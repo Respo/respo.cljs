@@ -19,6 +19,7 @@ def card-demo $ {}
               intent $ {} :key (-> event (.-target) (.-value))
 
         [] :div ({})
+          [] :div ({}) "|tag:" (:tag props)
           cond (:is-open state)
             [] :div ({} :on-click close-card) "|state is open"
             [] :div ({} :on-click open-card) "|state is closed"
