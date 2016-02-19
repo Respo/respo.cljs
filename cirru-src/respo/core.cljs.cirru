@@ -1,17 +1,11 @@
 
-ns respo.core
-  :require
-    [] reagent.core :as r
-    [] devtools.core :as devtools
+ns respo.core $ :require ([] reagent.core :as r)
+  [] devtools.core :as devtools
 
 defn -main ()
   enable-console-print!
   devtools/set-pref! :install-sanity-hints true
   devtools/install!
-
-  println "|Running main..."
-
+  println "|App is running..."
 set! js/window.onload -main
-
-defn fig-reload ()
-  println |demo
+defn fig-reload () $ println |demo
