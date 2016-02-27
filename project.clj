@@ -20,7 +20,7 @@
   :main ^:skip-aot respo.core
   :target-path "target/%s"
   :cljsbuild {:builds {:web-dev {:source-paths ["src"]
-                                 :figwheel {:websocket-host "repo"
+                                 :figwheel {:websocket-host "frp.im"
                                             :on-jsload "respo.core/fig-reload"}
                                  :compiler {:main respo.core
                                             :asset-path "cljs/out"

@@ -11,7 +11,7 @@ defn render (data) $ html
 
       [] :link $ {} (:type |image/png)
         :rel |icon
-        :href |images/pickchat.png
+        :href |images/frp.png
 
       [] :style nil "|body * {box-sizing: border-box; scroll-behavior: smooth; }"
 
