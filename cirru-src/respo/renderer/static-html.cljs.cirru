@@ -18,7 +18,7 @@ defn entry->string
   entry
   let
     (k $ first entry) (v $ last entry)
-    str (pr-str k)
+    str (name k)
       , |=
       pr-str v
 
@@ -39,9 +39,11 @@ defn props->string
 defn element->string
   element
   let
-    (tag $ first element) (props $ props->string $ get element 2)
+    (tag $ name $ first element) (props $ props->string $ get element 1)
       children $ map markup->string $ drop 2 element
-    str |< tag "| " props |> children |< tag |>
+    str |< tag "| " props |>
+      string/join | children
+      , |< tag |>
 
 defn component->string
   component
@@ -54,15 +56,16 @@ defn component->string
       let
         (factory $ render-method props state) (result $ factory default-intent)
         swap! memorization assoc component result
-        println |result result
         element->string result
 
 defn markup->string
   markup
   cond
     (string? markup) markup
+      keyword? markup
+      name markup
       is-element markup
-      markup->string markup
+      element->string markup
     (is-component markup) (component->string markup)
     (list? markup)
       ->> markup
