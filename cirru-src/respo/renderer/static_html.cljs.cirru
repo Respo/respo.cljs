@@ -43,7 +43,7 @@ defn element->string
       children $ map markup->string $ drop 2 element
     str |< tag "| " props |>
       string/join | children
-      , |< tag |>
+      , |</ tag |>
 
 defn component->string
   component
