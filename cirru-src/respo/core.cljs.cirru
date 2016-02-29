@@ -13,8 +13,8 @@ defn render-demo ()
         [] card-demo $ {}
         []
     
-    println demo-in-html
-    println $ .-outerHTML demo-in-dom
+    -- println demo-in-html
+    .log js/console demo-in-dom
 
 defn -main ()
   enable-console-print!

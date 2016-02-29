@@ -10,7 +10,6 @@ defn is-component (markup)
     map? $ first markup
 
 defn make-element (markup coord)
-  println |make-element markup coord
   let
     (tag-name $ name $ first markup)
       props $ get markup 1
@@ -21,18 +20,29 @@ defn make-element (markup coord)
           if (string? item)
             .createTextNode js/document item
             make-element item $ conj coord index
-        
+
         , children
-    
-    println "|look into" props child-elements
-    map $ fn (entry)
-      let
-        (k $ first entry)
-          v $ last entry
-        .setAttribute element k v
-    
-    map $ fn (child-element)
-      .appendChild element child-element
+
+    doall $ map
+      fn (entry)
+        let
+          (k $ name $ first entry)
+            v $ last entry
+          if
+            some? $ re-find (re-pattern |^on-.+)
+              , k
+            aset element
+              string/replace k |- |
+              , v
+            .setAttribute element k v
+
+      , props
+
+    doall $ map
+      fn (child-element)
+        .appendChild element child-element
+      , child-elements
+
     , element
 
 defn make-component (markup coord)
@@ -45,5 +55,5 @@ defn make-component (markup coord)
       factory $ render-method ({})
         , initial-state
       instance $ factory intent-method
-    
+
     make-element instance coord
