@@ -1,37 +1,29 @@
 
 ns respo.component.card-demo $ :require $ [] hsl.core :refer $ [] hsl
+
 def card-demo $ {}
-  :initial-state $ {}
-    :is-open false
+  :initial-state $ {} (:is-open false)
     :card-name :demo
-  :render $ fn
-    props state
+  :render $ fn (props state)
     fn (intent)
       let
         (close-card $ fn (event) (, intent) ({} :is-open false))
-          open-card $ fn
-            event
+          open-card $ fn (event)
             intent $ {} :is-open true
-          connect $ fn
-            key
+          connect $ fn (key)
             fn (event)
-              intent $ {} :key $ -> event
-                .-target
+              intent $ {} :key $ -> event (.-target)
                 .-value
-
-        [] :div
-          {}
-          [] :div
-            {}
+        
+        [] :div ({} :class |demo)
+          [] :div ({})
             , |tag:
           if (:is-open state)
-            [] :div
-              {} :on-click close-card
+            [] :div ({} :on-click close-card)
               , "|it is open"
-            [] :div
-              {} :on-click open-card
+            [] :div ({} :on-click open-card)
               , "|it is closed"
-
+          
           [] :input $ {} :value
             name $ :card-name state
             , :on-change

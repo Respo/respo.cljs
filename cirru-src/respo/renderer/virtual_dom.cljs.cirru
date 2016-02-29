@@ -12,19 +12,19 @@ defn is-component (markup)
 defn make-element (markup coord)
   println |make-element markup coord
   let
-    (tag-name $ first markup)
+    (tag-name $ name $ first markup)
       props $ get markup 1
       children $ drop 2 markup
       element $ .createElement js/document tag-name
       child-elements $ map-indexed
-        fn (entry)
-          let
-            (([] index item) entry)
-            
+        fn (index item)
+          if (string? item)
+            .createTextNode js/document item
             make-element item $ conj coord index
         
         , children
     
+    println "|look into" props child-elements
     map $ fn (entry)
       let
         (k $ first entry)
@@ -42,6 +42,8 @@ defn make-component (markup coord)
       render-method $ :render component
       intent-method $ fn ()
         println "|intent called"
-      instance $ render-method intent-method
+      factory $ render-method ({})
+        , initial-state
+      instance $ factory intent-method
     
     make-element instance coord
