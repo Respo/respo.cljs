@@ -9,7 +9,7 @@ ns respo.core $ :require
 
 defn render-demo ()
   let
-    (tree $ render-app $ [] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 1))
+    (tree $ render-app $ [] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 2))
 
     .log js/console tree
 

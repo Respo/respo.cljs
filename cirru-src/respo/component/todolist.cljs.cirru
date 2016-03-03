@@ -10,6 +10,8 @@ def style-root $ {} (:color |black)
 def style-list $ {} (:color |black)
   :background-color $ hsl 120 20 96
 
+def style-input $ {}
+
 def style-toolbar $ {} (:display |flex)
   :flex-direction |row
   :justify-content |center
@@ -20,7 +22,7 @@ def style-button $ {}
 
 defn clear-done (props state)
   fn (event intent set-state)
-    intent-clear-done
+    .log js/console "|intent clear-done"
 
 defn on-text-change (props state)
   fn (event intent set-state)
@@ -32,19 +34,18 @@ def todolist-component $ {}
   :render $ fn (props state)
     let
       (tasks $ :tasks props)
+      .log js/console |tasks: tasks
       [] :div ({} :style style-root)
         [] :input $ {} :style style-input :value (:draft state)
           , :on-change
           on-text-change props state
           , :placeholder |Task
-        [] :div ({} :style style-list)
+        [] :div
+          {} :class |task-list :style style-list
           into ({})
-            map
-              fn (task)
-                [] (:id task)
-                  [] task-component $ {} :task task
-
-              , tasks
+            ->> tasks $ map $ fn (task)
+              [] (:id task)
+                [] task-component $ {} :task task
 
         [] :div ({} :style style-toolbar)
           [] :div $ {} :style style-button :on-click $ clear-done props state

@@ -87,13 +87,16 @@ defn render-element (markup states coord)
 
       :coord coord
       :children $ into ({})
-        ->> children $ map $ fn (entry)
-          let
-            (k $ first entry)
-              v $ last entry
-            [] k $ if (some? v)
-              render-markup v states $ conj coord k
-              , nil
+        ->> children
+          map $ fn (entry)
+            let
+              (k $ first entry)
+                v $ last entry
+              [] k $ if (some? v)
+                render-markup v states $ conj coord k
+                , nil
+
+          sort-by first
 
 defn render-component (markup states coord)
   let
