@@ -4,17 +4,14 @@ ns respo.core $ :require
   [] devtools.core :as devtools
   [] respo.renderer.static-html :refer $ [] markup->string
   [] respo.renderer.virtual-dom :refer $ [] make-component
-  [] respo.component.card-demo :refer $ [] card-demo
+  [] respo.component.todolist :refer $ [] todolist-component
+  [] respo.renderer.render :refer $ [] render-app
 
 defn render-demo ()
   let
-    (demo-in-html $ markup->string $ [] card-demo $ {})
-      demo-in-dom $ make-component
-        [] card-demo $ {}
-        []
-    
-    -- println demo-in-html
-    .log js/console demo-in-dom
+    (tree $ render-app $ [] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 1))
+
+    println tree
 
 defn -main ()
   enable-console-print!
