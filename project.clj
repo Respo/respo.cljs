@@ -7,7 +7,7 @@
                  [org.clojure/clojurescript "1.7.228"]
                  [reagent "0.5.1"]
                  [hiccup "1.0.5"]
-                 [binaryage/devtools "0.4.1"]
+                 [binaryage/devtools "0.5.2"]
                  [mvc-works/hsl "0.1.2"]
                  [org.clojure/core.async "0.2.374"]]
   :plugins [[cirru/lein-sepal "0.0.17"]

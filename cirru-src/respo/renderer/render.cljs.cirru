@@ -48,6 +48,9 @@ defn render-markup (markup states coord)
     render-component markup states coord
     render-element markup states coord
 
+defn style->string (styles)
+  , styles
+
 defn render-element (markup states coord)
   let
     (element-name $ first markup)
@@ -68,10 +71,11 @@ defn render-element (markup states coord)
 
           map $ fn (entry)
             let
-              (attr-name $ keyword->string $ first entry)
+              (k $ first entry)
+                v $ last entry
+                attr-name $ keyword->string k
               if (= attr-name |style)
-                [] (first entry)
-                  , |
+                [] k $ style->string v
                 , entry
 
       :events $ into ({})

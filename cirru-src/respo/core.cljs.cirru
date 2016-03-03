@@ -11,13 +11,13 @@ defn render-demo ()
   let
     (tree $ render-app $ [] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 1))
 
-    println tree
+    .log js/console tree
 
 defn -main ()
-  enable-console-print!
-  devtools/set-pref! :install-sanity-hints true
+  devtools/enable-feature! :sanity-hints :dirac
   devtools/install!
-  println "|App is running..."
+  enable-console-print!
+  .log js/console "|App is running..."
   render-demo
 
 set! js/window.onload -main
