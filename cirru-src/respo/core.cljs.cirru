@@ -6,6 +6,9 @@ ns respo.core $ :require
   [] respo.renderer.virtual-dom :refer $ [] make-element
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.render :refer $ [] render-app
+  [] respo.renderer.differ :refer $ [] find-diffs
+
+defonce cached-tree $ atom nil
 
 defn render-demo ()
   .clear js/console
@@ -27,6 +30,9 @@ defn render-demo ()
       set! (.-innerHTML target)
         , |
       .appendChild target html-in-dom
+
+    .log js/console "|DOM diffs:" $ find-diffs @cached-tree tree
+    reset! cached-tree tree
 
 defn -main ()
   devtools/enable-feature! :sanity-hints :dirac
