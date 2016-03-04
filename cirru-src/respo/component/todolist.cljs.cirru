@@ -6,11 +6,16 @@ ns respo.component.todolist $ :require
 
 def style-root $ {} (:color |black)
   :background-color $ hsl 120 20 93
+  :line-height |24px
+  :font-size |16px
 
 def style-list $ {} (:color |black)
   :background-color $ hsl 120 20 96
 
-def style-input $ {}
+def style-input $ {} (:font-size |16px)
+  :line-height |24px
+  :padding "|0px 8px"
+  :outline |none
 
 def style-toolbar $ {} (:display |flex)
   :flex-direction |row

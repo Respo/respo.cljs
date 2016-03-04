@@ -102,11 +102,19 @@ defn render-component (markup states coord)
   let
     (component $ first markup)
       props $ last markup
-      state $ get states coord
       initial-state $ :initial-state component
+      state $ if (contains? @states coord)
+        get @states coord
+        let
+          (initial-state $ :initial-state component)
+          swap! states assoc coord initial-state
+          , initial-state
+
       render $ :render component
       element $ render props state
+
     render-element element states coord
 
 defn render-app (component)
-  render-component component @states $ []
+  .log js/console "|render loop:" states
+  render-component component states $ []

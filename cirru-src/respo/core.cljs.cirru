@@ -8,12 +8,15 @@ ns respo.core $ :require
   [] respo.renderer.render :refer $ [] render-app
 
 defn render-demo ()
+  .clear js/console
   let
     (tree $ render-app $ [] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 2))
 
-    .clear js/console
     .log js/console tree
     .log js/console $ element->string tree
+    set!
+      .-innerHTML $ .querySelector js/document |#app
+      element->string tree
 
 defn -main ()
   devtools/enable-feature! :sanity-hints :dirac
