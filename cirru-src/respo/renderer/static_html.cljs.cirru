@@ -33,7 +33,8 @@ defn attrs->string (attrs)
 defn element->string (element)
   let
     (tag-name $ name $ :name element)
-      attrs $ attrs->string $ :attrs element
+      attrs $ attrs->string $ merge (:attrs element)
+        {} :data-coord $ pr-str $ :coord element
       children $ ->> (:children element)
         map $ fn (entry)
           element->string $ last entry

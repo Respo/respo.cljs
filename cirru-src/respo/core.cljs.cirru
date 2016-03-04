@@ -3,7 +3,7 @@ ns respo.core $ :require
   [] reagent.core :as r
   [] devtools.core :as devtools
   [] respo.renderer.static-html :refer $ [] element->string
-  [] respo.renderer.virtual-dom :refer $ [] make-component
+  [] respo.renderer.virtual-dom :refer $ [] make-element
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.render :refer $ [] render-app
 
@@ -13,10 +13,20 @@ defn render-demo ()
     (tree $ render-app $ [] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 2))
 
     .log js/console tree
-    .log js/console $ element->string tree
-    set!
-      .-innerHTML $ .querySelector js/document |#app
-      element->string tree
+    let
+      (html-in-string $ element->string tree)
+      .log js/console html-in-string
+      set!
+        .-innerHTML $ .querySelector js/document |#app
+        , html-in-string
+
+    let
+      (html-in-dom $ make-element tree)
+        target $ .querySelector js/document |#app2
+      .log js/console html-in-dom
+      set! (.-innerHTML target)
+        , |
+      .appendChild target html-in-dom
 
 defn -main ()
   devtools/enable-feature! :sanity-hints :dirac

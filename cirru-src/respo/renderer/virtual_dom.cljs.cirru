@@ -1,59 +1,40 @@
 
-ns respo.renderer.virtual-dom $ :require $ [] clojure.string :as string
+ns respo.renderer.virtual-dom $ :require
+  [] clojure.string :as string
+  [] respo.renderer.static-html :refer $ [] style->string
 
-defn is-element (markup)
-  and (vector? markup)
-    keyword? $ first markup
-
-defn is-component (markup)
-  and (vector? markup)
-    map? $ first markup
-
-defn make-element (markup coord)
+defn make-element (virtual-element)
   let
-    (tag-name $ name $ first markup)
-      props $ get markup 1
-      children $ drop 2 markup
+    (tag-name $ name $ :name virtual-element)
+      attrs $ :attrs virtual-element
+      children $ :children virtual-element
       element $ .createElement js/document tag-name
-      child-elements $ map-indexed
-        fn (index item)
+      child-elements $ ->> children $ map $ fn (entry)
+        let
+          (item $ last entry)
           if (string? item)
             .createTextNode js/document item
-            make-element item $ conj coord index
+            make-element item
 
-        , children
+    set!
+      ->> element (.-dataset)
+        .-coord
+      pr-str $ :coord virtual-element
 
-    doall $ map
-      fn (entry)
-        let
-          (k $ name $ first entry)
-            v $ last entry
-          if
-            some? $ re-find (re-pattern |^on-.+)
-              , k
-            aset element
-              string/replace k |- |
-              , v
-            .setAttribute element k v
+    doall $ ->> attrs $ map $ fn (entry)
+      let
+        (k $ name $ first entry)
+          v $ last entry
+        if
+          some? $ re-find (re-pattern |^on-.+)
+            , k
+          aset element
+            string/replace k |- |
+            , v
+          .setAttribute element k $ if (= k |style)
+            style->string v
+            , v
 
-      , props
-
-    doall $ map
-      fn (child-element)
-        .appendChild element child-element
-      , child-elements
-
+    doall $ ->> child-elements $ map $ fn (child-element)
+      .appendChild element child-element
     , element
-
-defn make-component (markup coord)
-  let
-    (component $ first markup)
-      initial-state $ :initial-state component
-      render-method $ :render component
-      intent-method $ fn ()
-        println "|intent called"
-      factory $ render-method ({})
-        , initial-state
-      instance $ factory intent-method
-
-    make-element instance coord

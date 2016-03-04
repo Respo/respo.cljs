@@ -15,5 +15,5 @@ defn render (data) $ html
 
       [] :style nil "|body * {box-sizing: border-box; scroll-behavior: smooth; }"
 
-    [] :body ([] :div#app) $ [] :script
+    [] :body ([] :div#app) ([] :div#app2) $ [] :script
       {} $ :src |cljs/main.js
