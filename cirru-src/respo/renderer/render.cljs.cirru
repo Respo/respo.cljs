@@ -48,8 +48,9 @@ defn render-markup (markup states coord)
     render-component markup states coord
     render-element markup states coord
 
-defn style->string (styles)
-  , styles
+defn sort-style (styles)
+  into (sorted-map)
+    ->> styles $ sort-by key
 
 defn render-element (markup states coord)
   let
@@ -61,7 +62,7 @@ defn render-element (markup states coord)
         children-list->map raw-children
 
     {} (:name element-name)
-      :attrs $ into ({})
+      :attrs $ into (sorted-map)
         ->> props
           filter $ fn (entry)
             let
@@ -75,18 +76,23 @@ defn render-element (markup states coord)
                 v $ last entry
                 attr-name $ keyword->string k
               if (= attr-name |style)
-                [] k $ style->string v
+                [] k $ sort-style v
                 , entry
 
-      :events $ into ({})
-        ->> props $ filter $ fn (entry)
-          let
-            (attr-name $ keyword->string $ first entry)
-            and false $ re-find (re-pattern |^on-.+)
-              , attr-name
+          sort-by key
+
+      :events $ into (sorted-map)
+        ->> props
+          filter $ fn (entry)
+            let
+              (attr-name $ keyword->string $ first entry)
+              and false $ re-find (re-pattern |^on-.+)
+                , attr-name
+
+          sort-by key
 
       :coord coord
-      :children $ into ({})
+      :children $ into (sorted-map)
         ->> children
           map $ fn (entry)
             let

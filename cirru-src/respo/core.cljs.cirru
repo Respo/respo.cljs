@@ -6,7 +6,7 @@ ns respo.core $ :require
   [] respo.renderer.virtual-dom :refer $ [] make-element
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.render :refer $ [] render-app
-  [] respo.renderer.differ :refer $ [] find-diffs
+  [] respo.renderer.differ :refer $ [] find-element-diffs
 
 defonce cached-tree $ atom nil
 
@@ -31,7 +31,11 @@ defn render-demo ()
         , |
       .appendChild target html-in-dom
 
-    .log js/console "|DOM diffs:" $ find-diffs @cached-tree tree
+    .log js/console "|DOM diffs:" $ if (some? @cached-tree)
+      find-element-diffs ([])
+        , @cached-tree tree
+      , "|not ready"
+
     reset! cached-tree tree
 
 defn -main ()

@@ -1,15 +1,16 @@
 
 ns respo.renderer.differ $ :require $ [] clojure.string :as string
 
+declare find-element-diffs
+
 defn find-children-diffs (acc old-children new-children)
   cond
     (and (= 0 $ count old-children) (= 0 $ count new-children)) acc
 
     (and (= 0 $ count old-children) (> (count new-children) (, 0)))
       recur
-        conj acc
-          let $
-            entry $ first new-children
+        conj acc $ let
+          (entry $ first new-children)
             item $ val entry
           [] :add (:coord item)
             , item
@@ -71,7 +72,7 @@ defn find-style-diffs
       let
         (entry $ first old-style)
           follows $ into (sorted-map)
-            rest old-styles
+            rest old-style
 
         conj acc $ [] :rm-style coord $ key old-style
         , follows new-style
@@ -89,17 +90,17 @@ defn find-style-diffs
           key new-entry
         -1 $ recur
           conj acc $ [] :rm-style coord $ key old-entry
-          , old-follows new-style
+          , coord old-follows new-style
         1 $ recur
           conj acc $ [] :add-style coord new-entry
-          , old-style new-follows
+          , coord old-style new-follows
         if
           = (val old-entry)
             val new-entry
           , acc
           conj acc $ [] :replace-style coord new-entry
 
-defn find-attrs-diffs
+defn find-attr-diffs
   acc coord old-attrs new-attrs
   cond
     (and (= 0 $ count old-attrs) (= 0 $ count new-attrs)) acc
@@ -107,13 +108,14 @@ defn find-attrs-diffs
     (and (= 0 $ count old-attrs) (> (count new-attrs) (, 0)))
       recur
         conj acc $ [] :add-attr coord $ first new-attrs
-        , old-attrs
+        , coord old-attrs
         into (sorted-map)
           rest new-attrs
 
     (and (> (count old-attrs) (, 0)) (= 0 $ count new-attrs))
       recur
         conj acc $ [] :rm-attr coord $ key $ first old-attrs
+        , coord
         into (sorted-map)
           rest old-attrs
         , new-attrs
@@ -131,24 +133,26 @@ defn find-attrs-diffs
       case (compare old-k new-k)
         -1 $ recur
           conj acc $ [] :rm-attr coord old-k
-          , old-follows new-attrs
+          , coord old-follows new-attrs
         1 $ recur
           conj acc $ [] :add-attr coord new-entry
-          , old-attrs new-follows
+          , coord old-attrs new-follows
         if (= old-v new-v)
           , acc
           recur
             if (= new-k :style)
-              find-style-diffs coord old-v new-v
+              find-style-diffs acc coord old-v new-v
               conj acc $ [] :replace-attr coord new-entry
-            , old-follows new-follows
+            , coord old-follows new-follows
 
 defn find-element-diffs (acc old-tree new-tree)
   let
     (old-coord $ :coord old-tree)
       new-coord $ :coord new-tree
+      old-children $ :children old-tree
+      new-children $ :children new-tree
     if (not= old-coord new-coord)
-      throw $ Exception. $ str "|coord dismatched:" old-coord new-coord
+      throw $ js/Error. $ str "|coord dismatched:" old-coord new-coord
       if
         not= (:name old-tree)
           :name new-tree
