@@ -7,6 +7,7 @@ ns respo.core $ :require
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.render :refer $ [] render-app
   [] respo.renderer.differ :refer $ [] find-element-diffs
+  [] respo.examples.dom-tree :as examples
 
 defonce cached-tree $ atom nil
 
@@ -31,11 +32,8 @@ defn render-demo ()
         , |
       .appendChild target html-in-dom
 
-    .log js/console "|DOM diffs:" $ if (some? @cached-tree)
-      find-element-diffs ([])
-        , @cached-tree tree
-      , "|not ready"
-
+    .log js/console "|DOM diffs:" $ find-element-diffs ([])
+      , examples/example-1 examples/example-2
     reset! cached-tree tree
 
 defn -main ()
