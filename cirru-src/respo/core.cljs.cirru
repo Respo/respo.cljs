@@ -32,9 +32,16 @@ defn render-demo ()
         , |
       .appendChild target html-in-dom
 
-    .log js/console "|DOM diffs:" $ find-element-diffs ([])
-      , examples/example-1 examples/example-2
     reset! cached-tree tree
+
+defn diff-demos ()
+  .clear js/console
+  .log js/console "|DOM diff 2:" $ find-element-diffs ([])
+    , examples/example-1 examples/example-2
+  .log js/console "|DOM diff 3:" $ find-element-diffs ([])
+    , examples/example-1 examples/example-3
+  .log js/console "|DOM diff 4:" $ find-element-diffs ([])
+    , examples/example-1 examples/example-4
 
 defn -main ()
   devtools/enable-feature! :sanity-hints :dirac
@@ -42,8 +49,9 @@ defn -main ()
   enable-console-print!
   .log js/console "|App is running..."
   render-demo
+  diff-demos
 
 set! js/window.onload -main
 
 defn fig-reload (println |reload!)
-  render-demo
+  diff-demos
