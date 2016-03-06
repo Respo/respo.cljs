@@ -8,6 +8,7 @@ defn sorted-rest (map-x)
     rest map-x
 
 defn find-children-diffs (acc old-children new-children)
+  .log js/console "|diff children:" acc old-children new-children
   cond
     (and (= 0 $ count old-children) (= 0 $ count new-children)) acc
 
@@ -94,6 +95,7 @@ defn find-style-diffs
 
 defn find-attr-diffs
   acc coord old-attrs new-attrs
+  .log js/console "|find attr:" acc coord old-attrs new-attrs
   cond
     (and (= 0 $ count old-attrs) (= 0 $ count new-attrs)) acc
 
@@ -148,4 +150,4 @@ defn find-element-diffs (acc old-tree new-tree)
         let
           (acc-after-attrs $ find-attr-diffs acc new-coord (:attrs old-tree) (:attrs new-tree))
 
-          , find-children-diffs acc-after-attrs old-children new-children
+          find-children-diffs acc-after-attrs old-children new-children

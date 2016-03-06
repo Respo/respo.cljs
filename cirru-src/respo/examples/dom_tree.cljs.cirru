@@ -19,12 +19,12 @@ def example-3 $ {} (:name :div)
 def example-4 $ {} (:name :div)
   :attrs $ sorted-map :class |another
   :coord $ []
-  :cildren $ sorted-map
+  :children $ sorted-map
 
 def example-5 $ {} (:name :div)
   :attrs $ sorted-map
   :coord $ []
-  :children $ sorted-map $ {} (:name :div)
+  :children $ sorted-map 1 $ {} (:name :div)
     :attrs $ sorted-map
-    :coord $ []
+    :coord $ [] 1
     :children $ sorted-map

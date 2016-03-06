@@ -36,12 +36,23 @@ defn render-demo ()
 
 defn diff-demos ()
   .clear js/console
-  .log js/console "|DOM diff 2:" $ find-element-diffs ([])
+  .log js/console "|DOM diff 1->2:" $ find-element-diffs ([])
     , examples/example-1 examples/example-2
-  .log js/console "|DOM diff 3:" $ find-element-diffs ([])
+  newline
+  .log js/console "|DOM diff 1->3:" $ find-element-diffs ([])
     , examples/example-1 examples/example-3
-  .log js/console "|DOM diff 4:" $ find-element-diffs ([])
+  newline
+  .log js/console "|DOM diff 1->4:" $ find-element-diffs ([])
     , examples/example-1 examples/example-4
+  newline
+  .log js/console "|DOM diff 1->5:" $ find-element-diffs ([])
+    , examples/example-1 examples/example-5
+  newline
+  .log js/console "|DOM diff 3->4:" $ find-element-diffs ([])
+    , examples/example-3 examples/example-4
+  newline
+  .log js/console "|DOM diff 3->5:" $ find-element-diffs ([])
+    , examples/example-3 examples/example-5
 
 defn -main ()
   devtools/enable-feature! :sanity-hints :dirac
