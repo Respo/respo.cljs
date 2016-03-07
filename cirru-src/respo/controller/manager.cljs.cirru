@@ -1,5 +1,5 @@
 
-ns respo.renderer.manager $ :require
+ns respo.controller.manager $ :require
   [] respo.renderer.differ :refer $ [] find-element-diffs
   [] respo.renderer.static-html :refer $ [] element->string
   [] respo.renderer.make-dom :refer $ [] make-element
