@@ -1,5 +1,5 @@
 
-ns respo.renderer.virtual-dom $ :require
+ns respo.renderer.make-dom $ :require
   [] clojure.string :as string
   [] respo.renderer.static-html :refer $ [] style->string
 

@@ -3,7 +3,7 @@ ns respo.core $ :require
   [] reagent.core :as r
   [] devtools.core :as devtools
   [] respo.renderer.static-html :refer $ [] element->string
-  [] respo.renderer.virtual-dom :refer $ [] make-element
+  [] respo.renderer.make-dom :refer $ [] make-element
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.expander :refer $ [] render-app
   [] respo.renderer.differ :refer $ [] find-element-diffs

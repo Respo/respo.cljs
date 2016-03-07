@@ -2,8 +2,9 @@
 ns respo.renderer.manager $ :require
   [] respo.renderer.differ :refer $ [] find-element-diffs
   [] respo.renderer.static-html :refer $ [] element->string
-  [] respo.renderer.virtual-dom :refer $ [] make-element
+  [] respo.renderer.make-dom :refer $ [] make-element
   [] respo.renderer.patcher :refer $ [] apply-dom-changes
+  [] respo.renderer.expander :refer $ [] render-app
 
 defonce stateful-center $ atom $ {} :store ([])
   , :virtual-dom nil :is-mounted false :event-handlers
@@ -32,7 +33,7 @@ defn mount (markup mount-point)
         , html-content
       .addEventListener mount-point |click click-listener
       .addEventListener mount-point |input input-listener
-      swap! stateful-center assoc-in ([] :event-handlers :click)
-        , click-handler
-      swap! stateful-center assoc-in ([] :event-handlers :input)
-        , input-handler
+      swap! stateful-center assoc-in ([] :event-listener :click)
+        , click-listener
+      swap! stateful-center assoc-in ([] :event-listener :input)
+        , input-listener
