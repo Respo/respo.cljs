@@ -15,7 +15,7 @@ defn on-text-change (props state)
 def task-component $ {}
   :initial-state $ {} :is-editing false
   :render $ fn (props state)
-    .log js/console "|task args" props state
+    -- .log js/console "|task args" props state
     let
       (task $ :task props)
       [] :div ({})

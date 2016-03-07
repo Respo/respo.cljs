@@ -1,12 +1,7 @@
 
 ns respo.renderer.render $ :require $ [] clojure.string :as string
 
-def store $ atom $ []
-
 def states $ atom $ {}
-
-defn intent (action-name action-data)
-  swap! store store
 
 defn children-in-list? (children)
   if
@@ -39,20 +34,78 @@ defn element? (markup)
   and (vector? markup)
     keyword? $ first markup
 
+defn sort-style (styles)
+  ->> styles (sort-by key)
+    into $ sorted-map
+
+defn render-attrs (props)
+  ->> props
+    filter $ fn (entry)
+      let
+        (attr-name $ keyword->string $ first entry)
+        not $ re-find (re-pattern |^on-.+)
+          , attr-name
+
+    map $ fn (entry)
+      let
+        (k $ first entry)
+          v $ last entry
+          attr-name $ keyword->string k
+        if (= attr-name |style)
+          [] k $ sort-style v
+          , entry
+
+    sort-by key
+    into $ sorted-map
+
+defn render-events (props)
+  ->> props
+    filter $ fn (entry)
+      let
+        (attr-name $ keyword->string $ first entry)
+        and false $ re-find (re-pattern |^on-.+)
+          , attr-name
+
+    sort-by key
+    into $ sorted-map
+
 declare render-component
 
 declare render-element
 
-defn render-markup (markup states coord)
+defn render-markup (markup old-states coord)
   if (component? markup)
-    render-component markup states coord
-    render-element markup states coord
+    render-component markup old-states coord
+    render-element markup old-states coord
 
-defn sort-style (styles)
-  into (sorted-map)
-    ->> styles $ sort-by key
+defn render-children
+  acc children old-states coord
+  -- .log js/console "|render children:" acc children old-states coord
+  if
+    = (count children)
+      , 0
+    , acc
+    let
+      (cursor $ first children)
+        k $ key cursor
+        v $ val cursor
+      recur
+        if (some? v)
+          let
+            (element-wrap $ render-markup v old-states $ conj coord k)
+            {}
+              :elements $ assoc (:elements acc)
+                , k
+                :element element-wrap
+              :states $ merge (:states acc)
+                :states :element-wrap
 
-defn render-element (markup states coord)
+          , acc
+
+        rest children
+        , old-states coord
+
+defn render-element (markup old-states coord)
   let
     (element-name $ first markup)
       props $ get markup 1
@@ -60,67 +113,36 @@ defn render-element (markup states coord)
       children $ if (children-in-map? raw-children)
         first raw-children
         children-list->map raw-children
+      children-initial $ {} :states ({})
+        , :elememts
+        {}
+      children-wrap $ render-children children-initial children old-states coord
 
-    {} (:name element-name)
-      :attrs $ into (sorted-map)
-        ->> props
-          filter $ fn (entry)
-            let
-              (attr-name $ keyword->string $ first entry)
-              not $ re-find (re-pattern |^on-.+)
-                , attr-name
-
-          map $ fn (entry)
-            let
-              (k $ first entry)
-                v $ last entry
-                attr-name $ keyword->string k
-              if (= attr-name |style)
-                [] k $ sort-style v
-                , entry
-
-          sort-by key
-
-      :events $ into (sorted-map)
-        ->> props
-          filter $ fn (entry)
-            let
-              (attr-name $ keyword->string $ first entry)
-              and false $ re-find (re-pattern |^on-.+)
-                , attr-name
-
-          sort-by key
-
-      :coord coord
-      :children $ into (sorted-map)
-        ->> children
-          map $ fn (entry)
-            let
-              (k $ first entry)
-                v $ last entry
-              [] k $ if (some? v)
-                render-markup v states $ conj coord k
-                , nil
-
+    {} (:states $ {})
+      :element $ {} (:name element-name)
+        :attrs $ render-attrs props
+        :events $ render-events props
+        :coord coord
+        :children $ ->> (:elements children-wrap)
           sort-by first
+          into $ sorted-map
 
-defn render-component (markup states coord)
+defn render-component (markup old-states coord)
   let
     (component $ first markup)
-      props $ last markup
-      initial-state $ :initial-state component
-      state $ if (contains? @states coord)
-        get @states coord
-        let
-          (initial-state $ :initial-state component)
-          swap! states assoc coord initial-state
-          , initial-state
-
+      props $ get markup 1
+      state $ if (contains? old-states coord)
+        get old-states coord
+        :initial-state component
       render $ :render component
       element $ render props state
+      element-wrap $ render-element element old-states coord
 
-    render-element element states coord
+    {}
+      :states $ assoc (:states element-wrap)
+        , coord state
+      :element $ :element element-wrap
 
-defn render-app (component)
-  .log js/console "|render loop:" states
-  render-component component states $ []
+defn render-app (markup old-states)
+  .log js/console "|render loop:" markup old-states
+  render-component markup old-states $ []

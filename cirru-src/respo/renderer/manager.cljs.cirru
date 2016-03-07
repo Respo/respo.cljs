@@ -1,7 +1,38 @@
 
-ns respo.renderer.manager
-defonce store $ atom ({})
+ns respo.renderer.manager $ :require
+  [] respo.renderer.differ :refer $ [] find-element-diffs
+  [] respo.renderer.static-html :refer $ [] element->string
+  [] respo.renderer.virtual-dom :refer $ [] make-element
+  [] respo.renderer.patcher :refer $ [] apply-dom-changes
 
-defonce states $ atom ({})
+defonce stateful-center $ atom $ {} :store ([])
+  , :virtual-dom nil :is-mounted false :event-handlers
+  {}
 
-defn render $ segment mount-point
+defn mount (markup mount-point)
+  if (:is-mounted @stateful-center)
+    let
+      (new-tree $ make-element markup)
+        changes $ find-element-diffs ([])
+          []
+          :virtual-dom @stateful-center
+          , new-tree
+
+      apply-dom-changes changes mount-point
+
+    let
+      (new-tree $ make-element markup)
+        html-content $ element->string new-tree
+        click-listener $ fn (event)
+          .log js/console "|click happened:" event
+        input-listener $ fn (event)
+          .log js/console "|input happened:" event
+
+      set! (.-innerHTML mount-point)
+        , html-content
+      .addEventListener mount-point |click click-listener
+      .addEventListener mount-point |input input-listener
+      swap! stateful-center assoc-in ([] :event-handlers :click)
+        , click-handler
+      swap! stateful-center assoc-in ([] :event-handlers :input)
+        , input-handler

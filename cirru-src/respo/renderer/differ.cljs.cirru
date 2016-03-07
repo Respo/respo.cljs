@@ -9,7 +9,7 @@ defn sorted-rest (map-x)
 
 defn find-children-diffs
   acc n-coord index old-children new-children
-  .log js/console "|diff children:" acc old-children new-children
+  -- .log js/console "|diff children:" acc old-children new-children
   cond
     (and (= 0 $ count old-children) (= 0 $ count new-children)) acc
 
@@ -108,7 +108,7 @@ defn find-style-diffs
 
 defn find-attr-diffs
   acc coord old-attrs new-attrs
-  .log js/console "|find attr:" acc coord old-attrs new-attrs
+  -- .log js/console "|find attr:" acc coord old-attrs new-attrs
   cond
     (and (= 0 $ count old-attrs) (= 0 $ count new-attrs)) acc
 

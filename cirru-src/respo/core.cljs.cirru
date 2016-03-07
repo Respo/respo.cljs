@@ -7,15 +7,15 @@ ns respo.core $ :require
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.render :refer $ [] render-app
   [] respo.renderer.differ :refer $ [] find-element-diffs
-  [] respo.examples.dom-tree :refer
-    [] diff-demos
+  [] respo.examples.dom-tree :refer $ [] diff-demos
 
 defonce cached-tree $ atom nil
 
 defn render-demo ()
   .clear js/console
   let
-    (tree $ render-app $ [] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 2))
+    (element-wrap $ render-app ([] todolist-component $ {} $ :tasks $ [] ({} :text |demo :id 1) ({} :text |demo2 :id 2)) ({}))
+      tree $ :element element-wrap
 
     .log js/console tree
     let
@@ -41,9 +41,9 @@ defn -main ()
   enable-console-print!
   .log js/console "|App is running..."
   render-demo
-  diff-demos
 
 set! js/window.onload -main
 
-defn fig-reload (println |reload!)
-  diff-demos
+defn fig-reload ()
+  .log js/console |reload!
+  render-demo
