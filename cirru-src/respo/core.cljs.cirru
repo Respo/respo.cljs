@@ -7,7 +7,8 @@ ns respo.core $ :require
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.render :refer $ [] render-app
   [] respo.renderer.differ :refer $ [] find-element-diffs
-  [] respo.examples.dom-tree :as examples
+  [] respo.examples.dom-tree :refer
+    [] diff-demos
 
 defonce cached-tree $ atom nil
 
@@ -33,26 +34,6 @@ defn render-demo ()
       .appendChild target html-in-dom
 
     reset! cached-tree tree
-
-defn diff-demos ()
-  .clear js/console
-  .log js/console "|DOM diff 1->2:" $ find-element-diffs ([])
-    , examples/example-1 examples/example-2
-  newline
-  .log js/console "|DOM diff 1->3:" $ find-element-diffs ([])
-    , examples/example-1 examples/example-3
-  newline
-  .log js/console "|DOM diff 1->4:" $ find-element-diffs ([])
-    , examples/example-1 examples/example-4
-  newline
-  .log js/console "|DOM diff 1->5:" $ find-element-diffs ([])
-    , examples/example-1 examples/example-5
-  newline
-  .log js/console "|DOM diff 3->4:" $ find-element-diffs ([])
-    , examples/example-3 examples/example-4
-  newline
-  .log js/console "|DOM diff 3->5:" $ find-element-diffs ([])
-    , examples/example-3 examples/example-5
 
 defn -main ()
   devtools/enable-feature! :sanity-hints :dirac

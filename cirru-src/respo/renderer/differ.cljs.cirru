@@ -7,7 +7,8 @@ defn sorted-rest (map-x)
   into (sorted-map)
     rest map-x
 
-defn find-children-diffs (acc old-children new-children)
+defn find-children-diffs
+  acc n-coord index old-children new-children
   .log js/console "|diff children:" acc old-children new-children
   cond
     (and (= 0 $ count old-children) (= 0 $ count new-children)) acc
@@ -17,9 +18,11 @@ defn find-children-diffs (acc old-children new-children)
         conj acc $ let
           (entry $ first new-children)
             item $ val entry
-          [] :add (:coord item)
+          [] :add (conj n-coord index)
             , item
 
+        , n-coord
+        inc index
         , old-children
         sorted-rest new-children
 
@@ -28,8 +31,10 @@ defn find-children-diffs (acc old-children new-children)
         conj acc $ let
           (entry $ first old-children)
             item $ val entry
-          [] :rm $ :coord item
+          [] :rm $ conj n-coord index
 
+        , n-coord
+        inc index
         sorted-rest old-children
         , new-children
 
@@ -42,17 +47,20 @@ defn find-children-diffs (acc old-children new-children)
         compare (key first-old-entry)
           key first-new-entry
         -1 $ let
-          (acc-after-cursor $ conj acc $ [] :rm $ :coord $ val first-old-entry)
-          recur acc-after-cursor old-follows new-children
+          (acc-after-cursor $ conj acc $ [] :rm $ conj n-coord index)
+          recur acc-after-cursor n-coord (inc index)
+            , old-follows new-children
 
         1 $ let
-          (acc-after-cursor $ conj acc $ [] :add $ :coord $ val first-old-entry)
-          recur acc-after-cursor old-children new-follows
+          (acc-after-cursor $ conj acc $ [] :add $ conj n-coord index)
+          recur acc-after-cursor n-coord (inc index)
+            , old-children new-follows
 
         let
-          (acc-after-cursor $ find-element-diffs acc (val first-old-entry) (val first-new-entry))
+          (acc-after-cursor $ find-element-diffs acc (conj n-coord index) (val first-old-entry) (val first-new-entry))
 
-          recur acc-after-cursor old-follows new-follows
+          recur acc-after-cursor n-coord (inc index)
+            , old-follows new-follows
 
 defn find-style-diffs
   acc coord old-style new-style
@@ -63,15 +71,17 @@ defn find-style-diffs
       let
         (entry $ first new-style)
           follows $ sorted-rest new-style
-        conj acc $ [] :add-style coord entry
-        , old-style follows
+        recur
+          conj acc $ [] :add-style coord entry
+          , coord old-style follows
 
     (and (> (count old-style) (, 0)) (= 0 $ count new-style))
       let
         (entry $ first old-style)
           follows $ sorted-rest old-style
-        conj acc $ [] :rm-style coord $ key old-style
-        , follows new-style
+        recur
+          conj acc $ [] :rm-style coord $ key old-style
+          , coord follows new-style
 
     :else $ let
       (old-entry $ first old-style)
@@ -87,11 +97,14 @@ defn find-style-diffs
         1 $ recur
           conj acc $ [] :add-style coord new-entry
           , coord old-style new-follows
-        if
-          = (val old-entry)
-            val new-entry
-          , acc
-          conj acc $ [] :replace-style coord new-entry
+        recur
+          if
+            = (val old-entry)
+              val new-entry
+            , acc
+            conj acc $ [] :replace-style coord new-entry
+
+          , coord old-follows new-follows
 
 defn find-attr-diffs
   acc coord old-attrs new-attrs
@@ -135,7 +148,8 @@ defn find-attr-diffs
               conj acc $ [] :replace-attr coord new-entry
             , coord old-follows new-follows
 
-defn find-element-diffs (acc old-tree new-tree)
+defn find-element-diffs
+  acc n-coord old-tree new-tree
   let
     (old-coord $ :coord old-tree)
       new-coord $ :coord new-tree
@@ -146,8 +160,8 @@ defn find-element-diffs (acc old-tree new-tree)
       if
         not= (:name old-tree)
           :name new-tree
-        conj acc $ [] :replace new-coord new-tree
+        conj acc $ [] :replace n-coord new-tree
         let
-          (acc-after-attrs $ find-attr-diffs acc new-coord (:attrs old-tree) (:attrs new-tree))
+          (acc-after-attrs $ find-attr-diffs acc n-coord (:attrs old-tree) (:attrs new-tree))
 
-          find-children-diffs acc-after-attrs old-children new-children
+          find-children-diffs acc-after-attrs n-coord 0 old-children new-children
