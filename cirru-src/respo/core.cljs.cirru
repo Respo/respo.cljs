@@ -5,7 +5,7 @@ ns respo.core $ :require
   [] respo.renderer.static-html :refer $ [] element->string
   [] respo.renderer.virtual-dom :refer $ [] make-element
   [] respo.component.todolist :refer $ [] todolist-component
-  [] respo.renderer.render :refer $ [] render-app
+  [] respo.renderer.expander :refer $ [] render-app
   [] respo.renderer.differ :refer $ [] find-element-diffs
   [] respo.examples.dom-tree :refer $ [] diff-demos
 

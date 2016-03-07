@@ -1,5 +1,5 @@
 
-ns respo.renderer.render $ :require $ [] clojure.string :as string
+ns respo.renderer.expander $ :require $ [] clojure.string :as string
 
 def states $ atom $ {}
 
