@@ -62,8 +62,8 @@ defn render-events (props)
   ->> props
     filter $ fn (entry)
       let
-        (attr-name $ keyword->string $ first entry)
-        and false $ re-find (re-pattern |^on-.+)
+        (attr-name $ name $ key entry)
+        re-find (re-pattern |^on-.+)
           , attr-name
 
     sort-by key
@@ -121,7 +121,11 @@ defn render-element (markup old-states coord)
     {} (:states $ {})
       :element $ {} (:name element-name)
         :attrs $ render-attrs props
-        :events $ render-events props
+        :events $ let
+          (events $ render-events props)
+          -- .log js/console |events: events props
+          , events
+
         :coord coord
         :children $ ->> (:elements children-wrap)
           sort-by first

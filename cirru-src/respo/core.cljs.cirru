@@ -8,8 +8,16 @@ ns respo.core $ :require
   [] respo.renderer.expander :refer $ [] render-app
   [] respo.renderer.differ :refer $ [] find-element-diffs
   [] respo.examples.dom-tree :refer $ [] diff-demos
+  [] respo.controller.manager :refer $ [] mount unmount
 
 defonce cached-tree $ atom nil
+
+defonce todolist-store $ atom $ []
+  {} :text |demo1 :id 1
+  {} :text |demo2 :id 2
+
+defn intent (intent-name intent-data)
+  .log js/console |intent: intent-name intent-data
 
 defn render-demo ()
   .clear js/console
@@ -35,15 +43,24 @@ defn render-demo ()
 
     reset! cached-tree tree
 
+defn mount-demo ()
+  .clear js/console
+  let
+    (todo-demo $ [] todolist-component $ {} :tasks $ [] ({} :text |demo1 :id 1) ({} :text |demo2 :id 2))
+      target $ .querySelector js/document |#app
+
+    unmount target
+    mount todo-demo target intent
+
 defn -main ()
   devtools/enable-feature! :sanity-hints :dirac
   devtools/install!
   enable-console-print!
   .log js/console "|App is running..."
-  render-demo
+  mount-demo
 
 set! js/window.onload -main
 
 defn fig-reload ()
   .log js/console |reload!
-  render-demo
+  mount-demo

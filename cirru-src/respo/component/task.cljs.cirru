@@ -8,6 +8,10 @@ def style-input $ {} (:font-size |16px)
   :padding "|0px 8px"
   :outline |none
 
+defn on-click (props state)
+  fn (event intent set-state)
+    .log js/console |clicked
+
 defn on-text-change (props state)
   fn (event intent set-state)
     set-state $ {} :is-editing $ not $ :is-editing state
@@ -22,4 +26,5 @@ def task-component $ {}
         [] :input $ {} :value (:text task)
           , :on-change
           on-text-change props state
-          , :style style-input
+          , :style style-input :on-click
+          on-click props state
