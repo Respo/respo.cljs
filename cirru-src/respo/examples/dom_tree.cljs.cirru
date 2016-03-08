@@ -1,7 +1,7 @@
 
 ns respo.examples.dom-tree $ :require
   [] clojure.string :as string
-  [] respo.renderer.differ :refer $ [] find-element-diffs
+  [] respo.renderer.differ :refer $ [] find-element-diffs find-attr-diffs
 
 def example-1 $ {} (:name :div)
   :attrs $ sorted-map
@@ -79,3 +79,17 @@ defn diff-demos ()
   .log js/console "|DOM diff 6->7:" $ find-element-diffs ([])
     []
     , example-6 example-7
+
+def attrs-demo-1 $ {} (:placeholder |Task)
+  :style $ {} :color |red
+  :value |
+
+def attrs-demo-2 $ {} (:placeholder |Task)
+  :style $ {} :color |red
+  :value |d
+
+defn diff-attrs-demos ()
+  .clear js/console
+  .log js/console "|attrs diff:" $ find-attr-diffs ([])
+    []
+    , attrs-demo-1 attrs-demo-2

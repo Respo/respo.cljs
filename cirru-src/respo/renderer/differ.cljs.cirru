@@ -9,7 +9,7 @@ defn sorted-rest (map-x)
 
 defn find-children-diffs
   acc n-coord index old-children new-children
-  -- .log js/console "|diff children:" acc old-children new-children
+  -- .log js/console "|diff children:" acc n-coord index old-children new-children
   cond
     (and (= 0 $ count old-children) (= 0 $ count new-children)) acc
 
@@ -108,7 +108,8 @@ defn find-style-diffs
 
 defn find-attr-diffs
   acc coord old-attrs new-attrs
-  -- .log js/console "|find attr:" acc coord old-attrs new-attrs
+  -- .log js/console "|find attr:" acc coord old-attrs new-attrs (count old-attrs)
+    count new-attrs
   cond
     (and (= 0 $ count old-attrs) (= 0 $ count new-attrs)) acc
 
@@ -133,6 +134,7 @@ defn find-attr-diffs
         old-follows $ sorted-rest old-attrs
         new-follows $ sorted-rest new-attrs
 
+      -- .log js/console old-k new-k old-v new-v
       case (compare old-k new-k)
         -1 $ recur
           conj acc $ [] :rm-attr coord old-k
@@ -140,16 +142,18 @@ defn find-attr-diffs
         1 $ recur
           conj acc $ [] :add-attr coord new-entry
           , coord old-attrs new-follows
-        if (= old-v new-v)
-          , acc
-          recur
+        recur
+          if (= old-v new-v)
+            , acc
             if (= new-k :style)
               find-style-diffs acc coord old-v new-v
               conj acc $ [] :replace-attr coord new-entry
-            , coord old-follows new-follows
+
+          , coord old-follows new-follows
 
 defn find-element-diffs
   acc n-coord old-tree new-tree
+  -- .log js/console "|element diffing:" acc n-coord old-tree new-tree
   let
     (old-coord $ :coord old-tree)
       new-coord $ :coord new-tree
@@ -164,4 +168,5 @@ defn find-element-diffs
         let
           (acc-after-attrs $ find-attr-diffs acc n-coord (:attrs old-tree) (:attrs new-tree))
 
+          -- .log js/console "|after attrs:" acc-after-attrs
           find-children-diffs acc-after-attrs n-coord 0 old-children new-children
