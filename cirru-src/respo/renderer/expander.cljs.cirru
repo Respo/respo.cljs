@@ -73,13 +73,14 @@ declare render-component
 
 declare render-element
 
-defn render-markup (markup old-states coord)
+defn render-markup
+  markup old-states coord component-coord
   if (component? markup)
     render-component markup old-states coord
-    render-element markup old-states coord
+    render-element markup old-states coord component-coord
 
 defn render-children
-  acc children old-states coord
+  acc children old-states coord component-coord
   -- .log js/console "|render children:" acc children old-states coord
   if
     = (count children)
@@ -92,7 +93,8 @@ defn render-children
       recur
         if (some? v)
           let
-            (element-wrap $ render-markup v old-states $ conj coord k)
+            (element-wrap $ render-markup v old-states (conj coord k) (, component-coord))
+
             {}
               :elements $ assoc (:elements acc)
                 , k
@@ -103,9 +105,10 @@ defn render-children
           , acc
 
         rest children
-        , old-states coord
+        , old-states coord component-coord
 
-defn render-element (markup old-states coord)
+defn render-element
+  markup old-states coord component-coord
   let
     (element-name $ first markup)
       props $ get markup 1
@@ -116,7 +119,7 @@ defn render-element (markup old-states coord)
       children-initial $ {} :states ({})
         , :elememts
         {}
-      children-wrap $ render-children children-initial children old-states coord
+      children-wrap $ render-children children-initial children old-states coord component-coord
 
     {} (:states $ {})
       :element $ {} (:name element-name)
@@ -127,6 +130,7 @@ defn render-element (markup old-states coord)
           , events
 
         :coord coord
+        :component-coord component-coord
         :children $ ->> (:elements children-wrap)
           sort-by first
           into $ sorted-map
@@ -140,7 +144,7 @@ defn render-component (markup old-states coord)
         :initial-state component
       render $ :render component
       element $ render props state
-      element-wrap $ render-element element old-states coord
+      element-wrap $ render-element element old-states coord coord
 
     {}
       :states $ assoc (:states element-wrap)
@@ -148,5 +152,5 @@ defn render-component (markup old-states coord)
       :element $ :element element-wrap
 
 defn render-app (markup old-states)
-  .log js/console "|render loop:" markup old-states
+  .info js/console "|render loop, old-states:" old-states
   render-component markup old-states $ []

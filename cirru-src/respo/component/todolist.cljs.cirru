@@ -42,7 +42,7 @@ def todolist-component $ {}
       .log js/console |tasks: tasks
       [] :div ({} :style style-root)
         [] :input $ {} :style style-input :value (:draft state)
-          , :on-change
+          , :on-input
           on-text-change props state
           , :placeholder |Task
         [] :div

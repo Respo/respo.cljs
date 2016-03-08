@@ -17,15 +17,17 @@ defn rerender-instance (mount-point)
       element-wrap $ render-app markup old-states
       changes $ find-element-diffs ([])
         []
-        :virtual-dom instance
+        :element instance
         :element element-wrap
 
-    .log js/console "|dom changes:" changes
+    .info js/console "|dom changes:" changes (:element instance)
+      :element element-wrap
     apply-dom-changes changes mount-point
     swap! app-center assoc mount-point $ merge instance element-wrap
 
 defn build-set-state (coord mount-point)
   fn (state-updates)
+    .info js/console "|set state:" coord state-updates
     swap! app-center update-in
       [] mount-point :states coord
       fn (old-state)
@@ -53,19 +55,21 @@ defn mount (markup mount-point intent)
               target-listener $ :on-click $ :events target-element
 
             if (some? target-listener)
-              target-listener event intent $ build-set-state coord mount-point
-              .log js/console "|found no listener:" coord event
+              target-listener event intent $ build-set-state (:component-coord target-element)
+                , mount-point
+              .info js/console "|found no listener:" coord :on-click event
 
         input-listener $ fn (event)
           let
             (coord $ read-coord event)
               target-element $ find-event-target (:element element-wrap)
                 , coord :on-input
-              target-listener $ :on-input $ :event target-element
+              target-listener $ :on-input $ :events target-element
 
             if (some? target-listener)
-              target-listener $ :on-input $ build-set-state coord mount-point
-              .log js/console "|found no listener:" coord event
+              target-listener event intent $ build-set-state (:component-coord target-element)
+                , mount-point
+              .info js/console "|found no listener:" coord :on-input event
 
       set! (.-innerHTML mount-point)
         , html-content
