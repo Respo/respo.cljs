@@ -1,5 +1,7 @@
 
-ns respo.renderer.patcher $ :require $ [] clojure.string :as string
+ns respo.renderer.patcher $ :require
+  [] clojure.string :as string
+  [] respo.util.format :refer $ [] dashed->camel
 
 defn find-target (root coord)
   if
@@ -13,22 +15,23 @@ defn find-target (root coord)
 
       recur child follows
 
-defn replace-attr (target op)
+defn replace-prop (target op)
   .info js/console target op
   let
-    (attr-name $ name $ key op)
-      attr-value $ val op
-    .setAttribute target attr-name attr-value
+    (prop-name $ dashed->camel $ name $ key op)
+      prop-value $ val op
+    aset target prop-name prop-value
 
-defn add-attr (target op)
+defn add-prop (target op)
   .info js/console target op
   let
-    (attr-name $ name $ key op)
-      attr-value $ val op
-    .setAttribute target attr-name attr-value
+    (prop-name $ dashed->camel $ name $ key op)
+      prop-value $ val op
+    aset target prop-name prop-value
 
-defn rm-attr (target op)
+defn rm-prop (target op)
   .info js/console target op
+  js-delete target $ dashed->camel $ name op
 
 defn add-style (target op)
   .info js/console target op
@@ -59,9 +62,9 @@ defn apply-dom-changes (changes mount-point)
           target $ find-target root coord
         .log js/console op-type target op-data
         case op-type
-          :replace-attr $ replace-attr target op-data
-          :add-attr $ add-attr target op-data
-          :rm-attr $ rm-attr target op-data
+          :replace-prop $ replace-prop target op-data
+          :add-prop $ add-prop target op-data
+          :rm-prop $ rm-prop target op-data
           :add-style $ add-style target op-data
           :rm-style $ rm-style target op-data
           :add $ add-element target op-data

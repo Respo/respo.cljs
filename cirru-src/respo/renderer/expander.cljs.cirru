@@ -38,20 +38,20 @@ defn sort-style (styles)
   ->> styles (sort-by key)
     into $ sorted-map
 
-defn render-attrs (props)
+defn render-props (props)
   ->> props
     filter $ fn (entry)
       let
-        (attr-name $ keyword->string $ first entry)
+        (prop-name $ keyword->string $ first entry)
         not $ re-find (re-pattern |^on-.+)
-          , attr-name
+          , prop-name
 
     map $ fn (entry)
       let
         (k $ first entry)
           v $ last entry
-          attr-name $ keyword->string k
-        if (= attr-name |style)
+          prop-name $ keyword->string k
+        if (= prop-name |style)
           [] k $ sort-style v
           , entry
 
@@ -62,9 +62,9 @@ defn render-events (props)
   ->> props
     filter $ fn (entry)
       let
-        (attr-name $ name $ key entry)
+        (prop-name $ name $ key entry)
         re-find (re-pattern |^on-.+)
-          , attr-name
+          , prop-name
 
     sort-by key
     into $ sorted-map
@@ -123,7 +123,7 @@ defn render-element
 
     {} (:states $ {})
       :element $ {} (:name element-name)
-        :attrs $ render-attrs props
+        :props $ render-props props
         :events $ let
           (events $ render-events props)
           -- .log js/console |events: events props

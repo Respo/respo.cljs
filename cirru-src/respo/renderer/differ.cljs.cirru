@@ -106,48 +106,48 @@ defn find-style-diffs
 
           , coord old-follows new-follows
 
-defn find-attr-diffs
-  acc coord old-attrs new-attrs
-  -- .log js/console "|find attr:" acc coord old-attrs new-attrs (count old-attrs)
-    count new-attrs
+defn find-props-diffs
+  acc coord old-props new-props
+  -- .log js/console "|find props:" acc coord old-props new-props (count old-props)
+    count new-props
   cond
-    (and (= 0 $ count old-attrs) (= 0 $ count new-attrs)) acc
+    (and (= 0 $ count old-props) (= 0 $ count new-props)) acc
 
-    (and (= 0 $ count old-attrs) (> (count new-attrs) (, 0)))
+    (and (= 0 $ count old-props) (> (count new-props) (, 0)))
       recur
-        conj acc $ [] :add-attr coord $ first new-attrs
-        , coord old-attrs
-        sorted-rest new-attrs
+        conj acc $ [] :add-props coord $ first new-props
+        , coord old-props
+        sorted-rest new-props
 
-    (and (> (count old-attrs) (, 0)) (= 0 $ count new-attrs))
+    (and (> (count old-props) (, 0)) (= 0 $ count new-props))
       recur
-        conj acc $ [] :rm-attr coord $ key $ first old-attrs
+        conj acc $ [] :rm-props coord $ key $ first old-props
         , coord
-        sorted-rest old-attrs
-        , new-attrs
+        sorted-rest old-props
+        , new-props
 
     :else $ let
-      (old-entry $ first old-attrs)
-        new-entry $ first new-attrs
-        ([] old-k old-v) (first old-attrs)
-        ([] new-k new-v) (first new-attrs)
-        old-follows $ sorted-rest old-attrs
-        new-follows $ sorted-rest new-attrs
+      (old-entry $ first old-props)
+        new-entry $ first new-props
+        ([] old-k old-v) (first old-props)
+        ([] new-k new-v) (first new-props)
+        old-follows $ sorted-rest old-props
+        new-follows $ sorted-rest new-props
 
       -- .log js/console old-k new-k old-v new-v
       case (compare old-k new-k)
         -1 $ recur
-          conj acc $ [] :rm-attr coord old-k
-          , coord old-follows new-attrs
+          conj acc $ [] :rm-props coord old-k
+          , coord old-follows new-props
         1 $ recur
-          conj acc $ [] :add-attr coord new-entry
-          , coord old-attrs new-follows
+          conj acc $ [] :add-props coord new-entry
+          , coord old-props new-follows
         recur
           if (= old-v new-v)
             , acc
             if (= new-k :style)
               find-style-diffs acc coord old-v new-v
-              conj acc $ [] :replace-attr coord new-entry
+              conj acc $ [] :replace-prop coord new-entry
 
           , coord old-follows new-follows
 
@@ -166,7 +166,7 @@ defn find-element-diffs
           :name new-tree
         conj acc $ [] :replace n-coord new-tree
         let
-          (acc-after-attrs $ find-attr-diffs acc n-coord (:attrs old-tree) (:attrs new-tree))
+          (acc-after-props $ find-props-diffs acc n-coord (:props old-tree) (:props new-tree))
 
-          -- .log js/console "|after attrs:" acc-after-attrs
-          find-children-diffs acc-after-attrs n-coord 0 old-children new-children
+          -- .log js/console "|after props:" acc-after-props
+          find-children-diffs acc-after-props n-coord 0 old-children new-children

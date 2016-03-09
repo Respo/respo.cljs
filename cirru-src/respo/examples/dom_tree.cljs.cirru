@@ -1,52 +1,52 @@
 
 ns respo.examples.dom-tree $ :require
   [] clojure.string :as string
-  [] respo.renderer.differ :refer $ [] find-element-diffs find-attr-diffs
+  [] respo.renderer.differ :refer $ [] find-element-diffs find-props-diffs
 
 def example-1 $ {} (:name :div)
-  :attrs $ sorted-map
+  :props $ sorted-map
   :children $ sorted-map
   :coord $ []
 
 def example-2 $ {} (:name :span)
-  :attrs $ sorted-map
+  :props $ sorted-map
   :coord $ []
   :children $ sorted-map
 
 def example-3 $ {} (:name :div)
-  :attrs $ sorted-map :class |demo
+  :props $ sorted-map :class |demo
   :coord $ []
   :children $ sorted-map
 
 def example-4 $ {} (:name :div)
-  :attrs $ sorted-map :class |another
+  :props $ sorted-map :class |another
   :coord $ []
   :children $ sorted-map
 
 def example-5 $ {} (:name :div)
-  :attrs $ sorted-map
+  :props $ sorted-map
   :coord $ []
   :children $ sorted-map 1 $ {} (:name :div)
-    :attrs $ sorted-map
+    :props $ sorted-map
     :coord $ [] 1
     :children $ sorted-map
 
 def example-6 $ {} (:name :div)
-  :attrs $ sorted-map :class |example-6
+  :props $ sorted-map :class |example-6
   :coord $ []
   :children $ sorted-map 1 $ {} (:name :div)
-    :attrs $ sorted-map :style $ sorted-map :color |red
+    :props $ sorted-map :style $ sorted-map :color |red
     :coord $ [] 1
     :children $ sorted-map
 
 def example-7 $ {} (:name :div)
-  :attrs $ sorted-map :class |example-7 :spell-check false
+  :props $ sorted-map :class |example-7 :spell-check false
   :coord $ []
   :children $ sorted-map 1 $ {} (:name :div)
-    :attrs $ sorted-map :style $ sorted-map :color |yellow :display |inline-block
+    :props $ sorted-map :style $ sorted-map :color |yellow :display |inline-block
     :coord $ [] 1
     :children $ sorted-map 0 $ {} (:name :span)
-      :attrs $ sorted-map
+      :props $ sorted-map
       :coord $ [] 1 0
       :children $ sorted-map
 
@@ -80,16 +80,16 @@ defn diff-demos ()
     []
     , example-6 example-7
 
-def attrs-demo-1 $ {} (:placeholder |Task)
+def props-demo-1 $ {} (:placeholder |Task)
   :style $ {} :color |red
   :value |
 
-def attrs-demo-2 $ {} (:placeholder |Task)
+def props-demo-2 $ {} (:placeholder |Task)
   :style $ {} :color |red
   :value |d
 
-defn diff-attrs-demos ()
+defn diff-props-demos ()
   .clear js/console
-  .log js/console "|attrs diff:" $ find-attr-diffs ([])
+  .log js/console "|props diff:" $ find-props-diffs ([])
     []
-    , attrs-demo-1 attrs-demo-2
+    , props-demo-1 props-demo-2

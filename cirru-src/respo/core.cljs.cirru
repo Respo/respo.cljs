@@ -7,7 +7,7 @@ ns respo.core $ :require
   [] respo.component.todolist :refer $ [] todolist-component
   [] respo.renderer.expander :refer $ [] render-app
   [] respo.renderer.differ :refer $ [] find-element-diffs
-  [] respo.examples.dom-tree :refer $ [] diff-demos diff-attrs-demos
+  [] respo.examples.dom-tree :refer $ [] diff-demos diff-props-demos
   [] respo.controller.manager :refer $ [] mount unmount
 
 defonce cached-tree $ atom nil

@@ -25,6 +25,8 @@ def style-button $ {}
   :background-color $ hsl 200 80 90
   :display |inline-block
 
+def style-panel $ {} $ :display |flex
+
 defn clear-done (props state)
   fn (event intent set-state)
     .log js/console "|intent clear-done"
@@ -41,12 +43,16 @@ def todolist-component $ {}
       (tasks $ :tasks props)
       .log js/console |tasks: tasks
       [] :div ({} :style style-root)
-        [] :input $ {} :style style-input :value (:draft state)
-          , :on-input
-          on-text-change props state
-          , :placeholder |Task
+        [] :div ({} :style style-panel)
+          [] :input $ {} :style style-input :value (:draft state)
+            , :on-input
+            on-text-change props state
+            , :placeholder |Task
+          [] :div ({} :style style-button)
+            [] :span $ {} :inner-text |Add
+
         [] :div
-          {} :class |task-list :style style-list
+          {} :class-name |task-list :style style-list
           into ({})
             ->> tasks $ map $ fn (task)
               [] (:id task)

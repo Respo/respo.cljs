@@ -1,17 +1,6 @@
 
 ns respo.controller.resolver $ :require $ [] clojure.string :as string
 
-defn vector-contains? (vec-a vec-b)
-  cond
-    (and (= (count vec-a) (, 0)) (= (count vec-b) (, 0))) true
-
-    (and (= (count vec-a) (, 0)) (> (count vec-b) (, 0))) false
-
-    (and (> (count vec-a) (, 0)) (= (count vec-b) (, 0))) true
-
-    :else $ recur (rest vec-a)
-      rest vec-b
-
 defn get-element-at (element coord)
   if
     = coord $ []
@@ -28,16 +17,18 @@ defn find-event-target (element coord event-name)
   -- .log js/console |targeting: element coord event-name
   let
     (target-element $ get-element-at element coord)
+      element-exists? $ some? target-element
     if
-      and (some? target-element)
-        contains? (:events target-element)
-          , event-name
-
+      and element-exists? $ contains? (:events target-element)
+        , event-name
       , target-element
       if
         = coord $ []
         , nil
-        recur element
-          subvec coord 0 $ - (count coord)
-            , 1
-          , event-name
+        if element-exists?
+          recur element
+            subvec coord 0 $ - (count coord)
+              , 1
+            , event-name
+
+          , nil

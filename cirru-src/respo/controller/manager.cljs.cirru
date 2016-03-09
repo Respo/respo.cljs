@@ -71,6 +71,7 @@ defn mount (markup mount-point intent)
                 , mount-point
               .info js/console "|found no listener:" coord :on-input event
 
+      .log js/console "|HTML content:" html-content
       set! (.-innerHTML mount-point)
         , html-content
       .addEventListener mount-point |click click-listener
