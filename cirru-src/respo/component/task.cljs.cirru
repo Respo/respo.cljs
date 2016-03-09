@@ -8,6 +8,12 @@ def style-input $ {} (:font-size |16px)
   :padding "|0px 8px"
   :outline |none
 
+def style-button $ {} (:display |inline-block)
+  :color $ hsl 40 80 80
+  :background-color $ hsl 200 80 50
+  :font-family |Verdana
+  :padding "|0 6px"
+
 defn on-click (props state)
   fn (event intent set-state)
     .log js/console |clicked
@@ -28,3 +34,4 @@ def task-component $ {}
           on-text-change props state
           , :style style-input :on-click
           on-click props state
+        [] :span $ {} :style style-button :inner-text |Remove

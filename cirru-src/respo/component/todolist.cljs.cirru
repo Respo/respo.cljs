@@ -24,6 +24,8 @@ def style-toolbar $ {} (:display |flex)
 def style-button $ {}
   :background-color $ hsl 200 80 90
   :display |inline-block
+  :padding "|0 6px 0 6px"
+  :font-family |Verdana
 
 def style-panel $ {} $ :display |flex
 
@@ -35,6 +37,12 @@ defn on-text-change (props state)
   fn (event intent set-state)
     set-state $ {} :draft $ -> event (.-target)
       .-value
+
+defn handle-add (props state)
+  .log js/console "|state built inside:" props state
+  fn (event intent set-state)
+    .log js/console "|click add!" props state
+    intent :add $ :draft state
 
 def todolist-component $ {}
   :initial-state $ {} :draft |
@@ -49,7 +57,7 @@ def todolist-component $ {}
             on-text-change props state
             , :placeholder |Task
           [] :div ({} :style style-button)
-            [] :span $ {} :inner-text |Add
+            [] :span $ {} :inner-text |Add :on-click $ handle-add props state
 
         [] :div
           {} :class-name |task-list :style style-list

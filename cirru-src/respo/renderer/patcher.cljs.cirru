@@ -16,21 +16,18 @@ defn find-target (root coord)
       recur child follows
 
 defn replace-prop (target op)
-  .info js/console target op
   let
     (prop-name $ dashed->camel $ name $ key op)
       prop-value $ val op
     aset target prop-name prop-value
 
 defn add-prop (target op)
-  .info js/console target op
   let
     (prop-name $ dashed->camel $ name $ key op)
       prop-value $ val op
     aset target prop-name prop-value
 
 defn rm-prop (target op)
-  .info js/console target op
   js-delete target $ dashed->camel $ name op
 
 defn add-style (target op)

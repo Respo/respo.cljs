@@ -9,21 +9,20 @@ ns respo.controller.manager $ :require
 
 defonce app-center $ atom $ {}
 
-defn rerender-instance (mount-point)
+defn rerender-instance (markup mount-point)
   let
     (instance $ get @app-center mount-point)
       old-states $ :states instance
-      markup $ :markup instance
       element-wrap $ render-app markup old-states
       changes $ find-element-diffs ([])
         []
         :element instance
         :element element-wrap
 
-    .info js/console "|dom changes:" changes (:element instance)
-      :element element-wrap
+    .info js/console "|dom changes:" changes "|new states:" $ :states element-wrap
     apply-dom-changes changes mount-point
     swap! app-center assoc mount-point $ merge instance element-wrap
+    .log js/console "|after rerender:" @app-center element-wrap
 
 defn build-set-state (coord mount-point)
   fn (state-updates)
@@ -33,7 +32,9 @@ defn build-set-state (coord mount-point)
       fn (old-state)
         merge old-state state-updates
 
-    rerender-instance mount-point
+    rerender-instance
+      :markup $ get @app-center mount-point
+      , mount-point
 
 defn read-coord (event)
   read-string $ ->> event (.-target)
@@ -42,7 +43,7 @@ defn read-coord (event)
 
 defn mount (markup mount-point intent)
   if (contains? @app-center mount-point)
-    rerender-instance mount-point
+    rerender-instance markup mount-point
     let
       (old-states $ {})
         element-wrap $ render-app markup old-states
@@ -50,7 +51,8 @@ defn mount (markup mount-point intent)
         click-listener $ fn (event)
           let
             (coord $ read-coord event)
-              target-element $ find-event-target (:element element-wrap)
+              target-element $ find-event-target
+                :element $ get @app-center mount-point
                 , coord :on-click
               target-listener $ :on-click $ :events target-element
 
@@ -62,7 +64,8 @@ defn mount (markup mount-point intent)
         input-listener $ fn (event)
           let
             (coord $ read-coord event)
-              target-element $ find-event-target (:element element-wrap)
+              target-element $ find-event-target
+                :element $ get @app-center mount-point
                 , coord :on-input
               target-listener $ :on-input $ :events target-element
 
@@ -71,7 +74,7 @@ defn mount (markup mount-point intent)
                 , mount-point
               .info js/console "|found no listener:" coord :on-input event
 
-      .log js/console "|HTML content:" html-content
+      -- .log js/console "|HTML content:" html-content
       set! (.-innerHTML mount-point)
         , html-content
       .addEventListener mount-point |click click-listener

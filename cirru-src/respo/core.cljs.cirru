@@ -9,6 +9,7 @@ ns respo.core $ :require
   [] respo.renderer.differ :refer $ [] find-element-diffs
   [] respo.examples.dom-tree :refer $ [] diff-demos diff-props-demos
   [] respo.controller.manager :refer $ [] mount unmount
+  [] respo.update.core :refer $ [] update-transform
 
 defonce cached-tree $ atom nil
 
@@ -16,8 +17,19 @@ defonce todolist-store $ atom $ []
   {} :text |demo1 :id 1
   {} :text |demo2 :id 2
 
+defonce id-counter $ atom 10
+
+declare mount-demo
+
 defn intent (intent-name intent-data)
   .log js/console |intent: intent-name intent-data
+  reset! id-counter $ inc @id-counter
+  let
+    (op-id @id-counter)
+      new-store $ update-transform @todolist-store intent-name intent-data op-id
+    .log js/console "|new store:" new-store
+    reset! todolist-store new-store
+    mount-demo
 
 defn render-demo ()
   .clear js/console
@@ -44,12 +56,10 @@ defn render-demo ()
     reset! cached-tree tree
 
 defn mount-demo ()
-  .clear js/console
+  .log js/console "|store to mount:" @todolist-store
   let
-    (todo-demo $ [] todolist-component $ {} :tasks $ [] ({} :text |demo1 :id 1) ({} :text |demo2 :id 2))
+    (todo-demo $ [] todolist-component $ {} :tasks @todolist-store)
       target $ .querySelector js/document |#app
-
-    unmount target
     mount todo-demo target intent
 
 defn -main ()
@@ -62,5 +72,10 @@ defn -main ()
 set! js/window.onload -main
 
 defn fig-reload ()
+  .clear js/console
   .log js/console |reload!
+  let
+    (target $ .querySelector js/document |#app)
+    unmount target
+
   mount-demo
