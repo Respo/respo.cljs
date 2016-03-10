@@ -14,10 +14,10 @@ defn get-element-at (element coord)
         throw $ js/Error. "|child not found"
 
 defn find-event-target (element coord event-name)
-  -- .log js/console |targeting: element coord event-name
   let
     (target-element $ get-element-at element coord)
       element-exists? $ some? target-element
+    -- .log js/console "|target element:" target-element
     if
       and element-exists? $ contains? (:events target-element)
         , event-name

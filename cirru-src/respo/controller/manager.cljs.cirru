@@ -20,13 +20,14 @@ defn rerender-instance (markup mount-point)
         :element element-wrap
 
     .info js/console "|dom changes:" changes "|new states:" $ :states element-wrap
+    -- breakpoint
     apply-dom-changes changes mount-point
     swap! app-center assoc mount-point $ merge instance element-wrap $ {} :markup markup
     .log js/console "|after rerender:" @app-center element-wrap
 
 defn build-set-state (coord mount-point)
   fn (state-updates)
-    .info js/console "|set state:" coord state-updates
+    -- .info js/console "|set state:" coord state-updates
     swap! app-center update-in
       [] mount-point :states coord
       fn (old-state)

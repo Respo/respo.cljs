@@ -20,18 +20,23 @@ def style-input $ {} (:font-size |16px)
 def style-toolbar $ {} (:display |flex)
   :flex-direction |row
   :justify-content |center
+  :width |300px
 
 def style-button $ {}
   :background-color $ hsl 200 80 90
   :display |inline-block
   :padding "|0 6px 0 6px"
   :font-family |Verdana
+  :cursor |pointer
+  :border-radius |4px
+  :margin-left |8px
 
 def style-panel $ {} $ :display |flex
 
 defn clear-done (props state)
   fn (event intent set-state)
     .log js/console "|intent clear-done"
+    intent :clear nil
 
 defn on-text-change (props state)
   fn (event intent set-state)
@@ -43,6 +48,7 @@ defn handle-add (props state)
   fn (event intent set-state)
     .log js/console "|click add!" props state
     intent :add $ :draft state
+    set-state $ {} :draft |
 
 def todolist-component $ {}
   :initial-state $ {} :draft |
@@ -66,5 +72,9 @@ def todolist-component $ {}
               [] (:id task)
                 [] task-component $ {} :task task
 
-        [] :div ({} :style style-toolbar)
-          [] :div $ {} :style style-button :on-click $ clear-done props state
+        if
+          > (count tasks)
+            , 0
+          [] :div ({} :style style-toolbar)
+            [] :div $ {} :style style-button :on-click (clear-done props state)
+              , :inner-text |Clear

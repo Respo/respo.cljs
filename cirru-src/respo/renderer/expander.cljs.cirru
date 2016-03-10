@@ -126,7 +126,7 @@ defn render-element
         :props $ render-props props
         :events $ let
           (events $ render-events props)
-          -- .log js/console |events: events props
+          -- .log js/console |events: coord events props
           , events
 
         :coord coord
