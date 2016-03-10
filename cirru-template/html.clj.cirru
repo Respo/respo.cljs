@@ -9,7 +9,7 @@ defn render (data)
         :rel |stylesheet
       [] :link $ {} (:type |image/png)
         :rel |icon
-        :href |images/frp.png
+        :href |images/respo.png
       [] :style nil "|body * {box-sizing: border-box; scroll-behavior: smooth;}"
 
     [] :body ({} :style "|margin: 0;")
