@@ -146,7 +146,7 @@ defn render-component (markup old-states coord)
       element $ render props state
       element-wrap $ render-element element old-states coord coord
 
-    .log js/console "|component state:" coord state
+    -- .log js/console "|component state:" coord state
     {}
       :states $ assoc (:states element-wrap)
         , coord state
