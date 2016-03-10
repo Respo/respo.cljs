@@ -9,7 +9,7 @@ def style-input $ {} (:font-size |16px)
   :outline |none
 
 def style-button $ {} (:display |inline-block)
-  :color $ hsl 40 80 80
+  :color $ hsl 40 80 100
   :background-color $ hsl 200 80 50
   :font-family |Verdana
   :padding "|0 6px"
