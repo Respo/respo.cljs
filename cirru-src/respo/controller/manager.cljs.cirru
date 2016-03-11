@@ -19,7 +19,8 @@ defn rerender-instance (markup mount-point)
         :element instance
         :element element-wrap
 
-    .info js/console "|dom changes:" changes "|new states:" $ :states element-wrap
+    .info js/console "|dom changes:" changes "|new states:" (:states element-wrap)
+      , element-wrap
     -- breakpoint
     apply-dom-changes changes mount-point
     swap! app-center assoc mount-point $ merge instance element-wrap $ {} :markup markup

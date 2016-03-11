@@ -34,6 +34,9 @@ defn element? (markup)
   and (vector? markup)
     keyword? $ first markup
 
+defn io-get-time ()
+  .valueOf $ js/Date.
+
 defn sort-style (styles)
   ->> styles (sort-by key)
     into $ sorted-map
@@ -121,7 +124,8 @@ defn render-element
         {}
       children-wrap $ render-children children-initial children old-states coord component-coord
 
-    {} (:states $ {})
+    {}
+      :states $ :states children-wrap
       :element $ {} (:name element-name)
         :props $ render-props props
         :events $ let
@@ -134,10 +138,12 @@ defn render-element
         :children $ ->> (:elements children-wrap)
           sort-by first
           into $ sorted-map
+        :duration nil
 
 defn render-component (markup old-states coord)
   let
-    (component $ first markup)
+    (begin-time $ io-get-time)
+      component $ first markup
       props $ get markup 1
       state $ if (contains? old-states coord)
         get old-states coord
@@ -145,12 +151,16 @@ defn render-component (markup old-states coord)
       render $ :render component
       element $ render props state
       element-wrap $ render-element element old-states coord coord
+      end-time $ io-get-time
 
     -- .log js/console "|component state:" coord state
     {}
       :states $ assoc (:states element-wrap)
         , coord state
-      :element $ :element element-wrap
+      :element $ merge (:element element-wrap)
+        {}
+          :duration $ - end-time begin-time
+          :component-name $ :name component
 
 defn render-app (markup old-states)
   .info js/console "|render loop, old-states:" old-states

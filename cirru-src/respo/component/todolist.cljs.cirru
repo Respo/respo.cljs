@@ -50,7 +50,7 @@ defn handle-add (props state)
     intent :add $ :draft state
     set-state $ {} :draft |
 
-def todolist-component $ {}
+def todolist-component $ {} (:name :todolist)
   :initial-state $ {} :draft |
   :render $ fn (props state)
     let

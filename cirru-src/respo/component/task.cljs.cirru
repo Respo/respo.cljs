@@ -32,7 +32,8 @@ defn on-text-change (props state)
         text $ .-value $ .-target event
       intent :update $ {} :id task-id :text text
 
-def task-component $ {} (:initial-state $ {})
+def task-component $ {} (:name :task)
+  :initial-state $ {}
   :render $ fn (props state)
     -- .log js/console "|task args" props state
     let
