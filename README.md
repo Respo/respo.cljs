@@ -2,6 +2,8 @@
 
 FIXME: description
 
+![](resources/publisc/images/respo.png)
+
 ## Installation
 
 Download from http://example.com/FIXME.
