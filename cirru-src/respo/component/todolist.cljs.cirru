@@ -21,6 +21,7 @@ def style-toolbar $ {} (:display |flex)
   :flex-direction |row
   :justify-content |center
   :width |300px
+  :padding "|4px 0"
 
 def style-button $ {}
   :background-color $ hsl 200 80 90

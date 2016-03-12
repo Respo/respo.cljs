@@ -1,54 +1,60 @@
 
 ns respo.controller.manager $ :require
   [] respo.renderer.differ :refer $ [] find-element-diffs
-  [] respo.renderer.static-html :refer $ [] element->string
   [] respo.renderer.patcher :refer $ [] apply-dom-changes
   [] respo.renderer.expander :refer $ [] render-app
   [] cljs.reader :refer $ [] read-string
   [] respo.controller.resolver :refer $ [] find-event-target
   [] respo.util.time :refer $ [] io-get-time
   [] respo.util.format :refer $ [] event->string
+  [] respo.renderer.make-dom :refer $ [] make-element
 
 defonce app-center $ atom $ {}
 
-defn rerender-instance (markup mount-point)
+defn rerender-instance (element mount-point)
   let
     (instance $ get @app-center mount-point)
-      old-states $ :states instance
-      element-wrap $ render-app markup old-states
       changes $ find-element-diffs ([])
         []
         :element instance
-        :element element-wrap
+        , element
       begin-time $ io-get-time
 
-    .info js/console "|dom changes:" changes "|new states:" (:states element-wrap)
-      , element-wrap
+    .info js/console "|dom changes:" changes element
     -- breakpoint
     apply-dom-changes changes mount-point
     .info js/console "|time spent in patching:" $ - (io-get-time)
       , begin-time
-    swap! app-center assoc mount-point $ merge instance element-wrap $ {} :markup markup
-    .log js/console "|after rerender:" @app-center element-wrap
+    swap! app-center assoc mount-point $ assoc instance :element element
+    .log js/console "|after rerender:" @app-center element
 
-defn build-set-state (coord mount-point)
+defn initialize-instance (element mount-point bubble-collection)
+  let
+    (dom-content $ make-element element)
+    -- .log js/console "|DOM content:" dom-content
+    set! (.-innerHTML mount-point)
+      , |
+    .appendChild mount-point dom-content
+    doall $ ->> bubble-collection $ map $ fn (entry)
+      let
+        (event-string $ event->string $ name $ key entry)
+          listener $ val entry
+        .addEventListener mount-point event-string listener
+
+    swap! app-center assoc mount-point $ merge $ {} (:listeners bubble-collection)
+      :element element
+
+defn build-set-state (coord update-state)
   fn (state-updates)
-    -- .info js/console "|set state:" coord state-updates
-    swap! app-center update-in
-      [] mount-point :states coord
-      fn (old-state)
-        merge old-state state-updates
-
-    rerender-instance
-      :markup $ get @app-center mount-point
-      , mount-point
+    update-state coord state-updates
 
 defn read-coord (event)
   read-string $ ->> event (.-target)
     .-dataset
     .-coord
 
-defn build-listener (event-name mount-point intent)
+defn build-listener
+  event-name mount-point intent update-state
   fn (event)
     let
       (coord $ read-coord event)
@@ -60,43 +66,32 @@ defn build-listener (event-name mount-point intent)
 
       if (some? target-listener)
         target-listener event intent $ build-set-state (:component-coord target-element)
-          , mount-point
+          , update-state
         .info js/console "|found no listener:" coord :on-click event target-element
 
-defn mount (markup mount-point intent)
-  if (contains? @app-center mount-point)
-    rerender-instance markup mount-point
-    let
-      (old-states $ {})
-        no-bubble-events $ [] :on-scroll :on-focus :on-blur
-        bubble-events $ [] :on-click :on-input :on-wheel :on-keydown :on-dbclick :on-change
-        no-bubble-collection $ ->> bubble-events
-          map $ fn (event-name)
-            [] event-name $ build-listener event-name mount-point intent
-          into $ {}
+defn mount
+  markup mount-point intent global-states update-state do-states-gc
+  let
+    (no-bubble-events $ [] :on-scroll :on-focus :on-blur)
+      bubble-events $ [] :on-click :on-input :on-wheel :on-keydown :on-dbclick :on-change
+      no-bubble-collection $ ->> no-bubble-events
+        map $ fn (event-name)
+          [] event-name $ build-listener event-name mount-point intent update-state
+        into $ {}
 
-        bubble-collection $ ->> bubble-events
-          map $ fn (event-name)
-            [] event-name $ build-listener event-name mount-point intent
-          into $ {}
+      bubble-collection $ ->> bubble-events
+        map $ fn (event-name)
+          [] event-name $ build-listener event-name mount-point intent update-state
+        into $ {}
 
-        element-wrap $ render-app markup old-states
-        html-content $ element->string $ :element element-wrap
+      element-wrap $ render-app markup global-states
+      new-element $ :element element-wrap
+      new-states $ :states element-wrap
 
-      -- .log js/console "|HTML content:" html-content
-      set! (.-innerHTML mount-point)
-        , html-content
-      doall $ ->> bubble-collection $ map $ fn (entry)
-        let
-          (k $ key entry)
-            listener $ val entry
-            event-string $ event->string k
-          .addEventListener mount-point event-string listener
-
-      swap! app-center assoc mount-point $ merge
-        {} (:listeners bubble-collection)
-          :markup markup
-        , element-wrap
+    if (contains? @app-center mount-point)
+      rerender-instance new-element mount-point
+      initialize-instance new-element mount-point bubble-collection
+    do-states-gc new-states
 
 defn unmount (mount-point)
   if (contains? @app-center mount-point)
