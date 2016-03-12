@@ -1,5 +1,7 @@
 
-ns respo.renderer.expander $ :require $ [] clojure.string :as string
+ns respo.renderer.expander $ :require
+  [] clojure.string :as string
+  [] respo.util.time :refer $ io-get-time
 
 def states $ atom $ {}
 
@@ -33,9 +35,6 @@ defn component? (markup)
 defn element? (markup)
   and (vector? markup)
     keyword? $ first markup
-
-defn io-get-time ()
-  .valueOf $ js/Date.
 
 defn sort-style (styles)
   ->> styles (sort-by key)

@@ -20,3 +20,7 @@ defn dashed->camel
 defn prop->attr (x)
   case x (|class-name |class)
     , x
+
+defn event->string (x)
+  subs (name x)
+    , 3
