@@ -40,9 +40,8 @@ defn clear-done (props state)
     intent :clear nil
 
 defn on-text-change (props state)
-  fn (event intent set-state)
-    set-state $ {} :draft $ -> event (.-target)
-      .-value
+  fn (simple-event intent set-state)
+    set-state $ {} :draft $ :value simple-event
 
 defn handle-add (props state)
   .log js/console "|state built inside:" props state

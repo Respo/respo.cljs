@@ -86,7 +86,7 @@ defn apply-dom-changes (changes mount-point)
           coord $ get op 1
           op-data $ get op 2
           target $ find-target root coord
-        .log js/console op-type target op-data
+        -- .log js/console op-type target op-data
         case op-type
           :replace-prop $ replace-prop target op-data
           :add-prop $ add-prop target op-data

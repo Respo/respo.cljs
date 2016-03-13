@@ -3,7 +3,7 @@ ns respo.controller.client $ :require
   [] respo.renderer.patcher :refer $ [] apply-dom-changes
   [] cljs.reader :refer $ [] read-string
   [] respo.util.time :refer $ [] io-get-time
-  [] respo.util.format :refer $ [] event->string
+  [] respo.util.format :refer $ [] event->string event->edn
   [] respo.renderer.make-dom :refer $ [] make-element
 
 defonce dom-registry $ atom $ {}
@@ -21,32 +21,26 @@ defn build-listener (event-name deliver-event)
   fn (event)
     let
       (coord $ read-coord event)
-      deliver-event coord event-name
+      deliver-event coord event-name $ event->edn event
 
 defn activate-instance (entire-dom mount-point deliver-event)
   let
-      no-bubble-collection $ ->> no-bubble-events
-        map $ fn (event-name)
-          [] event-name $ build-listener event-name deliver-event
-        into $ {}
-    aset (.-innerHTML mount-point)
+    (no-bubble-collection $ ->> no-bubble-events (map $ fn (event-name) ([] event-name $ build-listener event-name deliver-event)) (into $ {}))
+
+    set! (.-innerHTML mount-point)
       , |
     .appendChild mount-point $ make-element entire-dom
 
 defn patch-instance (changes mount-point deliver-event)
   let
-      no-bubble-collection $ ->> no-bubble-events
-        map $ fn (event-name)
-          [] event-name $ build-listener event-name deliver-event
-        into $ {}
+    (no-bubble-collection $ ->> no-bubble-events (map $ fn (event-name) ([] event-name $ build-listener event-name deliver-event)) (into $ {}))
+
     apply-dom-changes changes mount-point
 
 defn initialize-instance (mount-point deliver-event)
   let
-      bubble-collection $ ->> bubble-events
-        map $ fn (event-name)
-          [] event-name $ build-listener event-name deliver-event
-        into $ {}
+    (bubble-collection $ ->> bubble-events (map $ fn (event-name) ([] event-name $ build-listener event-name deliver-event)) (into $ {}))
+
     doall $ ->> bubble-collection $ map $ fn (entry)
       let
         (event-string $ event->string $ name $ key entry)

@@ -29,7 +29,7 @@ defn on-text-change (props state)
   fn (event intent set-state)
     let
       (task-id $ :id $ :task props)
-        text $ .-value $ .-target event
+        text $ :value event
       intent :update $ {} :id task-id :text text
 
 def task-component $ {} (:name :task)
