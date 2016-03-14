@@ -1,0 +1,27 @@
+{
+  "name": "respo",
+  "version": "0.1.0",
+  "description": "FIXME: description",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvc-works/respo.git"
+  },
+  "author": "jiyinyiyong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mvc-works/respo/issues"
+  },
+  "homepage": "https://github.com/mvc-works/respo#readme",
+  "dependencies": {
+    "shortid": "^2.2.4",
+    "ws": "^1.0.1"
+  }
+}

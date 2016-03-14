@@ -2,7 +2,7 @@
 
 FIXME: description
 
-![](resources/publisc/images/respo.png)
+![](resources/public/images/respo.png)
 
 ## Installation
 

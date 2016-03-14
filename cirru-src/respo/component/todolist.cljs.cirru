@@ -44,7 +44,7 @@ defn on-text-change (props state)
     set-state $ {} :draft $ :value simple-event
 
 defn handle-add (props state)
-  .log js/console "|state built inside:" props state
+  .log js/console "|state built inside:" (pr-str props) (pr-str state)
   fn (event intent set-state)
     .log js/console "|click add!" props state
     intent :add $ :draft state
@@ -55,7 +55,7 @@ def todolist-component $ {} (:name :todolist)
   :render $ fn (props state)
     let
       (tasks $ :tasks props)
-      .log js/console |tasks: tasks
+      .log js/console |tasks: (pr-str tasks)
       [] :div ({} :style style-root)
         [] :div ({} :style style-panel)
           [] :input $ {} :style style-input :value (:draft state)

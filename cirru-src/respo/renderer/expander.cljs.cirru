@@ -162,5 +162,5 @@ defn render-component (markup old-states coord)
           :component-name $ :name component
 
 defn render-app (markup old-states)
-  .info js/console "|render loop, old-states:" old-states
+  .info js/console "|render loop, old-states:" (pr-str old-states)
   render-component markup old-states $ []

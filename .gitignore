@@ -16,3 +16,4 @@ pom.xml.asc
 /resources/public/index.html
 /resources/public/cljs/
 /figwheel_server.log
+/node_modules/
