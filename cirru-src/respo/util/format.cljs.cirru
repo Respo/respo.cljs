@@ -32,3 +32,21 @@ defn event->edn (event)
 
     -- .log js/console "|simplify result:" simple-event
     , simple-event
+
+defn purify-events (events)
+  ->> events
+    map $ fn (entry)
+      [] (key entry)
+        , true
+
+    into $ sorted-map
+
+defn purify-element (element)
+  -> element
+    assoc :events $ purify-events $ :events element
+    assoc :children $ ->> (:children element)
+      map $ fn (entry)
+        [] (key entry)
+          purify-element $ val entry
+
+      into $ sorted-map
