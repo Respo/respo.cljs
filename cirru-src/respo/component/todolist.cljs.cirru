@@ -41,6 +41,10 @@ defn clear-done (props state)
     .log js/console "|intent clear-done"
     intent :clear nil
 
+defn on-focus (props state)
+  fn (event intent set-state)
+    .log js/console "|Just focused~"
+
 defn on-text-change (props state)
   fn (simple-event intent set-state)
     set-state $ {} :draft $ :value simple-event
@@ -64,6 +68,8 @@ def todolist-component $ {} (:name :todolist)
           [] :input $ {} :style style-input :value (:draft state)
             , :on-input
             on-text-change props state
+            , :on-focus
+            on-focus props state
             , :placeholder |Task
           [] :div ({} :style style-button)
             [] :span $ {} :inner-text |Add :on-click $ handle-add props state
