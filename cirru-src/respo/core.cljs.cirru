@@ -25,8 +25,6 @@ defonce global-element $ atom nil
 
 defonce clients-list $ atom $ []
 
-declare rerender-demo
-
 defn mount-demo ()
   let
     (todo-demo $ [] todolist-component $ {} :tasks @todolist-store)
@@ -46,7 +44,7 @@ defn rerender-demo ()
 
     do-states-gc global-states $ :states element-wrap
     reset! global-element $ :element element-wrap
-    println "|force running:" @clients-list
+    println "|force running:" $ pr-str @clients-list
     doall $ ->> @clients-list $ map $ fn (client-id)
       go $ >! send-chan $ [] client-id $ [] :patch changes
 
@@ -80,3 +78,4 @@ set! *main-cli-fn* -main
 
 defn fig-reload ()
   println |reload!
+  rerender-demo

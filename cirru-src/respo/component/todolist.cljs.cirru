@@ -8,6 +8,7 @@ def style-root $ {} (:color |black)
   :background-color $ hsl 120 20 93
   :line-height |24px
   :font-size |16px
+  :padding |10px
 
 def style-list $ {} (:color |black)
   :background-color $ hsl 120 20 96
@@ -16,6 +17,7 @@ def style-input $ {} (:font-size |16px)
   :line-height |24px
   :padding "|0px 8px"
   :outline |none
+  :min-width |300px
 
 def style-toolbar $ {} (:display |flex)
   :flex-direction |row
@@ -44,7 +46,8 @@ defn on-text-change (props state)
     set-state $ {} :draft $ :value simple-event
 
 defn handle-add (props state)
-  .log js/console "|state built inside:" (pr-str props) (pr-str state)
+  .log js/console "|state built inside:" (pr-str props)
+    pr-str state
   fn (event intent set-state)
     .log js/console "|click add!" props state
     intent :add $ :draft state
@@ -55,7 +58,7 @@ def todolist-component $ {} (:name :todolist)
   :render $ fn (props state)
     let
       (tasks $ :tasks props)
-      .log js/console |tasks: (pr-str tasks)
+      .log js/console |tasks: $ pr-str tasks
       [] :div ({} :style style-root)
         [] :div ({} :style style-panel)
           [] :input $ {} :style style-input :value (:draft state)
@@ -64,6 +67,8 @@ def todolist-component $ {} (:name :todolist)
             , :placeholder |Task
           [] :div ({} :style style-button)
             [] :span $ {} :inner-text |Add :on-click $ handle-add props state
+          [] :div $ {} :style style-button :on-click (clear-done props state)
+            , :inner-text |Clear
 
         [] :div
           {} :class-name |task-list :style style-list

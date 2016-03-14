@@ -7,6 +7,7 @@ def style-input $ {} (:font-size |16px)
   :line-height |24px
   :padding "|0px 8px"
   :outline |none
+  :min-width |300px
 
 def style-button $ {} (:display |inline-block)
   :color $ hsl 40 80 100
