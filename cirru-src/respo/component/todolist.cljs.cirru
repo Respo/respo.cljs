@@ -53,7 +53,8 @@ defn handle-add (props state)
   .log js/console "|state built inside:" (pr-str props)
     pr-str state
   fn (event intent set-state)
-    .log js/console "|click add!" props state
+    .log js/console "|click add!" (pr-str props)
+      pr-str state
     intent :add $ :draft state
     set-state $ {} :draft |
 

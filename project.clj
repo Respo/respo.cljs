@@ -1,4 +1,4 @@
-(defproject mvc-works/respo "0.1.0"
+(defproject mvc-works/respo "0.1.1"
   :description "Responsive DOM library"
   :url "https://github.com/mvc-works/respo"
   :license {:name "Eclipse Public License"

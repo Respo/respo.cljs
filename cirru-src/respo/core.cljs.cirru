@@ -6,7 +6,6 @@ ns respo.core
     [] cljs.core.async :as a :refer $ [] >! <! chan
     [] respo.component.todolist :refer $ [] todolist-component
     [] respo.renderer.expander :refer $ [] render-app
-    [] respo.controller.resolver :refer $ [] find-event-target
     [] respo.examples.dom-tree :refer $ [] diff-demos diff-props-demos
     [] respo.update.core :refer $ [] update-transform
     [] respo.renderer.differ :refer $ [] find-element-diffs
