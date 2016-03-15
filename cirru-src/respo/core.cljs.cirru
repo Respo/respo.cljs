@@ -28,25 +28,24 @@ defonce clients-list $ atom $ []
 defn mount-demo ()
   let
     (todo-demo $ [] todolist-component $ {} :tasks @todolist-store)
-      element-wrap $ render-app todo-demo @global-states
+      element $ render-app todo-demo @global-states
     println "|store to mount:" $ pr-str @todolist-store
-    do-states-gc global-states $ :states element-wrap
-    reset! global-element $ :element element-wrap
+    reset! global-element element
 
 defn rerender-demo ()
   let
     (todo-demo $ [] todolist-component $ {} :tasks @todolist-store)
-      element-wrap $ render-app todo-demo @global-states
+      element $ render-app todo-demo @global-states
       changes $ find-element-diffs ([])
         []
         purify-element @global-element
-        purify-element $ :element element-wrap
+        purify-element element
 
-    do-states-gc global-states $ :states element-wrap
-    reset! global-element $ :element element-wrap
+    reset! global-element element
     println "|force running:" $ pr-str @clients-list
     doall $ ->> @clients-list $ map $ fn (client-id)
       go $ >! send-chan $ [] client-id $ [] :patch changes
+    do-states-gc global-states element
 
 defn -main ()
   enable-console-print!

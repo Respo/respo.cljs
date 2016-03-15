@@ -1,9 +1,44 @@
 
 ns respo.controller.deliver $ :require $ respo.controller.resolver :refer $ [] find-event-target
 
-defn do-states-gc (states-ref new-states)
-  println "|states GC:" $ pr-str new-states
-  reset! states-ref new-states
+defn all-component-coords (element)
+  conj
+    map
+      fn (child-entry)
+        all-component-coords $ val child-entry
+      :children element
+
+    :component-coord element
+
+defn purify-states (new-states old-states all-coords)
+  if
+    = (count old-states)
+      , 0
+    , new-states
+    let
+      (first-entry $ first old-states)
+      recur
+        if
+          some
+            fn (component-coord)
+              = component-coord $ key first-entry
+            , all-coords
+
+          assoc new-states (key first-entry)
+            val first-entry
+          , new-states
+
+        rest old-states
+        , all-coords
+
+defn do-states-gc (states-ref element)
+  println "|states GC:" $ pr-str @states-ref
+  let
+    (all-coords $ distinct $ all-component-coords element)
+      new-states $ purify-states ({})
+        , @states-ref all-coords
+
+    reset! states-ref new-states
 
 defonce id-counter $ atom 10
 

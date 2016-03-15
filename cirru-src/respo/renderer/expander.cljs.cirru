@@ -82,32 +82,20 @@ defn render-markup
     render-element markup old-states coord component-coord
 
 defn render-children
-  acc children old-states coord component-coord
-  -- .log js/console "|render children:" acc children old-states coord
-  if
-    = (count children)
-      , 0
-    , acc
-    let
-      (cursor $ first children)
-        k $ key cursor
-        v $ val cursor
-      recur
-        if (some? v)
-          let
-            (element-wrap $ render-markup v old-states (conj coord k) (, component-coord))
+  children global-states coord component-coord
+  -- .log js/console "|render children:" children global-states coord
+  ->> children
+    map $ fn (child-entry)
+      let
+        (k $ key child-entry)
+          child-element $ val child-entry
+        [] k $ if (some? child-element)
+          render-markup child-element global-states (conj coord k)
+            , component-coord
+          , nil
 
-            {}
-              :elements $ assoc (:elements acc)
-                , k
-                :element element-wrap
-              :states $ merge (:states acc)
-                :states :element-wrap
-
-          , acc
-
-        rest children
-        , old-states coord component-coord
+    sort-by first
+    into $ sorted-map
 
 defn render-element
   markup old-states coord component-coord
@@ -118,49 +106,40 @@ defn render-element
       children $ if (children-in-map? raw-children)
         first raw-children
         children-list->map raw-children
-      children-initial $ {} :states ({})
-        , :elememts
-        {}
-      children-wrap $ render-children children-initial children old-states coord component-coord
+      child-elements $ render-children children old-states coord component-coord
 
-    {}
-      :states $ :states children-wrap
-      :element $ {} (:name element-name)
-        :props $ render-props props
-        :events $ let
-          (events $ render-events props)
-          -- .log js/console |events: coord events props
-          , events
+    {} (:name element-name)
+      :props $ render-props props
+      :events $ let
+        (events $ render-events props)
+        -- .log js/console |events: coord events props
+        , events
 
-        :coord coord
-        :component-coord component-coord
-        :children $ ->> (:elements children-wrap)
-          sort-by first
-          into $ sorted-map
-        :duration nil
+      :coord coord
+      :component-coord component-coord
+      :children child-elements
+      :duration nil
 
 defn render-component (markup old-states coord)
   let
     (begin-time $ io-get-time)
       component $ first markup
       props $ get markup 1
-      state $ if (contains? old-states coord)
-        get old-states coord
-        :initial-state component
+      state $ merge (:initial-state component)
+        if (contains? old-states coord)
+          get old-states coord
+          , nil
+
       render $ :render component
       element $ render props state
-      element-wrap $ render-element element old-states coord coord
+      element $ render-element element old-states coord coord
       end-time $ io-get-time
 
     -- .log js/console "|component state:" coord state
-    {}
-      :states $ assoc (:states element-wrap)
-        , coord state
-      :element $ merge (:element element-wrap)
-        {}
-          :duration $ - end-time begin-time
-          :component-name $ :name component
+    assoc element :duration (- end-time begin-time)
+      , :component-name
+      :name component
 
 defn render-app (markup old-states)
-  .info js/console "|render loop, old-states:" (pr-str old-states)
+  .info js/console "|render loop, old-states:" $ pr-str old-states
   render-component markup old-states $ []
