@@ -49,7 +49,8 @@ defn find-children-diffs
           recur acc-after-cursor n-coord index old-follows new-children
 
         1 $ let
-          (acc-after-cursor $ conj acc $ [] :add $ conj n-coord index)
+          (acc-after-cursor $ conj acc $ [] :add (conj n-coord index) (val first-new-entry))
+
           recur acc-after-cursor n-coord (inc index)
             , old-children new-follows
 

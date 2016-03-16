@@ -59,7 +59,7 @@ go $ loop ([])
   let
     (msg-pack $ <! send-chan)
       socket $ get @socket-registry $ first msg-pack
-    println "|sending message pack:" $ pr-str msg-pack
+    -- println "|sending message pack:" $ pr-str msg-pack
     if (some? socket)
       .send socket $ pr-str $ last msg-pack
       println "|found not socket:" (first msg-pack)

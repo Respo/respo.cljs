@@ -15,8 +15,8 @@ ns respo.core
     [] respo.util.format :refer $ [] purify-element
 
 defonce todolist-store $ atom $ []
-  {} :text |demo1 :id 1
-  {} :text |demo2 :id 2
+  {} :text |101 :id 101
+  {} :text |102 :id 102
 
 defonce global-states $ atom $ {}
 
@@ -53,9 +53,12 @@ defn rerender-demo ()
 
     reset! global-element element
     println "|force running:" $ pr-str @clients-list
-    doall $ ->> @clients-list $ map $ fn (client-id)
-      go $ >! send-chan $ [] client-id $ [] :patch changes
-    do-states-gc global-states element
+    if
+      not $ empty? changes
+      do
+        doall $ ->> @clients-list $ map $ fn (client-id)
+          go $ >! send-chan $ [] client-id $ [] :patch changes
+        do-states-gc global-states element
 
 defn -main ()
   enable-console-print!

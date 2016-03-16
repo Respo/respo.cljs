@@ -1,5 +1,7 @@
 
-ns respo.controller.resolver $ :require $ [] clojure.string :as string
+ns respo.controller.resolver $ :require
+  [] clojure.string :as string
+  [] respo.util.format :refer $ [] purify-element
 
 defn get-element-at (element coord)
   if
@@ -11,7 +13,7 @@ defn get-element-at (element coord)
         child $ get-in element $ [] :children coord-first
       if (some? child)
         get-element-at child coord-rest
-        throw $ js/Error. "|child not found"
+        throw $ js/Error. $ str "|child not found:" coord $ purify-element element
 
 defn find-event-target (element coord event-name)
   let

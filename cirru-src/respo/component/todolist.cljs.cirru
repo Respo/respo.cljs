@@ -48,7 +48,7 @@ defn on-text-change (props state)
     set-state $ {} :draft $ :value simple-event
 
 defn handle-add (props state)
-  .log js/console "|state built inside:" (pr-str props)
+  -- .log js/console "|state built inside:" (pr-str props)
     pr-str state
   fn (event intent set-state)
     .log js/console "|click add!" (pr-str props)
@@ -77,10 +77,12 @@ def todolist-component $ {} (:name :todolist)
 
         [] :div
           {} :class-name |task-list :style style-list
-          into ({})
-            ->> tasks $ map $ fn (task)
+          ->> tasks
+            map $ fn (task)
               [] (:id task)
                 [] task-component $ {} :task task
+
+            into $ sorted-map
 
         if
           > (count tasks)

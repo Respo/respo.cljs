@@ -1,7 +1,8 @@
 
 ns respo.renderer.expander $ :require
   [] clojure.string :as string
-  [] respo.util.time :refer $ io-get-time
+  [] respo.util.time :refer $ [] io-get-time
+  [] respo.util.format :refer $ [] purify-element
 
 def states $ atom $ {}
 
@@ -36,10 +37,6 @@ defn element? (markup)
   and (vector? markup)
     keyword? $ first markup
 
-defn sort-style (styles)
-  ->> styles (sort-by key)
-    into $ sorted-map
-
 defn render-props (props)
   ->> props
     filter $ fn (entry)
@@ -54,10 +51,10 @@ defn render-props (props)
           v $ last entry
           prop-name $ keyword->string k
         if (= prop-name |style)
-          [] k $ sort-style v
+          [] k $ into (sorted-map)
+            , v
           , entry
 
-    sort-by key
     into $ sorted-map
 
 defn render-events (props)
@@ -68,7 +65,6 @@ defn render-events (props)
         re-find (re-pattern |^on-.+)
           , prop-name
 
-    sort-by key
     into $ sorted-map
 
 declare render-component
@@ -116,7 +112,8 @@ defn render-children
             , component-coord
           , nil
 
-    sort-by first
+    filter $ fn (entry)
+      some? $ last entry
     into $ sorted-map
 
 defn render-element
@@ -130,6 +127,7 @@ defn render-element
         children-list->map raw-children
       child-elements $ render-children children old-states coord component-coord
 
+    -- .log js/console "|children should have order:" $ pr-str $ keys child-elements
     {} (:name element-name)
       :props $ render-props props
       :events $ let
