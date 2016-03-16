@@ -40,18 +40,6 @@ defn do-states-gc (states-ref element)
 
     reset! states-ref new-states
 
-defonce id-counter $ atom 10
-
-defn build-intent (store-ref updater)
-  fn (intent-name intent-data)
-    println |intent: intent-name $ pr-str intent-data
-    reset! id-counter $ inc @id-counter
-    let
-      (op-id @id-counter)
-        new-store $ updater @store-ref intent-name intent-data op-id
-      println "|new store:" $ pr-str new-store
-      reset! store-ref new-store
-
 defn build-set-state (states-ref coord)
   fn (state-updates)
     println "|update state:" (pr-str coord)
@@ -59,7 +47,7 @@ defn build-set-state (states-ref coord)
     swap! states-ref assoc coord state-updates
 
 defn build-deliver-event
-  element-ref store-ref states-ref updater rerender-handler
+  element-ref intent states-ref rerender-handler
   fn (coord event-name simple-event)
     let
       (target-element $ find-event-target @element-ref coord event-name)
@@ -69,7 +57,7 @@ defn build-deliver-event
       if (some? target-listener)
         do
           println "|listener found:" coord event-name
-          target-listener simple-event (build-intent store-ref updater)
+          target-listener simple-event intent
             build-set-state states-ref $ :component-coord target-element
           rerender-handler
 

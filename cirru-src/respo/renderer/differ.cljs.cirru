@@ -148,6 +148,12 @@ defn find-props-diffs
 
           , coord old-follows new-follows
 
+defn purify-children (children-map)
+  ->> children-map
+    filter $ fn (entry)
+      some? $ val entry
+    into $ sorted-map
+
 defn find-element-diffs
   acc n-coord old-tree new-tree
   -- .log js/console "|element diffing:" acc n-coord old-tree new-tree
@@ -166,4 +172,5 @@ defn find-element-diffs
           (acc-after-props $ find-props-diffs acc n-coord (:props old-tree) (:props new-tree))
 
           -- .log js/console "|after props:" acc-after-props
-          find-children-diffs acc-after-props n-coord 0 old-children new-children
+          find-children-diffs acc-after-props n-coord 0 (purify-children old-children)
+            purify-children new-children

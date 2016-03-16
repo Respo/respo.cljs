@@ -24,6 +24,17 @@ defonce global-element $ atom nil
 
 defonce clients-list $ atom $ []
 
+defonce id-counter $ atom 10
+
+defn intent (intent-name intent-data)
+  println |intent: intent-name $ pr-str intent-data
+  reset! id-counter $ inc @id-counter
+  let
+    (op-id @id-counter)
+      new-store $ update-transform @todolist-store intent-name intent-data op-id
+    println "|new store:" $ pr-str new-store
+    reset! todolist-store new-store
+
 defn mount-demo ()
   let
     (todo-demo $ [] todolist-component $ {} :tasks @todolist-store)
@@ -56,7 +67,7 @@ defn -main ()
       (msg-pack $ <! receive-chan)
         state-id $ :state-id $ :meta msg-pack
         msg-data $ :data msg-pack
-        deliver-event $ build-deliver-event global-element todolist-store global-states update-transform rerender-demo
+        deliver-event $ build-deliver-event global-element intent global-states rerender-demo
       println "|receiving message:" msg-pack
       case (:type msg-pack)
         :event $ do (apply deliver-event msg-data)

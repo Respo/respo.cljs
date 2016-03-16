@@ -42,11 +42,13 @@ defn purify-events (events)
     into $ sorted-map
 
 defn purify-element (element)
-  -> element
-    assoc :events $ purify-events $ :events element
-    assoc :children $ ->> (:children element)
-      map $ fn (entry)
-        [] (key entry)
-          purify-element $ val entry
+  if (some? element)
+    -> element
+      assoc :events $ purify-events $ :events element
+      assoc :children $ ->> (:children element)
+        map $ fn (entry)
+          [] (key entry)
+            purify-element $ val entry
 
-      into $ sorted-map
+        into $ sorted-map
+    , nil

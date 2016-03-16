@@ -14,8 +14,7 @@ A responsive DOM library.
 ```
 
 ```clojure
-(respo.controller.deliver/build-deliver-event
-  virtual-element-ref store-ref states-ref updater-method callback-method)
+(respo.controller.deliver/build-deliver-event virtual-element-ref intent states-ref callback-method)
 (respo.controller.deliver/do-states-gc states-ref virtual-element)
 (respo.renderer.expander/render-app element-markup global-states)
 (respo.renderer.differ/find-element-diffs [] [] old-virtual-element virtual-element)
