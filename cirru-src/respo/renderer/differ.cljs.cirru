@@ -112,13 +112,13 @@ defn find-props-diffs
 
     (and (= 0 $ count old-props) (> (count new-props) (, 0)))
       recur
-        conj acc $ [] :add-props coord $ first new-props
+        conj acc $ [] :add-prop coord $ first new-props
         , coord old-props
         sorted-rest new-props
 
     (and (> (count old-props) (, 0)) (= 0 $ count new-props))
       recur
-        conj acc $ [] :rm-props coord $ key $ first old-props
+        conj acc $ [] :rm-prop coord $ key $ first old-props
         , coord
         sorted-rest old-props
         , new-props
@@ -134,10 +134,10 @@ defn find-props-diffs
       -- .log js/console old-k new-k old-v new-v
       case (compare old-k new-k)
         -1 $ recur
-          conj acc $ [] :rm-props coord old-k
+          conj acc $ [] :rm-prop coord old-k
           , coord old-follows new-props
         1 $ recur
-          conj acc $ [] :add-props coord new-entry
+          conj acc $ [] :add-prop coord new-entry
           , coord old-props new-follows
         recur
           if (= old-v new-v)

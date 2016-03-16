@@ -25,9 +25,7 @@ def style-toolbar $ {} (:display |flex)
   :width |300px
   :padding "|4px 0"
 
-def style-button $ {}
-  :background-color $ hsl 200 80 90
-  :display |inline-block
+def style-button $ {} (:display |inline-block)
   :padding "|0 6px 0 6px"
   :font-family |Verdana
   :cursor |pointer
@@ -87,6 +85,7 @@ def todolist-component $ {} (:name :todolist)
         if
           > (count tasks)
             , 0
-          [] :div ({} :style style-toolbar)
+          [] :div
+            {} :style style-toolbar :spell-check true
             [] :div $ {} :style style-button :on-click (clear-done props state)
               , :inner-text |Clear
