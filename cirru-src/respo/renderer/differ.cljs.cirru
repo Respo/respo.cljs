@@ -148,6 +148,41 @@ defn find-props-diffs
 
           , coord old-follows new-follows
 
+defn find-events-diffs
+  acc coord old-events new-events
+  -- .log js/console "|compare events:" (pr-str old-events)
+    pr-str new-events
+  cond
+    (and (= (count old-events) (, 0)) (= (count new-events) (, 0))) acc
+
+    (and (= (count old-events) (, 0)) (> (count new-events) (, 0)))
+      recur
+        conj acc $ [] :add-event coord $ first new-events
+        , coord old-events
+        rest new-events
+
+    (and (> (count old-events) (, 0)) (= (count new-events) (, 0)))
+      recur
+        conj acc $ [] :rm-event coord $ first old-events
+        , coord
+        rest old-events
+        , new-events
+
+    :else $ case
+      compare (first old-events)
+        first new-events
+      -1 $ recur
+        conj acc $ [] :rm-event coord $ first old-events
+        , coord
+        rest old-events
+        , new-events
+      1 $ recur
+        conj acc $ [] :add-event coord $ first new-events
+        , coord old-events
+        rest new-events
+      recur acc coord (rest old-events)
+        rest new-events
+
 defn purify-children (children-map)
   ->> children-map
     filter $ fn (entry)
@@ -170,7 +205,10 @@ defn find-element-diffs
         conj acc $ [] :replace n-coord new-tree
         let
           (acc-after-props $ find-props-diffs acc n-coord (:props old-tree) (:props new-tree))
+            acc-after-events $ find-events-diffs acc-after-props n-coord
+              sort $ keys $ :events old-tree
+              sort $ keys $ :events new-tree
 
           -- .log js/console "|after props:" acc-after-props
-          find-children-diffs acc-after-props n-coord 0 (purify-children old-children)
+          find-children-diffs acc-after-events n-coord 0 (purify-children old-children)
             purify-children new-children
