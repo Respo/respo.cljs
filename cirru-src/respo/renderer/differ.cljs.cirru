@@ -78,7 +78,7 @@ defn find-style-diffs
         (entry $ first old-style)
           follows $ sorted-rest old-style
         recur
-          conj acc $ [] :rm-style coord $ key old-style
+          conj acc $ [] :rm-style coord $ key entry
           , coord follows new-style
 
     :else $ let
