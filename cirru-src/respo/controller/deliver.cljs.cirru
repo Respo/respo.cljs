@@ -46,8 +46,7 @@ defn build-set-state (states-ref coord)
       pr-str state-updates
     swap! states-ref assoc coord state-updates
 
-defn build-deliver-event
-  element-ref intent states-ref rerender-handler
+defn build-deliver-event (element-ref intent states-ref)
   fn (coord event-name simple-event)
     let
       (target-element $ find-event-target @element-ref coord event-name)
@@ -57,8 +56,5 @@ defn build-deliver-event
       if (some? target-listener)
         do
           println "|listener found:" coord event-name
-          target-listener simple-event intent
-            build-set-state states-ref $ :component-coord target-element
-          rerender-handler
-
+          target-listener simple-event intent $ build-set-state states-ref $ :component-coord target-element
         println "|found no listener:" coord event-name

@@ -64,13 +64,15 @@ defn -main ()
   enable-console-print!
   println "|App is running..."
   mount-demo
+  add-watch todolist-store :rerender rerender-demo
+  add-watch global-states :rerender rerender-demo
   go $ loop
     [] acc $ {}
     let
       (msg-pack $ <! receive-chan)
         state-id $ :state-id $ :meta msg-pack
         msg-data $ :data msg-pack
-        deliver-event $ build-deliver-event global-element intent global-states rerender-demo
+        deliver-event $ build-deliver-event global-element intent global-states
       println "|receiving message:" msg-pack
       case (:type msg-pack)
         :event $ do (apply deliver-event msg-data)
