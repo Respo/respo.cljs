@@ -16,7 +16,7 @@ defn purify-states (new-states old-states all-coords)
       , 0
     , new-states
     let
-      (first-entry $ first old-states)
+        first-entry $ first old-states
       recur
         if
           some
@@ -34,7 +34,7 @@ defn purify-states (new-states old-states all-coords)
 defn do-states-gc (states-ref element)
   println "|states GC:" $ pr-str @states-ref
   let
-    (all-coords $ distinct $ all-component-coords element)
+      all-coords $ distinct $ all-component-coords element
       new-states $ purify-states ({})
         , @states-ref all-coords
 
@@ -49,7 +49,7 @@ defn build-set-state (states-ref coord)
 defn build-deliver-event (element-ref intent states-ref)
   fn (coord event-name simple-event)
     let
-      (target-element $ find-event-target @element-ref coord event-name)
+        target-element $ find-event-target @element-ref coord event-name
         target-listener $ get (:events target-element)
           , event-name
 

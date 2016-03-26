@@ -7,7 +7,7 @@
                  [org.clojure/clojurescript "1.7.228"]
                  [mvc-works/hsl "0.1.2"]
                  [org.clojure/core.async "0.2.374"]]
-  :plugins [[cirru/lein-sepal "0.0.17"]
+  :plugins [[cirru/lein-sepal "0.0.19"]
             [lein-cljsbuild "1.1.2"]
             [lein-figwheel "0.5.0-6"]]
   :cirru-sepal {:paths ["cirru-src"]}

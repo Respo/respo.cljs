@@ -8,7 +8,7 @@ defn get-element-at (element coord)
     = coord $ []
     , element
     let
-      (coord-first $ first coord)
+        coord-first $ first coord
         coord-rest $ subvec coord 1
         child $ get-in element $ [] :children coord-first
       if (some? child)
@@ -17,7 +17,7 @@ defn get-element-at (element coord)
 
 defn find-event-target (element coord event-name)
   let
-    (target-element $ get-element-at element coord)
+      target-element $ get-element-at element coord
       element-exists? $ some? target-element
     -- .log js/console "|target element:" target-element
     if

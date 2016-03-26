@@ -34,6 +34,8 @@ def style-button $ {} (:display |inline-block)
 
 def style-panel $ {} $ :display |flex
 
+def style-silent $ {} $ :pointer-events |none
+
 defn clear-done (props state)
   fn (event intent set-state)
     .log js/console "|intent clear-done"
@@ -60,7 +62,7 @@ def todolist-component $ {} (:name :todolist)
   :initial-state $ {} :draft |
   :render $ fn (props state)
     let
-      (tasks $ :tasks props)
+        tasks $ :tasks props
       .log js/console |tasks: $ pr-str tasks
       [] :div ({} :style style-root)
         [] :div ({} :style style-panel)
@@ -89,5 +91,7 @@ def todolist-component $ {} (:name :todolist)
             , 0
           [] :div
             {} :style style-toolbar :spell-check true
-            [] :div $ {} :style style-button :on-click (clear-done props state)
-              , :inner-text |Clear
+            [] :div
+              {} :style style-button :on-click $ clear-done props state
+              [] :span $ {} (:inner-text |Clear2)
+                :style style-silent
