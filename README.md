@@ -21,15 +21,24 @@ A responsive DOM library.
 (respo.util.format/purify-element virtual-element)
 ```
 
+## Develop
+
+```bash
+boot dev
+```
+
+```
+boot gen-static
+```
+
 ## Options
 
-This project is mainly inspired by React and Reagent.
+This project is mainly inspired by:
 
+* React
 * Reagent
+* Deku
 
 ## License
 
-Copyright © 2016 jiyinyiyong
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+MIT

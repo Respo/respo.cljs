@@ -90,6 +90,6 @@ defn -main ()
 
 set! *main-cli-fn* -main
 
-defn fig-reload ()
+defn on-jsload ()
   println |reload!
   rerender-demo
