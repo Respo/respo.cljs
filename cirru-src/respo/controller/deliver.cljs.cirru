@@ -49,10 +49,20 @@ defn build-deliver-event (element-ref intent states-ref)
           , event-name
         component-coord $ :component-coord target-element
         component-element $ get-element-at @element-ref component-coord
+        state-in-states $ get @states-ref component-coord
+        state-creator $ :c-creator component-element
         state-updater $ :c-updater component-element
+        prop-list $ :c-props component-element
+        state $ if (some? state-in-states)
+          , state-in-states
+          if (some? state-creator)
+            apply state-creator prop-list
+            , nil
+
         inward $ fn (& args)
           let
-            (new-state $ apply state-updater args)
+            (new-state $ apply (partial state-updater state) (, args))
+
             swap! states-ref assoc component-coord new-state
 
       if (some? target-listener)

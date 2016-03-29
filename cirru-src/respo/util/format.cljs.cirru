@@ -60,5 +60,6 @@ defn purify-element (element)
       dissoc :c-cost
       dissoc :c-props
       dissoc :c-state
+      dissoc :c-creator
 
     , nil

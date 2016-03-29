@@ -59,13 +59,17 @@ defn handle-add (props state)
     inward $ {} :draft |
 
 def todolist-component $ {} (:name :todolist)
-  :update-state merge
+  :update-state $ fn (old-state changes)
+    .log js/console |changes: (pr-str old-state)
+      pr-str changes
+    merge old-state changes
+
   :get-state $ fn (props)
     {} :draft |
   :render $ fn (props)
     fn (state)
       let
-          tasks $ :tasks props
+        (tasks $ :tasks props)
         .log js/console |tasks: $ pr-str tasks
         [] :div ({} :style style-root)
           [] :div ({} :style style-panel)

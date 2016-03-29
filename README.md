@@ -22,6 +22,33 @@ A responsive DOM library.
 (respo.util.format/purify-element virtual-element)
 ```
 
+## Component Definition
+
+Imagine this is ClojureScript code:
+
+```cirru
+defn handle-event (data)
+  fn (simple-event intent inward)
+    intent :op ({} :data :op-data)
+    inward :para1 :para2
+
+def demo-component $ {}
+  :name :demo
+
+  :update-state $ fn (old-state para1 para2)
+    merge old-state para1 para2
+
+  :get-state $ fn (prop1 prop2)
+    {}
+
+  :render $ fn (prop1 prop2)
+    [] :div ({} :on-click (handle-event data))
+      [] :div ({})
+```
+
+`inward` is previously `set-state` but changed a lot.
+Now you have to define `update-state` and `get-state` in every component.
+
 ## Develop
 
 ```bash
