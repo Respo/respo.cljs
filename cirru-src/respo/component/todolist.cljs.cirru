@@ -32,12 +32,12 @@ def style-button $ {} (:display |inline-block)
   :border-radius |4px
   :margin-left |8px
 
-def style-panel $ {} $ :display |flex
+def style-panel $ {} (:display |flex)
 
-def style-silent $ {} $ :pointer-events |none
+def style-silent $ {} (:pointer-events |none)
 
 defn clear-done (props state)
-  fn (event intent set-state)
+  fn (event intent inward)
     .log js/console "|intent clear-done"
     intent :clear nil
 
@@ -46,52 +46,56 @@ defn on-focus (props state)
     .log js/console "|Just focused~"
 
 defn on-text-change (props state)
-  fn (simple-event intent set-state)
-    set-state $ {} :draft $ :value simple-event
+  fn (simple-event intent inward)
+    inward $ {} :draft (:value simple-event)
 
 defn handle-add (props state)
   -- .log js/console "|state built inside:" (pr-str props)
     pr-str state
-  fn (event intent set-state)
+  fn (event intent inward)
     .log js/console "|click add!" (pr-str props)
       pr-str state
     intent :add $ :draft state
-    set-state $ {} :draft |
+    inward $ {} :draft |
 
 def todolist-component $ {} (:name :todolist)
-  :initial-state $ {} :draft |
-  :render $ fn (props state)
-    let
-        tasks $ :tasks props
-      .log js/console |tasks: $ pr-str tasks
-      [] :div ({} :style style-root)
-        [] :div ({} :style style-panel)
-          [] :input $ {} :style style-input :value (:draft state)
-            , :on-input
-            on-text-change props state
-            , :on-focus
-            on-focus props state
-            , :placeholder |Task
-          [] :div ({} :style style-button)
-            [] :span $ {} :inner-text |Add :on-click $ handle-add props state
-          [] :div $ {} :style style-button :on-click (clear-done props state)
-            , :inner-text |Clear
+  :update-state merge
+  :get-state $ fn (props)
+    {} :draft |
+  :render $ fn (props)
+    fn (state)
+      let
+          tasks $ :tasks props
+        .log js/console |tasks: $ pr-str tasks
+        [] :div ({} :style style-root)
+          [] :div ({} :style style-panel)
+            [] :input $ {} :style style-input :value (:draft state)
+              , :on-input
+              on-text-change props state
+              , :on-focus
+              on-focus props state
+              , :placeholder |Task
+            [] :div ({} :style style-button)
+              [] :span $ {} :inner-text |Add :on-click (handle-add props state)
 
-        [] :div
-          {} :class-name |task-list :style style-list
-          ->> tasks
-            map $ fn (task)
-              [] (:id task)
-                [] task-component $ {} :task task
+            [] :div $ {} :style style-button :on-click (clear-done props state)
+              , :inner-text |Clear
 
-            into $ sorted-map
-
-        if
-          > (count tasks)
-            , 0
           [] :div
-            {} :style style-toolbar :spell-check true
+            {} :class-name |task-list :style style-list
+            ->> tasks
+              map $ fn (task)
+                [] (:id task)
+                  [] task-component $ {} :task task
+
+              into $ sorted-map
+
+          if
+            > (count tasks)
+              , 0
             [] :div
-              {} :style style-button :on-click $ clear-done props state
-              [] :span $ {} (:inner-text |Clear2)
-                :style style-silent
+              {} :style style-toolbar :spell-check true
+              [] :div
+                {} :style style-button :on-click $ clear-done props state
+                [] :span $ {} (:inner-text |Clear2)
+                  :style style-silent

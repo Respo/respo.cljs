@@ -1,5 +1,6 @@
 
-ns respo.util.format $ :require $ [] clojure.string :as string
+ns respo.util.format $ :require
+  [] clojure.string :as string
 
 defn dashed->camel
   (x)
@@ -27,11 +28,13 @@ defn event->string (x)
 
 defn event->edn (event)
   -- .log js/console "|simplify event:" event
-  let
-    (simple-event $ case (.-type event) (|click $ {} :type :click) (|keydown $ {} :type :keydown :key-code $ .-keyCode event) (|input $ {} :type :input :value $ .-value $ .-target event) ({} :type (.-type event) (, :msg "|not recognized event")))
-
-    -- .log js/console "|simplify result:" simple-event
-    , simple-event
+  case (.-type event)
+    |click $ {} :type :click
+    |keydown $ {} :type :keydown :key-code (.-keyCode event)
+    |input $ {} :type :input :value
+      .-value $ .-target event
+    {} :type (.-type event)
+      , :msg "|not recognized event"
 
 defn purify-events (events)
   ->> events
@@ -44,12 +47,18 @@ defn purify-events (events)
 defn purify-element (element)
   if (some? element)
     -> element
-      assoc :events $ purify-events $ :events element
+      assoc :events $ purify-events (:events element)
       assoc :children $ ->> (:children element)
         map $ fn (entry)
           [] (key entry)
             purify-element $ val entry
 
         into $ sorted-map
+
+      dissoc :c-updater
+      dissoc :c-coord
+      dissoc :c-cost
+      dissoc :c-props
+      dissoc :c-state
 
     , nil

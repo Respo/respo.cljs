@@ -1,6 +1,6 @@
 
 ns respo.core
-  :require-macros $ [] cljs.core.async.macros :refer $ [] go
+  :require-macros $ [] cljs.core.async.macros :refer ([] go)
   :require
     [] cljs.nodejs :as nodejs
     [] cljs.core.async :as a :refer $ [] >! <! chan
@@ -14,15 +14,16 @@ ns respo.core
     [] respo.util.websocket :refer $ [] send-chan receive-chan
     [] respo.util.format :refer $ [] purify-element
 
-defonce todolist-store $ atom $ []
-  {} :text |101 :id 101
-  {} :text |102 :id 102
+defonce todolist-store $ atom
+  []
+    {} :text |101 :id 101
+    {} :text |102 :id 102
 
-defonce global-states $ atom $ {}
+defonce global-states $ atom ({})
 
 defonce global-element $ atom nil
 
-defonce clients-list $ atom $ []
+defonce clients-list $ atom ([])
 
 defonce id-counter $ atom 10
 
@@ -37,14 +38,15 @@ defn intent (intent-name intent-data)
 
 defn mount-demo ()
   let
-    (todo-demo $ [] todolist-component $ {} :tasks @todolist-store)
+    (todo-demo $ [] todolist-component ({} :tasks @todolist-store))
       element $ render-app todo-demo @global-states
+
     println "|store to mount:" $ pr-str @todolist-store
     reset! global-element element
 
 defn rerender-demo ()
   let
-    (todo-demo $ [] todolist-component $ {} :tasks @todolist-store)
+    (todo-demo $ [] todolist-component ({} :tasks @todolist-store))
       element $ render-app todo-demo @global-states
       changes $ find-element-diffs ([])
         []
@@ -52,12 +54,14 @@ defn rerender-demo ()
         purify-element element
 
     reset! global-element element
-    println "|force running:" $ pr-str @clients-list
     if
       not $ empty? changes
       do
-        doall $ ->> @clients-list $ map $ fn (client-id)
-          go $ >! send-chan $ [] client-id $ [] :patch changes
+        doall $ ->> @clients-list
+          map $ fn (client-id)
+            go $ >! send-chan
+              [] client-id $ [] :patch changes
+
         do-states-gc global-states element
 
 defn -main ()
@@ -70,20 +74,25 @@ defn -main ()
     [] acc $ {}
     let
       (msg-pack $ <! receive-chan)
-        state-id $ :state-id $ :meta msg-pack
+        state-id $ :state-id (:meta msg-pack)
         msg-data $ :data msg-pack
         deliver-event $ build-deliver-event global-element intent global-states
+
       println "|receiving message:" msg-pack
       case (:type msg-pack)
         :event $ do (apply deliver-event msg-data)
           recur acc
         :state/connect $ do
           swap! clients-list conj state-id
-          >! send-chan $ [] state-id $ [] :sync $ purify-element @global-element
+          >! send-chan $ [] state-id
+            [] :sync $ purify-element @global-element
           recur acc
+
         :state/disconnect $ do
-          reset! clients-list $ ->> @clients-list $ filter $ fn (client-id)
-            not= client-id state-id
+          reset! clients-list $ ->> @clients-list
+            filter $ fn (client-id)
+              not= client-id state-id
+
           recur acc
 
         println :else

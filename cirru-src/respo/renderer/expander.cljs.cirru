@@ -4,7 +4,7 @@ ns respo.renderer.expander $ :require
   [] respo.util.time :refer $ [] io-get-time
   [] respo.util.format :refer $ [] purify-element
 
-def states $ atom $ {}
+def states $ atom ({})
 
 defn children-in-list? (children)
   if
@@ -22,8 +22,9 @@ defn children-in-map? (children)
 
 defn children-list->map (children)
   into ({})
-    ->> children $ map-indexed $ fn (index item)
-      [] index item
+    ->> children $ map-indexed
+      fn (index item)
+        [] index item
 
 defn keyword->string (x)
   subs (str x)
@@ -41,7 +42,8 @@ defn render-props (props)
   ->> props
     filter $ fn (entry)
       let
-        (prop-name $ keyword->string $ first entry)
+        (prop-name $ keyword->string (first entry))
+
         not $ re-find (re-pattern |^on-.+)
           , prop-name
 
@@ -61,7 +63,8 @@ defn render-events (props)
   ->> props
     filter $ fn (entry)
       let
-        (prop-name $ name $ key entry)
+        (prop-name $ name (key entry))
+
         re-find (re-pattern |^on-.+)
           , prop-name
 
@@ -127,7 +130,7 @@ defn render-element
         children-list->map raw-children
       child-elements $ render-children children old-states coord component-coord
 
-    -- .log js/console "|children should have order:" $ pr-str $ keys child-elements
+    -- .log js/console "|children should have order:" $ pr-str (keys child-elements)
     {} (:name element-name)
       :props $ render-props props
       :events $ let
@@ -144,21 +147,27 @@ defn render-component (markup old-states coord)
   let
     (begin-time $ io-get-time)
       component $ first markup
-      props $ get markup 1
-      state $ merge (:initial-state component)
-        if (contains? old-states coord)
-          get old-states coord
+      prop-list $ subvec markup 1
+      state-creator $ :get-state component
+      state-in-states $ get old-states coord
+      state $ if (some? state-in-states)
+        , state-in-states
+        if (some? state-creator)
+          apply state-creator prop-list
           , nil
 
       render $ :render component
-      element $ render props state
-      element $ render-element element old-states coord coord
+      partial-render $ apply render prop-list
+      element $ render-element (partial-render state)
+        , old-states coord coord
       end-time $ io-get-time
 
-    -- .log js/console "|component state:" coord state
-    assoc element :duration (- end-time begin-time)
-      , :component-name
-      :name component
+    merge element $ {}
+      :c-cost $ - end-time begin-time
+      :c-name $ :name component
+      :c-props prop-list
+      :c-state state
+      :c-updater $ :update-state component
 
 defn render-app (markup old-states)
   .info js/console "|render loop, old-states:" $ pr-str old-states

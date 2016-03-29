@@ -19,30 +19,33 @@ def style-button $ {} (:display |inline-block)
   :margin-left |8px
 
 defn on-click (props state)
-  fn (event intent set-state)
+  fn (event intent inward)
     .log js/console |clicked
 
 defn handle-remove (props state)
-  fn (event intent set-state)
-    intent :remove $ :id $ :task props
+  fn (event intent inward)
+    intent :remove $ :id (:task props)
 
 defn on-text-change (props state)
-  fn (event intent set-state)
+  fn (event intent inward)
     let
-      (task-id $ :id $ :task props)
+        task-id $ :id (:task props)
         text $ :value event
+
       intent :update $ {} :id task-id :text text
 
 def task-component $ {} (:name :task)
-  :initial-state $ {}
-  :render $ fn (props state)
-    -- .log js/console "|task args" props state
-    let
-      (task $ :task props)
-      [] :div ({})
-        [] :input $ {} :value (:text task)
-          , :on-input
-          on-text-change props state
-          , :style style-input
-        [] :span $ {} :style style-button :on-click (handle-remove props state)
-          , :inner-text |Remove
+  :update-state merge
+  :get-state $ fn (props)
+    {}
+  :render $ fn (props)
+    fn (state)
+      let
+          task $ :task props
+        [] :div ({})
+          [] :input $ {} :value (:text task)
+            , :on-input
+            on-text-change props state
+            , :style style-input
+          [] :span $ {} :style style-button :on-click (handle-remove props state)
+            , :inner-text |Remove

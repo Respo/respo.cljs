@@ -54,7 +54,7 @@
                                     :heads-up-display true
                                     :autoload true
                                     :target :nodejs
-                                    :debug true}}]
+                                    :debug false}}]
            :figwheel-options {:repl true
                               :http-server-root "target"
                               :load-warninged-code false
