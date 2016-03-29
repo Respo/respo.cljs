@@ -1,7 +1,8 @@
 
 (set-env!
- :source-paths #{"src"}
- :resource-paths #{"assets"}
+ :asset-paths #{}
+ :source-paths #{}
+ :resource-paths #{"src"}
 
  :dev-dependencies '[]
  :dependencies '[[org.clojure/clojure "1.8.0"           :scope "provided"]
@@ -23,7 +24,7 @@
 
 (refer 'boot-figwheel :rename '{cljs-repl fw-cljs-repl}) ; avoid some symbols
 
-(def +version+ "0.1.8")
+(def +version+ "0.1.9")
 
 (task-options!
   pom {:project     'mvc-works/respo
