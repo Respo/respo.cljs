@@ -19,20 +19,20 @@ def style-button $ {} (:display |inline-block)
   :margin-left |8px
 
 defn on-click (props state)
-  fn (event intent inward)
+  fn (event dispatch mutate)
     .log js/console |clicked
 
 defn handle-remove (props state)
-  fn (event intent inward)
-    intent :remove $ :id (:task props)
+  fn (event dispatch mutate)
+    dispatch :remove $ :id (:task props)
 
 defn on-text-change (props state)
-  fn (event intent inward)
+  fn (event dispatch mutate)
     let
         task-id $ :id (:task props)
         text $ :value event
 
-      intent :update $ {} :id task-id :text text
+      dispatch :update $ {} :id task-id :text text
 
 def task-component $ {} (:name :task)
   :update-state merge

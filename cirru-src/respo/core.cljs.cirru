@@ -27,12 +27,12 @@ defonce clients-list $ atom ([])
 
 defonce id-counter $ atom 10
 
-defn intent (intent-name intent-data)
-  println |intent: intent-name $ pr-str intent-data
+defn dispatch (dispatch-type dispatch-data)
+  println |dispatch: dispatch-type $ pr-str dispatch-data
   reset! id-counter $ inc @id-counter
   let
     (op-id @id-counter)
-      new-store $ update-transform @todolist-store intent-name intent-data op-id
+      new-store $ update-transform @todolist-store dispatch-type dispatch-data op-id
     println "|new store:" $ pr-str new-store
     reset! todolist-store new-store
 
@@ -76,7 +76,7 @@ defn -main ()
       (msg-pack $ <! receive-chan)
         state-id $ :state-id (:meta msg-pack)
         msg-data $ :data msg-pack
-        deliver-event $ build-deliver-event global-element intent global-states
+        deliver-event $ build-deliver-event global-element dispatch global-states
 
       println "|receiving message:" msg-pack
       case (:type msg-pack)

@@ -37,26 +37,26 @@ def style-panel $ {} (:display |flex)
 def style-silent $ {} (:pointer-events |none)
 
 defn clear-done (props state)
-  fn (event intent inward)
-    .log js/console "|intent clear-done"
-    intent :clear nil
+  fn (event dispatch mutate)
+    .log js/console "|dispatch clear-done"
+    dispatch :clear nil
 
 defn on-focus (props state)
-  fn (event intent set-state)
+  fn (event dispatch mutate)
     .log js/console "|Just focused~"
 
 defn on-text-change (props state)
-  fn (simple-event intent inward)
-    inward $ {} :draft (:value simple-event)
+  fn (simple-event dispatch mutate)
+    mutate $ {} :draft (:value simple-event)
 
 defn handle-add (props state)
   -- .log js/console "|state built inside:" (pr-str props)
     pr-str state
-  fn (event intent inward)
+  fn (event dispatch mutate)
     .log js/console "|click add!" (pr-str props)
       pr-str state
-    intent :add $ :draft state
-    inward $ {} :draft |
+    dispatch :add $ :draft state
+    mutate $ {} :draft |
 
 def todolist-component $ {} (:name :todolist)
   :update-state $ fn (old-state changes)

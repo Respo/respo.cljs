@@ -41,7 +41,7 @@ defn do-states-gc (states-ref element)
 
     reset! states-ref new-states
 
-defn build-deliver-event (element-ref intent states-ref)
+defn build-deliver-event (element-ref dispatch states-ref)
   fn (coord event-name simple-event)
     let
       (target-element $ find-event-target @element-ref coord event-name)
@@ -59,7 +59,7 @@ defn build-deliver-event (element-ref intent states-ref)
             apply state-creator prop-list
             , nil
 
-        inward $ fn (& args)
+        mutate $ fn (& args)
           let
             (new-state $ apply (partial state-updater state) (, args))
 
@@ -68,5 +68,5 @@ defn build-deliver-event (element-ref intent states-ref)
       if (some? target-listener)
         do
           println "|listener found:" coord event-name
-          target-listener simple-event intent inward
+          target-listener simple-event dispatch mutate
         println "|found no listener:" coord event-name

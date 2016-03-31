@@ -3,7 +3,7 @@
 
 A responsive DOM library.
 
-![](resources/public/images/respo.png)
+![](assets/respo.png)
 
 ## Installation
 
