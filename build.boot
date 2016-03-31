@@ -36,7 +36,7 @@
 
 (set-env! :repositories #(conj % ["clojars" {:url "https://clojars.org/repo/"}]))
 
-(deftask gen-static []
+(deftask build-simple []
   (comp
     (cirru-sepal :paths ["cirru-src"])
     (cljs :compiler-options {:target :nodejs})))
@@ -68,7 +68,7 @@
     (figwheel)))
 
 ; bug: after optimization, method exported from npm package breaks
-(deftask build-app []
+(deftask build-advanced []
   (comp
     (cirru-sepal :paths ["cirru-src"])
     (cljs :compiler-options {:target :nodejs} :optimizations :advanced)))
@@ -76,13 +76,13 @@
 (deftask rsync []
   (fn [next-task]
     (fn [fileset]
-        (sh "rsync" "-r" "target/" "tiye:repo/mvc-works/respo" "--exclude" "main.out" "--delete")
-        (next-task fileset))))
+      (sh "rsync" "-r" "target/" "tiye:repo/mvc-works/respo" "--exclude" "main.out" "--delete")
+      (next-task fileset))))
 
 (deftask send-tiye []
-    (comp
-        (build-app)
-        (rsync)))
+  (comp
+    (build-advanced)
+    (rsync)))
 
 (deftask build []
   (comp

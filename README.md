@@ -14,7 +14,7 @@ A responsive DOM library.
 ```
 
 ```clojure
-(respo.controller.deliver/build-deliver-event virtual-element-ref intent states-ref)
+(respo.controller.deliver/build-deliver-event virtual-element-ref dispatch states-ref)
 (respo.controller.deliver/do-states-gc states-ref virtual-element)
 (respo.controller.resolver/get-element-at element coord)
 (respo.renderer.expander/render-app element-markup global-states)
@@ -28,9 +28,9 @@ Imagine this is ClojureScript code:
 
 ```cirru
 defn handle-event (data)
-  fn (simple-event intent inward)
-    intent :op ({} :data :op-data)
-    inward :para1 :para2
+  fn (simple-event dispatch mutate)
+    dispatch :op ({} :data :op-data)
+    mutate :para1 :para2
 
 def demo-component $ {}
   :name :demo
@@ -42,21 +42,28 @@ def demo-component $ {}
     {}
 
   :render $ fn (prop1 prop2)
-    [] :div ({} :on-click (handle-event data))
-      [] :div ({})
+    fn (state)
+      [] :div ({} :on-click (handle-event data))
+        [] :div ({})
 ```
 
-`inward` is previously `set-state` but changed a lot.
+`mutable` is previously `set-state` but changed a lot.
 Now you have to define `update-state` and `get-state` in every component.
 
 ## Develop
 
 ```bash
 boot dev
+
+cd target
+node main.js
 ```
 
-```
-boot gen-static
+```bash
+boot build-simple
+
+cd target
+node main.js
 ```
 
 ## Options
