@@ -201,8 +201,11 @@ defn find-element-diffs
     if (not= old-coord new-coord)
       throw $ js/Error. $ str "|coord dismatched:" old-coord new-coord
       if
-        not= (:name old-tree)
-          :name new-tree
+        or
+          not= (:name old-tree)
+            :name new-tree
+          not= (:c-name old-tree)
+            :c-name new-tree
         conj acc $ [] :replace n-coord new-tree
         let
           (acc-after-props $ find-props-diffs acc n-coord (:props old-tree) (:props new-tree))
