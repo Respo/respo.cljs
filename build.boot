@@ -36,9 +36,12 @@
 
 (set-env! :repositories #(conj % ["clojars" {:url "https://clojars.org/repo/"}]))
 
+(deftask compile-cirru []
+  (cirru-sepal :paths ["cirru-src"]))
+
 (deftask build-simple []
   (comp
-    (cirru-sepal :paths ["cirru-src"])
+    (compile-cirru)
     (cljs :compiler-options {:target :nodejs})))
 
 (task-options!
@@ -70,7 +73,7 @@
 ; bug: after optimization, method exported from npm package breaks
 (deftask build-advanced []
   (comp
-    (cirru-sepal :paths ["cirru-src"])
+    (compile-cirru)
     (cljs :compiler-options {:target :nodejs} :optimizations :advanced)))
 
 (deftask rsync []
@@ -86,9 +89,10 @@
 
 (deftask build []
   (comp
-   (pom)
-   (jar)
-   (install)))
+    (compile-cirru)
+    (pom)
+    (jar)
+    (install)))
 
 (deftask deploy []
   (comp
