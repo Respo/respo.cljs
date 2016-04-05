@@ -148,7 +148,10 @@ defn render-component (markup old-states coord)
     (begin-time $ io-get-time)
       component $ first markup
       prop-list $ subvec markup 1
-      state-creator $ :get-state component
+      state-creator $ or (:get-state component)
+        fn (&)
+          {}
+
       state-in-states $ get old-states coord
       state $ if (some? state-in-states)
         , state-in-states
@@ -167,8 +170,9 @@ defn render-component (markup old-states coord)
       :c-name $ :name component
       :c-props prop-list
       :c-state state
-      :c-updater $ :update-state component
-      :c-creator $ :get-state component
+      :c-updater $ or (:update-state component)
+        , merge
+      :c-creator state-creator
 
 defn render-app (markup old-states)
   .info js/console "|render loop, old-states:" $ pr-str old-states

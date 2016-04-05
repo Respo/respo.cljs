@@ -29,19 +29,16 @@ defn handle-remove (props state)
 defn on-text-change (props state)
   fn (event dispatch mutate)
     let
-        task-id $ :id (:task props)
+      (task-id $ :id (:task props))
         text $ :value event
 
       dispatch :update $ {} :id task-id :text text
 
 def task-component $ {} (:name :task)
-  :update-state merge
-  :get-state $ fn (props)
-    {}
   :render $ fn (props)
     fn (state)
       let
-          task $ :task props
+        (task $ :task props)
         [] :div ({})
           [] :input $ {} :value (:text task)
             , :on-input
