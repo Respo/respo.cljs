@@ -38,7 +38,7 @@ defn dispatch (dispatch-type dispatch-data)
 
 defn mount-demo ()
   let
-    (todo-demo $ [] todolist-component ({} :tasks @todolist-store))
+    (todo-demo $ todolist-component ({} :tasks @todolist-store))
       element $ render-app todo-demo @global-states
 
     println "|store to mount:" $ pr-str @todolist-store
@@ -46,7 +46,7 @@ defn mount-demo ()
 
 defn rerender-demo ()
   let
-    (todo-demo $ [] todolist-component ({} :tasks @todolist-store))
+    (todo-demo $ todolist-component ({} :tasks @todolist-store))
       element $ render-app todo-demo @global-states
       changes $ find-element-diffs ([])
         []

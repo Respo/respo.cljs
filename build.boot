@@ -75,7 +75,8 @@
 (deftask build-advanced []
   (comp
     (compile-cirru)
-    (cljs :compiler-options {:target :nodejs} :optimizations :advanced)))
+    (cljs :compiler-options {:target :nodejs} :optimizations :advanced)
+    (target)))
 
 (deftask rsync []
   (fn [next-task]

@@ -2,6 +2,7 @@
 ns respo.component.task $ :require
   [] clojure.string :as string
   [] hsl.core :refer $ [] hsl
+  [] respo.renderer.alias :refer $ [] div input span create-component
 
 def style-input $ {} (:font-size |16px)
   :line-height |24px
@@ -34,15 +35,16 @@ defn on-text-change (props state)
 
       dispatch :update $ {} :id task-id :text text
 
-def task-component $ {} (:name :task)
-  :render $ fn (props)
-    fn (state)
-      let
-        (task $ :task props)
-        [] :div ({})
-          [] :input $ {} :value (:text task)
-            , :on-input
-            on-text-change props state
-            , :style style-input
-          [] :span $ {} :style style-button :on-click (handle-remove props state)
-            , :inner-text |Remove
+def task-component $ create-component
+  {} (:name :task)
+    :render $ fn (props)
+      fn (state)
+        let
+          (task $ :task props)
+          div ({})
+            input $ {} :value (:text task)
+              , :on-input
+              on-text-change props state
+              , :style style-input
+            span $ {} :style style-button :on-click (handle-remove props state)
+              , :inner-text |Remove
