@@ -35,8 +35,6 @@ def style-button $ {} (:display |inline-block)
 
 def style-panel $ {} (:display |flex)
 
-def style-silent $ {} (:pointer-events |none)
-
 defn clear-done (props state)
   fn (event dispatch mutate)
     .log js/console "|dispatch clear-done"
@@ -104,4 +102,3 @@ def todolist-component $ create-component
                 div
                   {} :style style-button :on-click $ clear-done props state
                   span $ {} (:inner-text |Clear2)
-                    :style style-silent
