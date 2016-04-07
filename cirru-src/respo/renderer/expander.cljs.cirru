@@ -149,7 +149,7 @@ defn render-component (markup old-states coord)
       component $ first markup
       prop-list $ subvec markup 1
       state-creator $ or (:get-state component)
-        fn (&)
+        fn (& args)
           {}
 
       state-in-states $ get old-states coord

@@ -42,7 +42,8 @@
 (deftask build-simple []
   (comp
     (compile-cirru)
-    (cljs :compiler-options {:target :nodejs})))
+    (cljs :compiler-options {:target :nodejs})
+    (target)))
 
 (task-options!
  figwheel {:build-ids  ["dev"]
