@@ -41,7 +41,8 @@ defn mount-demo ()
     (todo-demo $ todolist-component ({} :tasks @todolist-store))
       element $ render-app todo-demo @global-states
 
-    println "|store to mount:" $ pr-str @todolist-store
+    -- println "|store to mount:" (pr-str @todolist-store)
+      pr-str $ purify-element element
     reset! global-element element
 
 defn rerender-demo ()
@@ -54,6 +55,7 @@ defn rerender-demo ()
         purify-element element
 
     reset! global-element element
+    -- println |changes changes
     if
       not $ empty? changes
       do
@@ -78,7 +80,7 @@ defn -main ()
         msg-data $ :data msg-pack
         deliver-event $ build-deliver-event global-element dispatch global-states
 
-      println "|receiving message:" msg-pack
+      -- println "|receiving message:" msg-pack
       case (:type msg-pack)
         :event $ do (apply deliver-event msg-data)
           recur acc

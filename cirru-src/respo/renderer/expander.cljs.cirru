@@ -3,72 +3,17 @@ ns respo.renderer.expander $ :require
   [] clojure.string :as string
   [] respo.util.time :refer $ [] io-get-time
   [] respo.util.format :refer $ [] purify-element
-
-def states $ atom ({})
-
-defn children-in-list? (children)
-  if
-    > (count children)
-      , 0
-    vector? $ first children
-    , true
-
-defn children-in-map? (children)
-  if
-    > (count children)
-      , 0
-    map? $ first children
-    , false
-
-defn children-list->map (children)
-  into ({})
-    ->> children $ map-indexed
-      fn (index item)
-        [] index item
+  [] respo.renderer.alias :refer $ [] Component Element
 
 defn keyword->string (x)
   subs (str x)
     , 1
 
 defn component? (markup)
-  and (vector? markup)
-    map? $ first markup
+  = Component $ type markup
 
 defn element? (markup)
-  and (vector? markup)
-    keyword? $ first markup
-
-defn render-props (props)
-  ->> props
-    filter $ fn (entry)
-      let
-        (prop-name $ keyword->string (first entry))
-
-        not $ re-find (re-pattern |^on-.+)
-          , prop-name
-
-    map $ fn (entry)
-      let
-        (k $ first entry)
-          v $ last entry
-          prop-name $ keyword->string k
-        if (= prop-name |style)
-          [] k $ into (sorted-map)
-            , v
-          , entry
-
-    into $ sorted-map
-
-defn render-events (props)
-  ->> props
-    filter $ fn (entry)
-      let
-        (prop-name $ name (key entry))
-
-        re-find (re-pattern |^on-.+)
-          , prop-name
-
-    into $ sorted-map
+  = Element $ type markup
 
 declare render-component
 
@@ -103,16 +48,16 @@ defn render-markup
     render-element markup partial-states coord component-coord
 
 defn render-children
-  children global-states coord component-coord
-  -- .log js/console "|render children:" children global-states coord
+  children states coord comp-coord
+  -- .log js/console "|render children:" $ pr-str children
   ->> children
     map $ fn (child-entry)
       let
         (k $ key child-entry)
           child-element $ val child-entry
         [] k $ if (some? child-element)
-          render-markup child-element global-states (conj coord k)
-            , component-coord
+          render-markup child-element states (conj coord k)
+            , comp-coord
           , nil
 
     filter $ fn (entry)
@@ -120,60 +65,36 @@ defn render-children
     into $ sorted-map
 
 defn render-element
-  markup old-states coord component-coord
+  markup states coord comp-coord
   let
-    (element-name $ first markup)
-      props $ get markup 1
-      raw-children $ subvec markup 2
-      children $ if (children-in-map? raw-children)
-        first raw-children
-        children-list->map raw-children
-      child-elements $ render-children children old-states coord component-coord
+    (children $ :children markup)
+      child-elements $ render-children children states coord comp-coord
+    -- .log js/console "|children should have order:" (pr-str children)
+      pr-str child-elements
+      pr-str markup
+    assoc markup :coord coord :c-coord comp-coord :children child-elements
 
-    -- .log js/console "|children should have order:" $ pr-str (keys child-elements)
-    {} (:name element-name)
-      :props $ render-props props
-      :events $ let
-        (events $ render-events props)
-        -- .log js/console |events: coord events props
-        , events
-
-      :coord coord
-      :component-coord component-coord
-      :children child-elements
-      :duration nil
-
-defn render-component (markup old-states coord)
+defn render-component (markup states coord)
   let
     (begin-time $ io-get-time)
+      args $ :args markup
       component $ first markup
-      prop-list $ subvec markup 1
-      state-creator $ or (:get-state component)
-        fn (& args)
-          {}
+      init-state $ :init-state markup
+      state $ if (contains? states coord)
+        get states coord
+        apply init-state args
+      render $ :render markup
+      half-render $ apply render args
+      new-coord $ conj coord 0
+      markup-tree $ half-render state
+      tree $ render-element markup-tree states new-coord new-coord
+      cost $ - (io-get-time)
+        , begin-time
 
-      state-in-states $ get old-states coord
-      state $ if (some? state-in-states)
-        , state-in-states
-        if (some? state-creator)
-          apply state-creator prop-list
-          , nil
+    -- .log js/console "|markup tree:" $ pr-str markup-tree
+    assoc markup :coord coord :tree tree :cost cost
 
-      render $ :render component
-      partial-render $ apply render prop-list
-      element $ render-element (partial-render state)
-        , old-states coord coord
-      end-time $ io-get-time
-
-    merge element $ {}
-      :c-cost $ - end-time begin-time
-      :c-name $ :name component
-      :c-props prop-list
-      :c-state state
-      :c-updater $ or (:update-state component)
-        , merge
-      :c-creator state-creator
-
-defn render-app (markup old-states)
-  .info js/console "|render loop, old-states:" $ pr-str old-states
-  render-component markup old-states $ []
+defn render-app (markup states)
+  .info js/console "|render loop, states:" $ pr-str states
+  render-markup markup states ([])
+    []

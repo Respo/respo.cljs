@@ -1,6 +1,7 @@
 
 ns respo.util.format $ :require
   [] clojure.string :as string
+  [] respo.renderer.alias :refer $ [] Element Component
 
 defn dashed->camel
   (x)
@@ -44,22 +45,18 @@ defn purify-events (events)
 
     into $ sorted-map
 
-defn purify-element (element)
-  if (some? element)
-    -> element
-      assoc :events $ purify-events (:events element)
-      assoc :children $ ->> (:children element)
-        map $ fn (entry)
-          [] (key entry)
-            purify-element $ val entry
-
-        into $ sorted-map
-
-      dissoc :c-updater
-      dissoc :c-coord
-      dissoc :c-cost
-      dissoc :c-props
-      dissoc :c-state
-      dissoc :c-creator
-
+defn purify-element (markup)
+  if (nil? markup)
     , nil
+    if
+      = Component $ type markup
+      recur $ :tree markup
+      into ({})
+        -> markup
+          assoc :event $ purify-events (:event markup)
+          assoc :children $ ->> (:children markup)
+            map $ fn (entry)
+              [] (key entry)
+                purify-element $ val entry
+
+            into $ sorted-map

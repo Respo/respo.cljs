@@ -3,7 +3,7 @@ ns respo.component.todolist $ :require
   [] clojure.string :as string
   [] hsl.core :refer $ [] hsl
   [] respo.component.task :refer $ [] task-component
-  [] respo.renderer.alias :refer $ [] div span input create-component
+  [] respo.renderer.alias :refer $ [] div span input create-comp
 
 def style-root $ {} (:color |black)
   :background-color $ hsl 120 20 93
@@ -72,20 +72,26 @@ defn render (props)
       .log js/console |tasks: $ pr-str tasks
       div ({} :style style-root)
         div ({} :style style-panel)
-          input $ {} :style style-input :value (:draft state)
-            , :on-input
-            on-text-change props state
-            , :on-focus
-            on-focus props state
-            , :placeholder |Task
-          div ({} :style style-button)
-            [] :span $ {} :inner-text |Add :on-click (handle-add props state)
+          input $ {} :style style-input :event
+            {} :input (on-text-change props state)
+              , :focus
+              on-focus props state
+            , :attrs
+            {} :placeholder |Text
 
-          div $ {} :style style-button :on-click (clear-done props state)
-            , :inner-text |Clear
+          div ({} :style style-button)
+            span $ {} :event
+              {} :click $ handle-add props state
+              , :attrs
+              {} :inner-text |Add
+
+          div $ {} :style style-button :event
+            {} :click $ clear-done props state
+            , :attrs
+            {} :inner-text |Clear
 
         div
-          {} :class-name |task-list :style style-list
+          {} :style style-list :attrs $ {} :class-name |task-list
           ->> tasks
             map $ fn (task)
               [] (:id task)
@@ -97,15 +103,10 @@ defn render (props)
           > (count tasks)
             , 0
           div
-            {} :style style-toolbar :spell-check true
+            {} :style style-toolbar :attrs $ {} :spell-check true
             div
-              {} :style style-button :on-click $ clear-done props state
-              span $ {} (:inner-text |Clear2)
+              {} :style style-button :event $ {} :click (clear-done props state)
+              span $ {} :attrs
+                {} $ :inner-text |Clear2
 
-
-def todolist-component $ create-component
-  {} (:name :todolist)
-    :update-state update-state
-
-    :get-state init-state
-    :render render
+def todolist-component $ create-comp :todolist init-state update-state render

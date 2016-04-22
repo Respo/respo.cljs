@@ -13,7 +13,7 @@
                  [org.clojure/tools.nrepl "0.2.10"  :scope "test"]
                  [ajchemist/boot-figwheel "0.5.2-0" :scope "test"]
                  [adzerk/boot-reload "0.4.6"        :scope "test"]
-                 [cirru/boot-cirru-sepal "0.1.1"    :scope "test"]
+                 [cirru/boot-cirru-sepal "0.1.2"    :scope "test"]
                  [org.clojure/core.async "0.2.374"  :scope "test"]
                  [mvc-works/hsl "0.1.2"             :scope "test"]])
 
@@ -69,7 +69,8 @@
   (comp
     (cirru-sepal :paths ["cirru-src"] :watch true)
     (repl)
-    (figwheel)))
+    (figwheel)
+    (target)))
 
 ; bug: after optimization, method exported from npm package breaks
 (deftask build-advanced []

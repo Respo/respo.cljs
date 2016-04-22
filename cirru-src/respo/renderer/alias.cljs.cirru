@@ -1,24 +1,65 @@
 
 ns respo.renderer.alias
 
-defn create-element
-  tag-name props & children
-  into ([])
-    concat ([] tag-name props)
-      , children
+defrecord Element $ name coord c-coord attrs style event children
 
-defn create-component (markup)
-  fn (& args)
-    into ([])
-      concat ([] markup)
-        , args
+defrecord Component $ name coord args init-state update-state render tree cost
 
-def div $ partial create-element :div
+defn arrange-children (children)
+  if
+    = 1 $ count children
+    let
+      (cursor $ first children)
+      if
+        or
+          = Element $ type cursor
+          = Component $ type cursor
+        map-indexed vector children
+        , cursor
 
-def span $ partial create-element :span
+    ->> children (map-indexed vector)
+      into $ sorted-map
 
-def input $ partial create-element :input
+defn create-element (tag-name props children)
+  let
+    (attrs $ if (contains? props :attrs) (into (sorted-map) (:attrs props)) (, {}))
+      style $ if (contains? props :style)
+        into (sorted-map)
+          :style props
+        , {}
 
-def header $ partial create-element :header
+      event $ if (contains? props :event)
+        into (sorted-map)
+          :event props
+        , {}
 
-def footer $ partial create-element :footer
+      children-map $ arrange-children children
+
+    ->Element tag-name nil nil attrs style event children-map
+
+defn default-init (& args)
+  , {}
+
+def default-update merge
+
+defn create-comp
+  (comp-name render)
+    create-comp comp-name default-init default-update render
+  (comp-name init-state update-state render)
+    fn (& args)
+      ->Component comp-name nil args init-state update-state render nil nil
+
+defn div (props & children)
+  create-element :div props children
+
+defn span (props & children)
+  create-element :span props children
+
+defn input (props & children)
+  create-element :input props children
+
+defn header (props & children)
+  create-element :header props children
+
+defn footer (props & children)
+  create-element :footer props children

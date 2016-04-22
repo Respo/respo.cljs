@@ -2,7 +2,7 @@
 ns respo.component.task $ :require
   [] clojure.string :as string
   [] hsl.core :refer $ [] hsl
-  [] respo.renderer.alias :refer $ [] div input span create-component
+  [] respo.renderer.alias :refer $ [] div input span create-comp
 
 def style-input $ {} (:font-size |16px)
   :line-height |24px
@@ -40,13 +40,13 @@ defn render (props)
     let
       (task $ :task props)
       div ({})
-        input $ {} :value (:text task)
-          , :on-input
-          on-text-change props state
-          , :style style-input
-        span $ {} :style style-button :on-click (handle-remove props state)
-          , :inner-text |Remove
+        input $ {} :style style-input :event
+          {} :input $ on-text-change props state
+          , :attrs
+          {} :value $ :text task
+        span $ {} :style style-button :event
+          {} :click $ handle-remove props state
+          , :attrs
+          {} :inner-text |Remove
 
-def task-component $ create-component
-  {} (:name :task)
-    :render render
+def task-component $ create-comp :task render

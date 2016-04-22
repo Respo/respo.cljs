@@ -1,5 +1,6 @@
 
-ns respo.renderer.differ $ :require $ [] clojure.string :as string
+ns respo.renderer.differ $ :require
+  [] clojure.string :as string
 
 declare find-element-diffs
 
@@ -45,11 +46,12 @@ defn find-children-diffs
         compare (key first-old-entry)
           key first-new-entry
         -1 $ let
-          (acc-after-cursor $ conj acc $ [] :rm $ conj n-coord index)
+          (acc-after-cursor $ conj acc ([] :rm $ conj n-coord index))
+
           recur acc-after-cursor n-coord index old-follows new-children
 
         1 $ let
-          (acc-after-cursor $ conj acc $ [] :add (conj n-coord index) (val first-new-entry))
+          (acc-after-cursor $ conj acc ([] :add (conj n-coord index) (val first-new-entry)))
 
           recur acc-after-cursor n-coord (inc index)
             , old-children new-follows
@@ -78,7 +80,7 @@ defn find-style-diffs
         (entry $ first old-style)
           follows $ sorted-rest old-style
         recur
-          conj acc $ [] :rm-style coord $ key entry
+          conj acc $ [] :rm-style coord (key entry)
           , coord follows new-style
 
     :else $ let
@@ -90,8 +92,9 @@ defn find-style-diffs
         compare (key old-entry)
           key new-entry
         -1 $ recur
-          conj acc $ [] :rm-style coord $ key old-entry
+          conj acc $ [] :rm-style coord (key old-entry)
           , coord old-follows new-style
+
         1 $ recur
           conj acc $ [] :add-style coord new-entry
           , coord old-style new-follows
@@ -113,13 +116,14 @@ defn find-props-diffs
 
     (and (= 0 $ count old-props) (> (count new-props) (, 0)))
       recur
-        conj acc $ [] :add-prop coord $ first new-props
+        conj acc $ [] :add-prop coord (first new-props)
         , coord old-props
         sorted-rest new-props
 
     (and (> (count old-props) (, 0)) (= 0 $ count new-props))
       recur
-        conj acc $ [] :rm-prop coord $ key $ first old-props
+        conj acc $ [] :rm-prop coord
+          key $ first old-props
         , coord
         sorted-rest old-props
         , new-props
@@ -158,13 +162,13 @@ defn find-events-diffs
 
     (and (= (count old-events) (, 0)) (> (count new-events) (, 0)))
       recur
-        conj acc $ [] :add-event coord $ first new-events
+        conj acc $ [] :add-event coord (first new-events)
         , coord old-events
         rest new-events
 
     (and (> (count old-events) (, 0)) (= (count new-events) (, 0)))
       recur
-        conj acc $ [] :rm-event coord $ first old-events
+        conj acc $ [] :rm-event coord (first old-events)
         , coord
         rest old-events
         , new-events
@@ -173,14 +177,16 @@ defn find-events-diffs
       compare (first old-events)
         first new-events
       -1 $ recur
-        conj acc $ [] :rm-event coord $ first old-events
+        conj acc $ [] :rm-event coord (first old-events)
         , coord
         rest old-events
         , new-events
+
       1 $ recur
-        conj acc $ [] :add-event coord $ first new-events
+        conj acc $ [] :add-event coord (first new-events)
         , coord old-events
         rest new-events
+
       recur acc coord (rest old-events)
         rest new-events
 
@@ -199,19 +205,21 @@ defn find-element-diffs
       old-children $ :children old-tree
       new-children $ :children new-tree
     if (not= old-coord new-coord)
-      throw $ js/Error. $ str "|coord dismatched:" old-coord new-coord
+      throw $ js/Error.
+        str "|coord dismatched:" old-coord new-coord
       if
         or
           not= (:name old-tree)
             :name new-tree
           not= (:c-name old-tree)
             :c-name new-tree
+
         conj acc $ [] :replace n-coord new-tree
         let
           (acc-after-props $ find-props-diffs acc n-coord (:props old-tree) (:props new-tree))
             acc-after-events $ find-events-diffs acc-after-props n-coord
-              sort $ keys $ :events old-tree
-              sort $ keys $ :events new-tree
+              sort $ keys (:event old-tree)
+              sort $ keys (:event new-tree)
 
           -- .log js/console "|after props:" acc-after-props
           find-children-diffs acc-after-events n-coord 0 (purify-children old-children)
