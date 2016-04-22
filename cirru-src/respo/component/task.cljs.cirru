@@ -35,16 +35,18 @@ defn on-text-change (props state)
 
       dispatch :update $ {} :id task-id :text text
 
+defn render (props)
+  fn (state)
+    let
+      (task $ :task props)
+      div ({})
+        input $ {} :value (:text task)
+          , :on-input
+          on-text-change props state
+          , :style style-input
+        span $ {} :style style-button :on-click (handle-remove props state)
+          , :inner-text |Remove
+
 def task-component $ create-component
   {} (:name :task)
-    :render $ fn (props)
-      fn (state)
-        let
-          (task $ :task props)
-          div ({})
-            input $ {} :value (:text task)
-              , :on-input
-              on-text-change props state
-              , :style style-input
-            span $ {} :style style-button :on-click (handle-remove props state)
-              , :inner-text |Remove
+    :render render

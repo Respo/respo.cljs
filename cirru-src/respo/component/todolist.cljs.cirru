@@ -57,48 +57,55 @@ defn handle-add (props state)
     dispatch :add $ :draft state
     mutate $ {} :draft |
 
+defn init-state (props)
+  {} :draft |
+
+defn update-state (old-state changes)
+  .log js/console |changes: (pr-str old-state)
+    pr-str changes
+  merge old-state changes
+
+defn render (props)
+  fn (state)
+    let
+      (tasks $ :tasks props)
+      .log js/console |tasks: $ pr-str tasks
+      div ({} :style style-root)
+        div ({} :style style-panel)
+          input $ {} :style style-input :value (:draft state)
+            , :on-input
+            on-text-change props state
+            , :on-focus
+            on-focus props state
+            , :placeholder |Task
+          div ({} :style style-button)
+            [] :span $ {} :inner-text |Add :on-click (handle-add props state)
+
+          div $ {} :style style-button :on-click (clear-done props state)
+            , :inner-text |Clear
+
+        div
+          {} :class-name |task-list :style style-list
+          ->> tasks
+            map $ fn (task)
+              [] (:id task)
+                task-component $ {} :task task
+
+            into $ sorted-map
+
+        if
+          > (count tasks)
+            , 0
+          div
+            {} :style style-toolbar :spell-check true
+            div
+              {} :style style-button :on-click $ clear-done props state
+              span $ {} (:inner-text |Clear2)
+
+
 def todolist-component $ create-component
   {} (:name :todolist)
-    :update-state $ fn (old-state changes)
-      .log js/console |changes: (pr-str old-state)
-        pr-str changes
-      merge old-state changes
+    :update-state update-state
 
-    :get-state $ fn (props)
-      {} :draft |
-    :render $ fn (props)
-      fn (state)
-        let
-          (tasks $ :tasks props)
-          .log js/console |tasks: $ pr-str tasks
-          div ({} :style style-root)
-            div ({} :style style-panel)
-              input $ {} :style style-input :value (:draft state)
-                , :on-input
-                on-text-change props state
-                , :on-focus
-                on-focus props state
-                , :placeholder |Task
-              div ({} :style style-button)
-                [] :span $ {} :inner-text |Add :on-click (handle-add props state)
-
-              div $ {} :style style-button :on-click (clear-done props state)
-                , :inner-text |Clear
-
-            div
-              {} :class-name |task-list :style style-list
-              ->> tasks
-                map $ fn (task)
-                  [] (:id task)
-                    task-component $ {} :task task
-
-                into $ sorted-map
-
-            if
-              > (count tasks)
-                , 0
-              div
-                {} :style style-toolbar :spell-check true
-                div
-                  {} :style style-button :on-click $ clear-done props state
-                  span $ {} (:inner-text |Clear2)
+    :get-state init-state
+    :render render
