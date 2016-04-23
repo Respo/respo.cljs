@@ -1,6 +1,6 @@
 
 ns respo.controller.deliver $ :require
-  respo.controller.resolver :refer $ [] find-event-target get-element-at
+  respo.controller.resolver :refer $ [] find-event-target get-markup-at
 
 defn all-component-coords (element)
   conj
@@ -45,25 +45,20 @@ defn build-deliver-event (element-ref dispatch states-ref)
   fn (coord event-name simple-event)
     let
       (target-element $ find-event-target @element-ref coord event-name)
-        target-listener $ get (:events target-element)
+        target-listener $ get (:event target-element)
           , event-name
-        component-coord $ :component-coord target-element
-        component-element $ get-element-at @element-ref component-coord
-        state-in-states $ get @states-ref component-coord
-        state-creator $ :c-creator component-element
-        state-updater $ :c-updater component-element
-        prop-list $ :c-props component-element
-        state $ if (some? state-in-states)
-          , state-in-states
-          if (some? state-creator)
-            apply state-creator prop-list
-            , nil
-
+        c-coord $ :c-coord target-element
+        comp-element $ get-markup-at @element-ref c-coord
+        init-state $ :init-state comp-element
+        update-state $ :update-state comp-element
+        state $ if (contains? @states-ref c-coord)
+          get @states-ref c-coord
+          apply init-state $ :args comp-element
         mutate $ fn (& args)
           let
-            (new-state $ apply (partial state-updater state) (, args))
+            (new-state $ apply update-state (cons state args))
 
-            swap! states-ref assoc component-coord new-state
+            swap! states-ref assoc c-coord new-state
 
       if (some? target-listener)
         do

@@ -11,7 +11,7 @@
                  [figwheel-sidecar "0.5.2"          :scope "test"]
                  [com.cemerick/piggieback "0.2.1"   :scope "test"]
                  [org.clojure/tools.nrepl "0.2.10"  :scope "test"]
-                 [ajchemist/boot-figwheel "0.5.2-0" :scope "test"]
+                 [ajchemist/boot-figwheel "0.5.2-2" :scope "test"]
                  [adzerk/boot-reload "0.4.6"        :scope "test"]
                  [cirru/boot-cirru-sepal "0.1.2"    :scope "test"]
                  [org.clojure/core.async "0.2.374"  :scope "test"]
@@ -24,7 +24,7 @@
 
 (refer 'boot-figwheel :rename '{cljs-repl fw-cljs-repl}) ; avoid some symbols
 
-(def +version+ "0.1.11")
+(def +version+ "0.1.12")
 
 (task-options!
   pom {:project     'mvc-works/respo
@@ -59,13 +59,14 @@
                                     :heads-up-display true
                                     :autoload true
                                     :target :nodejs
-                                    :debug false}}]
+                                    :debug true}}]
            :figwheel-options {:repl true
                               :http-server-root "target"
                               :load-warninged-code false
                               :css-dirs ["target"]}})
 
 (deftask dev []
+  (set-env! :source-paths #(into % ["src"]))
   (comp
     (cirru-sepal :paths ["cirru-src"] :watch true)
     (repl)

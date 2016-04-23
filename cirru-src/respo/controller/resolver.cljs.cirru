@@ -2,26 +2,34 @@
 ns respo.controller.resolver $ :require
   [] clojure.string :as string
   [] respo.util.format :refer $ [] purify-element
+  [] respo.renderer.alias :refer $ [] Element Component
 
-defn get-element-at (element coord)
+defn get-markup-at (markup coord)
+  -- .log js/console "|get markup:" $ pr-str coord
   if
     = coord $ []
-    , element
-    let
-        coord-first $ first coord
-        coord-rest $ subvec coord 1
-        child $ get-in element $ [] :children coord-first
-      if (some? child)
-        get-element-at child coord-rest
-        throw $ js/Error. $ str "|child not found:" coord $ purify-element element
+    , markup
+    if
+      = Component $ type markup
+      recur (:tree markup)
+        subvec coord 1
+      let
+        (coord-first $ first coord)
+          child $ get-in markup ([] :children coord-first)
+
+        if (some? child)
+          recur child $ subvec coord 1
+          throw $ js/Error.
+            str "|child not found:" coord $ purify-element markup
 
 defn find-event-target (element coord event-name)
   let
-      target-element $ get-element-at element coord
+    (target-element $ get-markup-at element coord)
       element-exists? $ some? target-element
-    -- .log js/console "|target element:" target-element
+    -- .log js/console "|target element:" $ pr-str (:c-coord target-element)
+      , event-name
     if
-      and element-exists? $ contains? (:events target-element)
+      and element-exists? $ contains? (:event target-element)
         , event-name
       , target-element
       if

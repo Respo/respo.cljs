@@ -87,7 +87,7 @@ defn render-component (markup states coord)
       half-render $ apply render args
       new-coord $ conj coord 0
       markup-tree $ half-render state
-      tree $ render-element markup-tree states new-coord new-coord
+      tree $ render-element markup-tree states new-coord coord
       cost $ - (io-get-time)
         , begin-time
 
