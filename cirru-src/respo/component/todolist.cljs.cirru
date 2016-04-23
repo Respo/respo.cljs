@@ -36,22 +36,22 @@ def style-button $ {} (:display |inline-block)
 def style-panel $ {} (:display |flex)
 
 defn clear-done (props state)
-  fn (event dispatch mutate)
+  fn (event dispatch)
     .log js/console "|dispatch clear-done"
     dispatch :clear nil
 
 defn on-focus (props state)
-  fn (event dispatch mutate)
+  fn (event dispatch)
     .log js/console "|Just focused~"
 
-defn on-text-change (props state)
-  fn (simple-event dispatch mutate)
+defn on-text-change (props state mutate)
+  fn (simple-event dispatch)
     mutate $ {} :draft (:value simple-event)
 
-defn handle-add (props state)
+defn handle-add (props state mutate)
   -- .log js/console "|state built inside:" (pr-str props)
     pr-str state
-  fn (event dispatch mutate)
+  fn (event dispatch)
     .log js/console "|click add!" (pr-str props)
       pr-str state
     dispatch :add $ :draft state
@@ -66,22 +66,23 @@ defn update-state (old-state changes)
   merge old-state changes
 
 defn render (props)
-  fn (state)
+  fn (state mutate)
     let
       (tasks $ :tasks props)
       .log js/console |tasks: $ pr-str tasks
       div ({} :style style-root)
         div ({} :style style-panel)
           input $ {} :style style-input :event
-            {} :input (on-text-change props state)
+            {} :input
+              on-text-change props state mutate
               , :focus
               on-focus props state
             , :attrs
-            {} :placeholder |Text
+            {} :placeholder |Text :value $ :draft state
 
           div ({} :style style-button)
             span $ {} :event
-              {} :click $ handle-add props state
+              {} :click $ handle-add props state mutate
               , :attrs
               {} :inner-text |Add
 

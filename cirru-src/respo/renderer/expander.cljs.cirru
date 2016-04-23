@@ -41,14 +41,14 @@ defn filter-states (partial-states coord)
     into $ {}
 
 defn render-markup
-  markup partial-states coord component-coord
+  markup states build-mutate coord component-coord
   if (component? markup)
-    render-component markup (filter-states partial-states coord)
-      , coord
-    render-element markup partial-states coord component-coord
+    render-component markup (filter-states states coord)
+      , build-mutate coord
+    render-element markup states build-mutate coord component-coord
 
 defn render-children
-  children states coord comp-coord
+  children states build-mutate coord comp-coord
   -- .log js/console "|render children:" $ pr-str children
   ->> children
     map $ fn (child-entry)
@@ -56,7 +56,7 @@ defn render-children
         (k $ key child-entry)
           child-element $ val child-entry
         [] k $ if (some? child-element)
-          render-markup child-element states (conj coord k)
+          render-markup child-element states build-mutate (conj coord k)
             , comp-coord
           , nil
 
@@ -65,16 +65,17 @@ defn render-children
     into $ sorted-map
 
 defn render-element
-  markup states coord comp-coord
+  markup states build-mutate coord comp-coord
   let
     (children $ :children markup)
-      child-elements $ render-children children states coord comp-coord
+      child-elements $ render-children children states build-mutate coord comp-coord
     -- .log js/console "|children should have order:" (pr-str children)
       pr-str child-elements
       pr-str markup
     assoc markup :coord coord :c-coord comp-coord :children child-elements
 
-defn render-component (markup states coord)
+defn render-component
+  markup states build-mutate coord
   let
     (begin-time $ io-get-time)
       args $ :args markup
@@ -86,15 +87,16 @@ defn render-component (markup states coord)
       render $ :render markup
       half-render $ apply render args
       new-coord $ conj coord 0
-      markup-tree $ half-render state
-      tree $ render-element markup-tree states new-coord coord
+      mutate $ build-mutate coord
+      markup-tree $ half-render state mutate
+      tree $ render-element markup-tree states build-mutate new-coord coord
       cost $ - (io-get-time)
         , begin-time
 
     -- .log js/console "|markup tree:" $ pr-str markup-tree
     assoc markup :coord coord :tree tree :cost cost
 
-defn render-app (markup states)
+defn render-app (markup states build-mutate)
   .info js/console "|render loop, states:" $ pr-str states
-  render-markup markup states ([])
+  render-markup markup states build-mutate ([])
     []

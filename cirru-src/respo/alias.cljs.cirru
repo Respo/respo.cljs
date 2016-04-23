@@ -50,7 +50,11 @@ defn create-comp
       ->Component comp-name nil args init-state update-state render nil nil
 
 defn div (props & children)
-  create-element :div props children
+  let
+    (attrs $ :attrs props)
+    if (contains? attrs :inner-text)
+      .warn js/console "|useing in div is dangerous!"
+    create-element :div props children
 
 defn span (props & children)
   create-element :span props children

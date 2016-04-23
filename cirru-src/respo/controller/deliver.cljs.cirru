@@ -1,15 +1,17 @@
 
 ns respo.controller.deliver $ :require
-  respo.controller.resolver :refer $ [] find-event-target get-markup-at
+  [] respo.controller.resolver :refer $ [] find-event-target get-markup-at
+  [] respo.alias :refer $ [] Component Element
 
-defn all-component-coords (element)
-  conj
-    map
-      fn (child-entry)
+defn all-component-coords (markup)
+  if
+    = Component $ type markup
+    cons (:coord markup)
+      all-component-coords $ :tree markup
+    ->> (:children markup)
+      map $ fn (child-entry)
         all-component-coords $ val child-entry
-      :children element
-
-    :component-coord element
+      apply concat
 
 defn purify-states (new-states old-states all-coords)
   if
@@ -39,29 +41,18 @@ defn do-states-gc (states-ref element)
       new-states $ purify-states ({})
         , @states-ref all-coords
 
+    println $ pr-str all-coords
     reset! states-ref new-states
 
-defn build-deliver-event (element-ref dispatch states-ref)
+defn build-deliver-event (element-ref dispatch)
   fn (coord event-name simple-event)
     let
       (target-element $ find-event-target @element-ref coord event-name)
         target-listener $ get (:event target-element)
           , event-name
-        c-coord $ :c-coord target-element
-        comp-element $ get-markup-at @element-ref c-coord
-        init-state $ :init-state comp-element
-        update-state $ :update-state comp-element
-        state $ if (contains? @states-ref c-coord)
-          get @states-ref c-coord
-          apply init-state $ :args comp-element
-        mutate $ fn (& args)
-          let
-            (new-state $ apply update-state (cons state args))
-
-            swap! states-ref assoc c-coord new-state
 
       if (some? target-listener)
         do
           println "|listener found:" coord event-name
-          target-listener simple-event dispatch mutate
+          target-listener simple-event dispatch
         println "|found no listener:" coord event-name

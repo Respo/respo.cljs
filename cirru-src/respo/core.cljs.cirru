@@ -11,6 +11,7 @@ ns respo.core
     [] respo.renderer.differ :refer $ [] find-element-diffs
     [] respo.util.time :refer $ [] io-get-time
     [] respo.controller.deliver :refer $ [] build-deliver-event do-states-gc
+    [] respo.controller.resolver :refer $ [] get-markup-at
     [] respo.util.websocket :refer $ [] send-chan receive-chan
     [] respo.util.format :refer $ [] purify-element
 
@@ -36,10 +37,21 @@ defn dispatch (dispatch-type dispatch-data)
     println "|new store:" $ pr-str new-store
     reset! todolist-store new-store
 
+defonce global-mutate-methods $ atom ({})
+
+defn build-mutate (coord)
+  if (contains? @global-mutate-methods coord)
+    get @global-mutate-methods coord
+    let
+      (method $ fn (& state-args) (let ((component $ get-markup-at @global-element coord) (init-state $ :init-state component) (update-state $ :update-state component) (old-state $ if (contains? @global-states coord) (get @global-states coord) (apply init-state $ :args component)) (new-state $ apply update-state (cons old-state state-args))) (println "|compare states:" (pr-str @global-states) (pr-str old-state) (pr-str new-state)) (swap! global-states assoc coord new-state)))
+
+      swap! global-mutate-methods assoc coord method
+      , method
+
 defn mount-demo ()
   let
     (todo-demo $ todolist-component ({} :tasks @todolist-store))
-      element $ render-app todo-demo @global-states
+      element $ render-app todo-demo @global-states build-mutate
 
     -- println "|store to mount:" (pr-str @todolist-store)
       pr-str $ purify-element element
@@ -48,7 +60,7 @@ defn mount-demo ()
 defn rerender-demo ()
   let
     (todo-demo $ todolist-component ({} :tasks @todolist-store))
-      element $ render-app todo-demo @global-states
+      element $ render-app todo-demo @global-states build-mutate
       changes $ find-element-diffs ([])
         []
         purify-element @global-element
@@ -78,7 +90,7 @@ defn -main ()
       (msg-pack $ <! receive-chan)
         state-id $ :state-id (:meta msg-pack)
         msg-data $ :data msg-pack
-        deliver-event $ build-deliver-event global-element dispatch global-states
+        deliver-event $ build-deliver-event global-element dispatch
 
       -- println "|receiving message:" msg-pack
       case (:type msg-pack)

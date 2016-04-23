@@ -24,9 +24,5 @@
     "shortid": "^2.2.4",
     "ws": "^1.0.1"
   },
-  "devDependencies": {
-    "bufferutil": "^1.2.1",
-    "source-map-support": "^0.4.0",
-    "utf-8-validate": "^1.2.1"
-  }
+  "devDependencies": {}
 }
