@@ -147,10 +147,7 @@ defn find-props-diffs
         recur
           if (= old-v new-v)
             , acc
-            if (= new-k :style)
-              find-style-diffs acc coord old-v new-v
-              conj acc $ [] :replace-prop coord new-entry
-
+            conj acc $ [] :replace-prop coord new-entry
           , coord old-follows new-follows
 
 defn find-events-diffs
@@ -215,12 +212,13 @@ defn find-element-diffs
             :c-name new-tree
 
         conj acc $ [] :replace n-coord new-tree
-        let
-          (acc-after-props $ find-props-diffs acc n-coord (:props old-tree) (:props new-tree))
-            acc-after-events $ find-events-diffs acc-after-props n-coord
-              sort $ keys (:event old-tree)
-              sort $ keys (:event new-tree)
+        -> acc
+          find-style-diffs n-coord (:style old-tree)
+            :style new-tree
+          find-props-diffs n-coord (:attrs old-tree)
+            :attrs new-tree
+          find-events-diffs n-coord
+            sort $ keys (:event old-tree)
+            sort $ keys (:event new-tree)
 
-          -- .log js/console "|after props:" acc-after-props
-          find-children-diffs acc-after-events n-coord 0 (purify-children old-children)
-            purify-children new-children
+          find-children-diffs n-coord 0 old-children new-children
