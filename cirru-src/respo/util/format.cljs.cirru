@@ -1,7 +1,7 @@
 
 ns respo.util.format $ :require
   [] clojure.string :as string
-  [] respo.renderer.alias :refer $ [] Element Component
+  [] respo.alias :refer $ [] Element Component
 
 defn dashed->camel
   (x)

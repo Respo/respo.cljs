@@ -3,7 +3,7 @@ ns respo.renderer.expander $ :require
   [] clojure.string :as string
   [] respo.util.time :refer $ [] io-get-time
   [] respo.util.format :refer $ [] purify-element
-  [] respo.renderer.alias :refer $ [] Component Element
+  [] respo.alias :refer $ [] Component Element
 
 defn keyword->string (x)
   subs (str x)

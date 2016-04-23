@@ -2,7 +2,7 @@
 ns respo.component.task $ :require
   [] clojure.string :as string
   [] hsl.core :refer $ [] hsl
-  [] respo.renderer.alias :refer $ [] div input span create-comp
+  [] respo.alias :refer $ [] div input span create-comp
 
 def style-input $ {} (:font-size |16px)
   :line-height |24px

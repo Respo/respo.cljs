@@ -1,5 +1,5 @@
 
-ns respo.renderer.alias
+ns respo.alias
 
 defrecord Element $ name coord c-coord attrs style event children
 
@@ -61,5 +61,17 @@ defn input (props & children)
 defn header (props & children)
   create-element :header props children
 
+defn section (props & children)
+  create-element :section props children
+
 defn footer (props & children)
   create-element :footer props children
+
+defn textarea (props & children)
+  create-element :textarea props children
+
+defn code (props & children)
+  create-element :code props children
+
+defn pre (props & children)
+  create-element :pre props children

@@ -3,7 +3,7 @@ ns respo.component.todolist $ :require
   [] clojure.string :as string
   [] hsl.core :refer $ [] hsl
   [] respo.component.task :refer $ [] task-component
-  [] respo.renderer.alias :refer $ [] div span input create-comp
+  [] respo.alias :refer $ [] div span input create-comp
 
 def style-root $ {} (:color |black)
   :background-color $ hsl 120 20 93

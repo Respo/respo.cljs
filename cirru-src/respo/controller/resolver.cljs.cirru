@@ -2,7 +2,7 @@
 ns respo.controller.resolver $ :require
   [] clojure.string :as string
   [] respo.util.format :refer $ [] purify-element
-  [] respo.renderer.alias :refer $ [] Element Component
+  [] respo.alias :refer $ [] Element Component
 
 defn get-markup-at (markup coord)
   -- .log js/console "|get markup:" $ pr-str coord

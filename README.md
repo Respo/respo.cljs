@@ -20,8 +20,8 @@ A responsive DOM library.
 (respo.renderer.expander/render-app element-markup global-states)
 (respo.renderer.differ/find-element-diffs [] [] old-virtual-element virtual-element)
 (respo.util.format/purify-element virtual-element)
-(respo.renderer.alias/div {})
-(respo.renderer.alias/create-component {:name :demo :render (fn [] (fn [state] (div)))})
+(respo.alias/div {})
+(respo.alias/create-component {:name :demo :render (fn [] (fn [state] (div)))})
 ```
 
 ## Component Definition
@@ -34,19 +34,18 @@ defn handle-event (data)
     dispatch :op ({} :data :op-data)
     mutate :para1 :para2
 
-def demo-component $ create-component $ {}
-  :name :demo
+defn init-state (prop1 prop2)
+  {}
 
-  :update-state $ fn (old-state para1 para2)
-    merge old-state para1 para2
+defn update-state (old-state para1 para2)
+  merge old-state para1 para2
 
-  :get-state $ fn (prop1 prop2)
-    {}
+defn render (prop1 prop2)
+  fn (state)
+    div ({} :on-click (handle-event data))
+      div ({})
 
-  :render $ fn (prop1 prop2)
-    fn (state)
-      div ({} :on-click (handle-event data))
-        div ({})
+def demo-component $ create-comp :demo init-state update-state render
 ```
 
 `mutable` is previously `set-state` but changed a lot.
