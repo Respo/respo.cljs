@@ -56,3 +56,16 @@ defn build-deliver-event (element-ref dispatch)
           println "|listener found:" coord event-name
           target-listener simple-event dispatch
         println "|found no listener:" coord event-name
+
+
+defonce global-mutate-methods $ atom ({})
+
+defn mutate-factory (global-element global-states)
+  fn (coord)
+    if (contains? @global-mutate-methods coord)
+      get @global-mutate-methods coord
+      let
+        (method $ fn (& state-args) (let ((component $ get-markup-at @global-element coord) (init-state $ :init-state component) (update-state $ :update-state component) (old-state $ if (contains? @global-states coord) (get @global-states coord) (apply init-state $ :args component)) (new-state $ apply update-state (cons old-state state-args))) (println "|compare states:" (pr-str @global-states) (pr-str old-state) (pr-str new-state)) (swap! global-states assoc coord new-state)))
+
+        swap! global-mutate-methods assoc coord method
+        , method

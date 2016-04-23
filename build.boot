@@ -24,7 +24,7 @@
 
 (refer 'boot-figwheel :rename '{cljs-repl fw-cljs-repl}) ; avoid some symbols
 
-(def +version+ "0.1.14")
+(def +version+ "0.1.15")
 
 (task-options!
   pom {:project     'mvc-works/respo
@@ -53,7 +53,8 @@
                                     :source-map true
                                     :optimizations :none
                                     :output-to "app.js"
-                                    :output-dir "server_out/"}
+                                    :output-dir "server_out/"
+                                    :verbose true}
                          :figwheel {:build-id  "dev"
                                     :on-jsload 'respo.core/on-jsload
                                     :heads-up-display true

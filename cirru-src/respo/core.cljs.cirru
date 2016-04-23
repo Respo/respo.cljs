@@ -10,7 +10,7 @@ ns respo.core
     [] respo.update.core :refer $ [] update-transform
     [] respo.renderer.differ :refer $ [] find-element-diffs
     [] respo.util.time :refer $ [] io-get-time
-    [] respo.controller.deliver :refer $ [] build-deliver-event do-states-gc
+    [] respo.controller.deliver :refer $ [] build-deliver-event do-states-gc mutate-factory
     [] respo.controller.resolver :refer $ [] get-markup-at
     [] respo.util.websocket :refer $ [] send-chan receive-chan
     [] respo.util.format :refer $ [] purify-element
@@ -37,16 +37,7 @@ defn dispatch (dispatch-type dispatch-data)
     println "|new store:" $ pr-str new-store
     reset! todolist-store new-store
 
-defonce global-mutate-methods $ atom ({})
-
-defn build-mutate (coord)
-  if (contains? @global-mutate-methods coord)
-    get @global-mutate-methods coord
-    let
-      (method $ fn (& state-args) (let ((component $ get-markup-at @global-element coord) (init-state $ :init-state component) (update-state $ :update-state component) (old-state $ if (contains? @global-states coord) (get @global-states coord) (apply init-state $ :args component)) (new-state $ apply update-state (cons old-state state-args))) (println "|compare states:" (pr-str @global-states) (pr-str old-state) (pr-str new-state)) (swap! global-states assoc coord new-state)))
-
-      swap! global-mutate-methods assoc coord method
-      , method
+def build-mutate $ mutate-factory global-element global-states
 
 defn mount-demo ()
   let

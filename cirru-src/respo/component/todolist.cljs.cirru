@@ -80,13 +80,13 @@ defn render (props)
             , :attrs
             {} :placeholder |Text :value $ :draft state
 
-          div ({} :style style-button)
+          span ({} :style style-button)
             span $ {} :event
               {} :click $ handle-add props state mutate
               , :attrs
               {} :inner-text |Add
 
-          div $ {} :style style-button :event
+          span $ {} :style style-button :event
             {} :click $ clear-done props state
             , :attrs
             {} :inner-text |Clear

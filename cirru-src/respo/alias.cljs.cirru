@@ -53,7 +53,7 @@ defn div (props & children)
   let
     (attrs $ :attrs props)
     if (contains? attrs :inner-text)
-      .warn js/console "|useing in div is dangerous!"
+      .error js/console "|useing in div is dangerous!"
     create-element :div props children
 
 defn span (props & children)
