@@ -86,7 +86,7 @@ defn render-component
         apply init-state args
       render $ :render markup
       half-render $ apply render args
-      new-coord $ conj coord 0
+      new-coord $ conj coord (:name markup)
       mutate $ build-mutate coord
       markup-tree $ half-render state mutate
       tree $ render-element markup-tree states build-mutate new-coord coord
