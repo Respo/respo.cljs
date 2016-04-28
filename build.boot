@@ -24,7 +24,7 @@
 
 (refer 'boot-figwheel :rename '{cljs-repl fw-cljs-repl}) ; avoid some symbols
 
-(def +version+ "0.1.17")
+(def +version+ "0.1.18")
 
 (task-options!
   pom {:project     'mvc-works/respo

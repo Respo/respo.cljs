@@ -67,7 +67,7 @@ defn mutate-factory (global-element global-states)
         (hint "|compare states:")
           method $ fn (& state-args)
             let
-              (component $ get-markup-at @global-element coord)
+              (component $ get-markup-at @global-element (subvec coord 0 $ - (count coord) (, 1)))
                 init-state $ :init-state component
                 update-state $ :update-state component
                 old-state $ if (contains? @global-states coord)

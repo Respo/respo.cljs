@@ -81,15 +81,15 @@ defn render-component
       args $ :args markup
       component $ first markup
       init-state $ :init-state markup
-      state $ if (contains? states coord)
-        get states coord
+      new-coord $ conj coord (:name markup)
+      state $ if (contains? states new-coord)
+        get states new-coord
         apply init-state args
       render $ :render markup
       half-render $ apply render args
-      new-coord $ conj coord (:name markup)
-      mutate $ build-mutate coord
+      mutate $ build-mutate new-coord
       markup-tree $ half-render state mutate
-      tree $ render-element markup-tree states build-mutate new-coord coord
+      tree $ render-element markup-tree states build-mutate new-coord new-coord
       cost $ - (io-get-time)
         , begin-time
 

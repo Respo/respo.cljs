@@ -58,7 +58,7 @@ defn rerender-demo ()
         purify-element element
 
     reset! global-element element
-    -- println |changes changes
+    println |states: @global-states
     if
       not $ empty? changes
       do $ doall
