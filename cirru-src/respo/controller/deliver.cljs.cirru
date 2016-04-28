@@ -34,15 +34,15 @@ defn purify-states (new-states old-states all-coords)
         rest old-states
         , all-coords
 
-defn do-states-gc (states-ref element)
-  println "|states GC:" $ pr-str @states-ref
+defn gc-states (states element)
+  -- println "|states GC:" $ pr-str states
   let
     (all-coords $ distinct (all-component-coords element))
       new-states $ purify-states ({})
-        , @states-ref all-coords
+        , states all-coords
 
-    println $ pr-str all-coords
-    reset! states-ref new-states
+    -- println $ pr-str all-coords
+    , new-states
 
 defn build-deliver-event (element-ref dispatch)
   fn (coord event-name simple-event)
@@ -57,7 +57,6 @@ defn build-deliver-event (element-ref dispatch)
           target-listener simple-event dispatch
         println "|found no listener:" coord event-name
 
-
 defonce global-mutate-methods $ atom ({})
 
 defn mutate-factory (global-element global-states)
@@ -65,7 +64,22 @@ defn mutate-factory (global-element global-states)
     if (contains? @global-mutate-methods coord)
       get @global-mutate-methods coord
       let
-        (method $ fn (& state-args) (let ((component $ get-markup-at @global-element coord) (init-state $ :init-state component) (update-state $ :update-state component) (old-state $ if (contains? @global-states coord) (get @global-states coord) (apply init-state $ :args component)) (new-state $ apply update-state (cons old-state state-args))) (println "|compare states:" (pr-str @global-states) (pr-str old-state) (pr-str new-state)) (swap! global-states assoc coord new-state)))
+        (hint "|compare states:")
+          method $ fn (& state-args)
+            let
+              (component $ get-markup-at @global-element coord)
+                init-state $ :init-state component
+                update-state $ :update-state component
+                old-state $ if (contains? @global-states coord)
+                  get @global-states coord
+                  apply init-state $ :args component
+                new-state $ apply update-state (cons old-state state-args)
+                clean-states $ gc-states @global-states @global-element
+
+              -- println hint (pr-str @global-states)
+                pr-str old-state
+                pr-str new-state
+              swap! global-states assoc coord new-state
 
         swap! global-mutate-methods assoc coord method
         , method

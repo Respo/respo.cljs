@@ -15,13 +15,13 @@ A responsive DOM library.
 
 ```clojure
 (respo.controller.deliver/build-deliver-event virtual-element-ref dispatch states-ref)
-(respo.controller.deliver/do-states-gc states-ref virtual-element)
+(def build-mutate (respo.controller.deliver/mutate-factory element-ref states-ref))
 (respo.controller.resolver/get-element-at element coord)
 (respo.renderer.expander/render-app element-markup global-states)
 (respo.renderer.differ/find-element-diffs [] [] old-virtual-element virtual-element)
 (respo.util.format/purify-element virtual-element)
 (respo.alias/div {})
-(respo.alias/create-component {:name :demo :render (fn [] (fn [state] (div)))})
+(respo.alias/create-comp :demo (fn [] (fn [state] (div))))
 ```
 
 ## Component Definition

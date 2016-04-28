@@ -10,7 +10,7 @@ ns respo.core
     [] respo.update.core :refer $ [] update-transform
     [] respo.renderer.differ :refer $ [] find-element-diffs
     [] respo.util.time :refer $ [] io-get-time
-    [] respo.controller.deliver :refer $ [] build-deliver-event do-states-gc mutate-factory
+    [] respo.controller.deliver :refer $ [] build-deliver-event mutate-factory
     [] respo.controller.resolver :refer $ [] get-markup-at
     [] respo.util.websocket :refer $ [] send-chan receive-chan
     [] respo.util.format :refer $ [] purify-element
@@ -61,13 +61,11 @@ defn rerender-demo ()
     -- println |changes changes
     if
       not $ empty? changes
-      do
-        doall $ ->> @clients-list
-          map $ fn (client-id)
+      do $ doall
+        ->> @clients-list $ map
+          fn (client-id)
             go $ >! send-chan
               [] client-id $ [] :patch changes
-
-        do-states-gc global-states element
 
 defn -main ()
   enable-console-print!
