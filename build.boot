@@ -54,13 +54,13 @@
                                     :optimizations :none
                                     :output-to "app.js"
                                     :output-dir "server_out/"
-                                    :verbose true}
+                                    :verbose false}
                          :figwheel {:build-id  "dev"
                                     :on-jsload 'respo.core/on-jsload
                                     :heads-up-display true
                                     :autoload true
                                     :target :nodejs
-                                    :debug true}}]
+                                    :debug false}}]
            :figwheel-options {:repl true
                               :http-server-root "target"
                               :load-warninged-code false

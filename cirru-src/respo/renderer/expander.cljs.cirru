@@ -97,6 +97,6 @@ defn render-component
     assoc markup :coord coord :tree tree :cost cost
 
 defn render-app (markup states build-mutate)
-  .info js/console "|render loop, states:" $ pr-str states
+  -- .info js/console "|render loop, states:" $ pr-str states
   render-markup markup states build-mutate ([])
     []

@@ -4,6 +4,7 @@ ns respo.component.todolist $ :require
   [] hsl.core :refer $ [] hsl
   [] respo.component.task :refer $ [] task-component
   [] respo.alias :refer $ [] div span input create-comp
+  [] respo.component.zero :refer $ [] component-zero
 
 def style-root $ {} (:color |black)
   :background-color $ hsl 120 20 93

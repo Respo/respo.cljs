@@ -56,11 +56,17 @@ defn div (props & children)
       .error js/console "|useing in div is dangerous!"
     create-element :div props children
 
+defn img (props & children)
+  create-element :img props children
+
 defn span (props & children)
   create-element :span props children
 
 defn input (props & children)
   create-element :input props children
+
+defn button (props & children)
+  create-element :button props children
 
 defn header (props & children)
   create-element :header props children

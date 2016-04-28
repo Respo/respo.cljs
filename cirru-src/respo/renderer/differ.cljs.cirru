@@ -197,28 +197,25 @@ defn find-element-diffs
   acc n-coord old-tree new-tree
   -- .log js/console "|element diffing:" acc n-coord old-tree new-tree
   let
-    (old-coord $ :coord old-tree)
-      new-coord $ :coord new-tree
-      old-children $ :children old-tree
+    (old-children $ :children old-tree)
       new-children $ :children new-tree
-    if (not= old-coord new-coord)
-      throw $ js/Error.
-        str "|coord dismatched:" old-coord new-coord
-      if
-        or
-          not= (:name old-tree)
-            :name new-tree
-          not= (:c-name old-tree)
-            :c-name new-tree
+    if
+      or
+        not= (:coord old-tree)
+          :coord new-tree
+        not= (:name old-tree)
+          :name new-tree
+        not= (:c-name old-tree)
+          :c-name new-tree
 
-        conj acc $ [] :replace n-coord new-tree
-        -> acc
-          find-style-diffs n-coord (:style old-tree)
-            :style new-tree
-          find-props-diffs n-coord (:attrs old-tree)
-            :attrs new-tree
-          find-events-diffs n-coord
-            sort $ keys (:event old-tree)
-            sort $ keys (:event new-tree)
+      conj acc $ [] :replace n-coord new-tree
+      -> acc
+        find-style-diffs n-coord (:style old-tree)
+          :style new-tree
+        find-props-diffs n-coord (:attrs old-tree)
+          :attrs new-tree
+        find-events-diffs n-coord
+          sort $ keys (:event old-tree)
+          sort $ keys (:event new-tree)
 
-          find-children-diffs n-coord 0 old-children new-children
+        find-children-diffs n-coord 0 old-children new-children
