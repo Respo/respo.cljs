@@ -10,7 +10,7 @@ A responsive DOM library.
 [![Respo](https://img.shields.io/clojars/v/mvc-works/respo.svg)](https://clojars.org/mvc-works/respo)
 
 ```clojure
-[mvc-works/respo "0.1.8"]
+[mvc-works/respo "0.1.16"]
 ```
 
 ```clojure
