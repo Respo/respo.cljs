@@ -3,6 +3,7 @@ ns respo.component.task $ :require
   [] clojure.string :as string
   [] hsl.core :refer $ [] hsl
   [] respo.alias :refer $ [] div input span create-comp
+  [] respo.component.debug :refer $ [] comp-debug
 
 def style-input $ {} (:font-size |16px)
   :line-height |24px
@@ -40,6 +41,7 @@ defn render (props)
     let
       (task $ :task props)
       div ({})
+        -- comp-debug task $ {} (:padding "|0px 4px")
         input $ {} :style style-input :event
           {} :input $ on-text-change props state
           , :attrs
