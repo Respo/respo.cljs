@@ -53,9 +53,9 @@ defn build-deliver-event (element-ref dispatch)
 
       if (some? target-listener)
         do
-          println "|listener found:" coord event-name
+          -- println "|listener found:" coord event-name
           target-listener simple-event dispatch
-        println "|found no listener:" coord event-name
+        -- println "|found no listener:" coord event-name
 
 defonce global-mutate-methods $ atom ({})
 

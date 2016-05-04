@@ -22,6 +22,8 @@ A responsive DOM library.
 (respo.util.format/purify-element virtual-element)
 (respo.alias/div {})
 (respo.alias/create-comp :demo (fn [] (fn [state] (div))))
+(respo.alias/create-element :demo props children)
+(respo.component/debug/comp-debug data {})
 ```
 
 ## Component Definition

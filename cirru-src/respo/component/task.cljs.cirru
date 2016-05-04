@@ -41,7 +41,7 @@ defn render (props)
     let
       (task $ :task props)
       div ({})
-        -- comp-debug task $ {} (:padding "|0px 4px")
+        comp-debug task $ {} (:left |60px)
         input $ {} :style style-input :event
           {} :input $ on-text-change props state
           , :attrs

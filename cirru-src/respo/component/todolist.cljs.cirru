@@ -5,6 +5,7 @@ ns respo.component.todolist $ :require
   [] respo.component.task :refer $ [] task-component
   [] respo.alias :refer $ [] div span input create-comp
   [] respo.component.zero :refer $ [] component-zero
+  [] respo.component.debug :refer $ [] comp-debug
 
 def style-root $ {} (:color |black)
   :background-color $ hsl 120 20 93
@@ -70,8 +71,8 @@ defn render (props)
   fn (state mutate)
     let
       (tasks $ :tasks props)
-      .log js/console |tasks: $ pr-str tasks
       div ({} :style style-root)
+        comp-debug state $ {} (:left |80px)
         div ({} :style style-panel)
           input $ {} :style style-input :event
             {} :input
