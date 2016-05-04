@@ -1,5 +1,5 @@
 
-ns respo.renderer.differ $ :require
+ns respo.render.differ $ :require
   [] clojure.string :as string
 
 declare find-element-diffs

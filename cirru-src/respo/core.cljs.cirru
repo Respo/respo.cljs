@@ -5,10 +5,10 @@ ns respo.core
     [] cljs.nodejs :as nodejs
     [] cljs.core.async :as a :refer $ [] >! <! chan
     [] respo.component.todolist :refer $ [] todolist-component
-    [] respo.renderer.expander :refer $ [] render-app
+    [] respo.render.expander :refer $ [] render-app
     [] respo.examples.dom-tree :refer $ [] diff-demos diff-props-demos
     [] respo.update.core :refer $ [] update-transform
-    [] respo.renderer.differ :refer $ [] find-element-diffs
+    [] respo.render.differ :refer $ [] find-element-diffs
     [] respo.util.time :refer $ [] io-get-time
     [] respo.controller.deliver :refer $ [] build-deliver-event mutate-factory
     [] respo.controller.resolver :refer $ [] get-markup-at

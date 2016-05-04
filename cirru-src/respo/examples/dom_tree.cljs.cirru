@@ -1,7 +1,7 @@
 
 ns respo.examples.dom-tree $ :require
   [] clojure.string :as string
-  [] respo.renderer.differ :refer $ [] find-element-diffs find-props-diffs
+  [] respo.render.differ :refer $ [] find-element-diffs find-props-diffs
 
 def example-1 $ {} (:name :div)
   :props $ sorted-map

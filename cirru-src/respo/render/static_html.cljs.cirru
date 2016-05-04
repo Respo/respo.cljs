@@ -1,5 +1,5 @@
 
-ns respo.renderer.static-html $ :require
+ns respo.render.static-html $ :require
   [] clojure.string :as string
   [] respo.util.format :refer $ [] prop->attr
 

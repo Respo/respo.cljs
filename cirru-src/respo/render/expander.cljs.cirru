@@ -1,5 +1,5 @@
 
-ns respo.renderer.expander $ :require
+ns respo.render.expander $ :require
   [] clojure.string :as string
   [] respo.util.time :refer $ [] io-get-time
   [] respo.util.format :refer $ [] purify-element
