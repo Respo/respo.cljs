@@ -51,32 +51,31 @@ def example-7 $ {} (:name :div)
       :children $ sorted-map
 
 defn diff-demos ()
-  .clear js/console
-  .log js/console "|DOM diff 1->2:" $ find-element-diffs ([])
+  println "|DOM diff 1->2:" $ find-element-diffs ([])
     []
     , example-1 example-2
   newline
-  .log js/console "|DOM diff 1->3:" $ find-element-diffs ([])
+  println "|DOM diff 1->3:" $ find-element-diffs ([])
     []
     , example-1 example-3
   newline
-  .log js/console "|DOM diff 1->4:" $ find-element-diffs ([])
+  println "|DOM diff 1->4:" $ find-element-diffs ([])
     []
     , example-1 example-4
   newline
-  .log js/console "|DOM diff 1->5:" $ find-element-diffs ([])
+  println "|DOM diff 1->5:" $ find-element-diffs ([])
     []
     , example-1 example-5
   newline
-  .log js/console "|DOM diff 3->4:" $ find-element-diffs ([])
+  println "|DOM diff 3->4:" $ find-element-diffs ([])
     []
     , example-3 example-4
   newline
-  .log js/console "|DOM diff 3->5:" $ find-element-diffs ([])
+  println "|DOM diff 3->5:" $ find-element-diffs ([])
     []
     , example-3 example-5
   newline
-  .log js/console "|DOM diff 6->7:" $ find-element-diffs ([])
+  println "|DOM diff 6->7:" $ find-element-diffs ([])
     []
     , example-6 example-7
 
@@ -89,7 +88,6 @@ def props-demo-2 $ {} (:placeholder |Task)
   :value |d
 
 defn diff-props-demos ()
-  .clear js/console
-  .log js/console "|props diff:" $ find-props-diffs ([])
+  println "|props diff:" $ find-props-diffs ([])
     []
     , props-demo-1 props-demo-2

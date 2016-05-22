@@ -1,12 +1,14 @@
 
 ns respo.util.comparator
+  :require
+    [] respo.util.error :refer $ [] raise
 
 defn type-as-int (x)
   cond
     (number? x) 0
     (keyword? x) 1
     (string? x) 2
-    :else $ js/thow "|use number, keyword or string in coord!"
+    :else $ raise "|use number, keyword or string in coord!"
 
 defn compare-more (x y)
   let

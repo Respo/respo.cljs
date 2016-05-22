@@ -1,7 +1,8 @@
 
-ns respo.util.format $ :require
-  [] clojure.string :as string
-  [] respo.alias :refer $ [] Element Component
+ns respo.util.format
+  :require
+    [] clojure.string :as string
+    [] respo.util.detect :refer $ [] component? element?
 
 defn dashed->camel
   (x)
@@ -16,7 +17,7 @@ defn dashed->camel
           recur acc piece-followed true
           recur
             str acc $ if promoted? (string/upper-case cursor)
-              , cursor
+                , cursor
             , piece-followed false
 
 defn prop->attr (x)
@@ -49,7 +50,7 @@ defn purify-element (markup)
   if (nil? markup)
     , nil
     if
-      = Component $ type markup
+      component? markup
       recur $ :tree markup
       into ({})
         -> markup

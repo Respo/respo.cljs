@@ -3,17 +3,11 @@ ns respo.render.expander $ :require
   [] clojure.string :as string
   [] respo.util.time :refer $ [] io-get-time
   [] respo.util.format :refer $ [] purify-element
-  [] respo.alias :refer $ [] Component Element
+  [] respo.util.detect :refer $ [] component? element?
 
 defn keyword->string (x)
   subs (str x)
     , 1
-
-defn component? (markup)
-  = Component $ type markup
-
-defn element? (markup)
-  = Element $ type markup
 
 declare render-component
 
@@ -49,12 +43,12 @@ defn render-markup
 
 defn render-children
   children states build-mutate coord comp-coord
-  -- .log js/console "|render children:" $ pr-str children
+  -- println "|render children:" children
   ->> children
     map $ fn (child-entry)
       let
-        (k $ key child-entry)
-          child-element $ val child-entry
+        (k $ first child-entry)
+          child-element $ last child-entry
         [] k $ if (some? child-element)
           render-markup child-element states build-mutate (conj coord k)
             , comp-coord
@@ -69,7 +63,7 @@ defn render-element
   let
     (children $ :children markup)
       child-elements $ render-children children states build-mutate coord comp-coord
-    -- .log js/console "|children should have order:" (pr-str children)
+    -- println "|children should have order:" (pr-str children)
       pr-str child-elements
       pr-str markup
     assoc markup :coord coord :c-coord comp-coord :children child-elements
@@ -93,7 +87,7 @@ defn render-component
       cost $ - (io-get-time)
         , begin-time
 
-    -- .log js/console "|markup tree:" $ pr-str markup-tree
+    -- println "|markup tree:" $ pr-str markup-tree
     assoc markup :coord coord :tree tree :cost cost
 
 defn render-app (markup states build-mutate)

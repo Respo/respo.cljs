@@ -39,22 +39,22 @@ def style-panel $ {} (:display |flex)
 
 defn clear-done (props state)
   fn (event dispatch)
-    .log js/console "|dispatch clear-done"
+    println "|dispatch clear-done"
     dispatch :clear nil
 
 defn on-focus (props state)
   fn (event dispatch)
-    .log js/console "|Just focused~"
+    println "|Just focused~"
 
 defn on-text-change (props state mutate)
   fn (simple-event dispatch)
     mutate $ {} :draft (:value simple-event)
 
 defn handle-add (props state mutate)
-  -- .log js/console "|state built inside:" (pr-str props)
+  -- println "|state built inside:" (pr-str props)
     pr-str state
   fn (event dispatch)
-    .log js/console "|click add!" (pr-str props)
+    println "|click add!" (pr-str props)
       pr-str state
     dispatch :add $ :draft state
     mutate $ {} :draft |
@@ -63,7 +63,7 @@ defn init-state (props)
   {} :draft |
 
 defn update-state (old-state changes)
-  .log js/console |changes: (pr-str old-state)
+  println |changes: (pr-str old-state)
     pr-str changes
   merge old-state changes
 

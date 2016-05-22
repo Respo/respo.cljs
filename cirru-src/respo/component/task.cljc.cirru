@@ -22,7 +22,7 @@ def style-button $ {} (:display |inline-block)
 
 defn on-click (props state)
   fn (event dispatch mutate)
-    .log js/console |clicked
+    println |clicked
 
 defn handle-remove (props state)
   fn (event dispatch mutate)
@@ -37,7 +37,7 @@ defn on-text-change (props state)
       dispatch :update $ {} :id task-id :text text
 
 defn render (props)
-  fn (state)
+  fn (state mutate)
     let
       (task $ :task props)
       div ({})

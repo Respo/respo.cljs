@@ -1,11 +1,11 @@
 
 ns respo.controller.deliver $ :require
   [] respo.controller.resolver :refer $ [] find-event-target get-markup-at
-  [] respo.alias :refer $ [] Component Element
+  [] respo.util.detect :refer $ [] component? element?
 
 defn all-component-coords (markup)
   if
-    = Component $ type markup
+    component? markup
     cons (:coord markup)
       all-component-coords $ :tree markup
     ->> (:children markup)

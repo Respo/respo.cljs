@@ -12,7 +12,7 @@ ns respo.core
     [] respo.util.time :refer $ [] io-get-time
     [] respo.controller.deliver :refer $ [] build-deliver-event mutate-factory
     [] respo.controller.resolver :refer $ [] get-markup-at
-    [] respo.util.websocket :refer $ [] send-chan receive-chan
+    [] respo.websocket :refer $ [] send-chan receive-chan
     [] respo.util.format :refer $ [] purify-element
 
 defonce todolist-store $ atom

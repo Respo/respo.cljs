@@ -3,7 +3,7 @@ ns respo.update.core $ :require $ [] clojure.string :as string
 
 defn update-transform
   old-store op-type op-data op-id
-  .log js/console (pr-str old-store)
+  println (pr-str old-store)
     pr-str op-type
     pr-str op-data
   case op-type

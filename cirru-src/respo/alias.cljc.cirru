@@ -53,7 +53,7 @@ defn div (props & children)
   let
     (attrs $ :attrs props)
     if (contains? attrs :inner-text)
-      .error js/console "|useing in div is dangerous!"
+      println "|useing in div is dangerous!"
     create-element :div props children
 
 defn img (props & children)

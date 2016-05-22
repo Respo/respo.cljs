@@ -1,5 +1,5 @@
 
-ns respo.util.websocket
+ns respo.websocket
   :require-macros $ [] cljs.core.async.macros :refer ([] go)
   :require
     [] cljs.nodejs :as nodejs

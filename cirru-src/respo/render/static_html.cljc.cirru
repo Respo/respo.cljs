@@ -2,6 +2,7 @@
 ns respo.render.static-html $ :require
   [] clojure.string :as string
   [] respo.util.format :refer $ [] prop->attr
+  [] respo.util.detect :refer $ [] component? element?
 
 defn style->string (styles)
   string/join | $ ->> styles $ map $ fn (entry)
@@ -40,14 +41,19 @@ defn element->string (element)
       text-inside $ or (:innerHTML props)
         :inner-text props
       formatted-coord $ pr-str $ :coord element
-      tailored-props $ -> (:props element)
+      formatted-event $ pr-str $ into ([]) $ keys (:event element)
+      tailored-props $ -> (:attrs element)
         dissoc :innerHTML
         dissoc :inner-text
-        merge $ {} :data-coord formatted-coord
+        merge $ {}
+          :data-coord formatted-coord
+          :data-event formatted-event
       props-in-string $ props->string tailored-props
       children $ ->> (:children element)
         map $ fn (entry)
-          element->string $ last entry
+          let
+              child $ last entry
+            element->string child
 
     str |< tag-name "| " props-in-string |>
       or text-inside $ string/join | children
