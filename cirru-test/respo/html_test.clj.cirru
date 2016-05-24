@@ -6,7 +6,7 @@ ns respo.html-test
     [] respo.render.expander :refer $ [] render-app
     [] respo.component.todolist :refer $ [] todolist-component
     [] respo.controller.deliver :refer $ [] mutate-factory
-    [] respo.render.static-html :refer $ [] element->string
+    [] respo.render.static-html :refer $ [] element->string element->html
     [] respo.util.format :refer $ [] purify-element
 
 def todolist-store $ atom
@@ -26,3 +26,10 @@ deftest html-test
       element $ render-app todo-demo @global-states build-mutate
     testing "|test generated HTML"
       is $ = (slurp "|examples/demo.html") (element->string (purify-element element))
+
+deftest simple-html-test
+  let
+      todo-demo $ todolist-component ({} :tasks @todolist-store)
+      element $ render-app todo-demo @global-states build-mutate
+    testing "|test generated HTML"
+      is $ = (slurp "|examples/simple.html") (element->html (purify-element element))

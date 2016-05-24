@@ -21,7 +21,7 @@
 
 (refer 'boot-figwheel :rename '{cljs-repl fw-cljs-repl}) ; avoid some symbols
 
-(def +version+ "0.1.20")
+(def +version+ "0.1.21")
 
 (task-options!
   pom {:project     'mvc-works/respo
@@ -45,7 +45,8 @@
     (target)))
 
 (task-options!
- figwheel {:build-ids  ["dev"]
+  test {:namespaces '#{respo.html-test}}
+  figwheel {:build-ids  ["dev"]
            :all-builds [{:id "dev"
                          :compiler {:main 'respo.core
                                     :target :nodejs
@@ -62,6 +63,7 @@
                                     :debug false}}]
            :figwheel-options {:repl true
                               :http-server-root "target"
+                              :reload-clj-files false
                               :load-warninged-code false
                               :css-dirs ["target"]}})
 

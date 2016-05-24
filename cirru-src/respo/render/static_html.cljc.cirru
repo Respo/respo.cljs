@@ -55,6 +55,30 @@ defn element->string (element)
               child $ last entry
             element->string child
 
-    str |< tag-name "| " props-in-string |>
+    str |< tag-name
+      if (> (count props-in-string) 0) "| " "|"
+      , props-in-string |>
+      or text-inside $ string/join | children
+      , |</ tag-name |>
+
+defn element->html (element)
+  let
+    (tag-name $ name $ :name element)
+      props $ :props element
+      text-inside $ or (:innerHTML props)
+        :inner-text props
+      tailored-props $ -> (:attrs element)
+        dissoc :innerHTML
+        dissoc :inner-text
+      props-in-string $ props->string tailored-props
+      children $ ->> (:children element)
+        map $ fn (entry)
+          let
+              child $ last entry
+            element->html child
+
+    str |< tag-name
+      if (> (count props-in-string) 0) "| " "|"
+      , props-in-string |>
       or text-inside $ string/join | children
       , |</ tag-name |>

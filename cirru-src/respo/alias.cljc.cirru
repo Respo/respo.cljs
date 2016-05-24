@@ -85,3 +85,33 @@ defn code (props & children)
 
 defn pre (props & children)
   create-element :pre props children
+
+defn img (props & children)
+  create-element :img props children
+
+defn canvas (props & children)
+  create-element :canvas props children
+
+defn html (props & children)
+  create-element :html props children
+
+defn head (props & children)
+  create-element :head props children
+
+defn body (props & children)
+  create-element :body props children
+
+defn link (props & children)
+  create-element :link props children
+
+defn meta' (props & children)
+  create-element :meta props children
+
+defn script (props & children)
+  create-element :script props children
+
+defn style (props & children)
+  create-element :style props children
+
+defn title (props & children)
+  create-element :title props children
