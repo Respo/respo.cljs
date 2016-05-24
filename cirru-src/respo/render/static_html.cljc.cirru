@@ -37,12 +37,12 @@ defn props->string (props)
 defn element->string (element)
   let
     (tag-name $ name $ :name element)
-      props $ :props element
-      text-inside $ or (:innerHTML props)
-        :inner-text props
+      attrs $ :attrs element
+      text-inside $ or (:innerHTML attrs)
+        :inner-text attrs
       formatted-coord $ pr-str $ :coord element
       formatted-event $ pr-str $ into ([]) $ keys (:event element)
-      tailored-props $ -> (:attrs element)
+      tailored-props $ -> attrs
         dissoc :innerHTML
         dissoc :inner-text
         merge $ {}
@@ -64,10 +64,10 @@ defn element->string (element)
 defn element->html (element)
   let
     (tag-name $ name $ :name element)
-      props $ :props element
-      text-inside $ or (:innerHTML props)
-        :inner-text props
-      tailored-props $ -> (:attrs element)
+      attrs $ :attrs element
+      text-inside $ or (:innerHTML attrs)
+        :inner-text attrs
+      tailored-props $ -> attrs
         dissoc :innerHTML
         dissoc :inner-text
       props-in-string $ props->string tailored-props
