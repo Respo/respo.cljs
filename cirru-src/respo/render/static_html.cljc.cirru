@@ -1,8 +1,10 @@
 
 ns respo.render.static-html $ :require
   [] clojure.string :as string
-  [] respo.util.format :refer $ [] prop->attr
+  [] respo.util.format :refer $ [] prop->attr purify-element
   [] respo.util.detect :refer $ [] component? element?
+  [] respo.render.expander :refer $ [] render-app
+  [] respo.controller.deliver :refer $ [] mutate-factory
 
 defn style->string (styles)
   string/join | $ ->> styles $ map $ fn (entry)
@@ -82,3 +84,19 @@ defn element->html (element)
       , props-in-string |>
       or text-inside $ string/join | children
       , |</ tag-name |>
+
+def global-states $ atom ({})
+
+def global-element $ atom nil
+
+def build-mutate $ mutate-factory global-element global-states
+
+defn make-string (tree)
+  let
+      element $ render-app tree @global-states build-mutate
+    element->string (purify-element element)
+
+defn make-html (tree)
+  let
+      element $ render-app tree @global-states build-mutate
+    element->html (purify-element element)

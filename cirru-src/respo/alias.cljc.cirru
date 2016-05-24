@@ -86,9 +86,6 @@ defn code (props & children)
 defn pre (props & children)
   create-element :pre props children
 
-defn img (props & children)
-  create-element :img props children
-
 defn canvas (props & children)
   create-element :canvas props children
 

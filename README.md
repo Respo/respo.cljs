@@ -10,7 +10,7 @@ A responsive DOM library.
 [![Respo](https://img.shields.io/clojars/v/mvc-works/respo.svg)](https://clojars.org/mvc-works/respo)
 
 ```clojure
-[mvc-works/respo "0.1.21"]
+[mvc-works/respo "0.1.22"]
 ```
 
 ```clojure
@@ -19,8 +19,8 @@ A responsive DOM library.
 (respo.controller.resolver/get-element-at element coord)
 (respo.render.expander/render-app element-markup global-states)
 (respo.render.differ/find-element-diffs [] [] old-virtual-element virtual-element)
-(respo.render.static-html/element->string purified-element)
-(respo.render.static-html/element->html purified-element)
+(respo.render.static-html/make-string virtual-element)
+(respo.render.static-html/make-html virtual-element)
 (respo.util.format/purify-element virtual-element)
 (respo.alias/div {})
 (respo.alias/create-comp :demo (fn [] (fn [state] (div))))
