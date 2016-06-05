@@ -1,25 +1,21 @@
 
 (set-env!
- :dependencies '[[org.clojure/clojure "1.8.0"           :scope "provided"]
-                 [org.clojure/clojurescript "1.7.228"   :scope "provided"]
-                 [adzerk/boot-cljs "1.7.170-3"      :scope "test"]
-                 [figwheel-sidecar "0.5.2"          :scope "test"]
-                 [com.cemerick/piggieback "0.2.1"   :scope "test"]
-                 [org.clojure/tools.nrepl "0.2.10"  :scope "test"]
-                 [ajchemist/boot-figwheel "0.5.2-2" :scope "test"]
-                 [adzerk/boot-reload "0.4.6"        :scope "test"]
-                 [cirru/boot-cirru-sepal "0.1.5"    :scope "test"]
-                 [org.clojure/core.async "0.2.374"  :scope "test"]
-                 [adzerk/boot-test       "1.1.1"    :scope "test"]
-                 [mvc-works/hsl "0.1.2"             :scope "test"]])
+ :dependencies '[[org.clojure/clojure         "1.8.0"       :scope "provided"]
+                 [org.clojure/clojurescript   "1.9.36"      :scope "provided"]
+                 [adzerk/boot-cljs            "1.7.228-1"   :scope "test"]
+                 [figwheel-sidecar            "0.5.2"       :scope "test"]
+                 [com.cemerick/piggieback     "0.2.1"       :scope "test"]
+                 [org.clojure/tools.nrepl     "0.2.10"      :scope "test"]
+                 [ajchemist/boot-figwheel     "0.5.2-2"     :scope "test"]
+                 [cirru/boot-cirru-sepal      "0.1.5"       :scope "test"]
+                 [org.clojure/core.async      "0.2.374"     :scope "test"]
+                 [adzerk/boot-test            "1.1.1"       :scope "test"]
+                 [mvc-works/hsl               "0.1.2"       :scope "test"]])
 
 (require '[adzerk.boot-cljs   :refer [cljs]]
-         '[adzerk.boot-reload :refer [reload]]
-         '[cirru-sepal.core   :refer [cirru-sepal transform-cirru]]
+         '[cirru-sepal.core   :refer [transform-cirru]]
          '[adzerk.boot-test   :refer :all]
          '[boot-figwheel])
-
-(refer 'boot-figwheel :rename '{cljs-repl fw-cljs-repl}) ; avoid some symbols
 
 (def +version+ "0.1.22")
 
@@ -31,21 +27,24 @@
        :scm         {:url "https://github.com/mvc-works/respo"}
        :license     {"MIT" "http://opensource.org/licenses/mit-license.php"}})
 
-(set-env! :repositories #(conj % ["clojars" {:url "https://clojars.org/repo/"}]))
-
 (deftask compile-cirru []
-  (cirru-sepal :paths ["cirru-src" "cirru-app"]))
-
-(deftask build-simple []
   (set-env!
-    :source-paths #{"cirru-src" "cirru-app"})
+    :source-paths #{"cirru/"})
   (comp
     (transform-cirru)
-    (cljs :compiler-options {:target :nodejs})
-    (target)))
+    (target :dir #{"compiled/"})))
+
+(deftask watch-compile []
+  (set-env!
+    :source-paths #{"cirru/"})
+  (comp
+    (watch)
+    (transform-cirru)
+    (target :dir #{"compiled/"})))
+
+(refer 'boot-figwheel :rename '{cljs-repl fw-cljs-repl}) ; avoid some symbols
 
 (task-options!
-  test {:namespaces '#{respo.html-test}}
   figwheel {:build-ids  ["dev"]
            :all-builds [{:id "dev"
                          :compiler {:main 'respo.core
@@ -69,20 +68,26 @@
 
 (deftask dev []
   (set-env!
-    :source-paths #{"src" "app"})
+    :source-paths #{"compiled/src" "compiled/app"})
   (comp
-    (cirru-sepal :paths ["cirru-src" "cirru-app"] :watch true)
     (repl)
     (figwheel)
     (target)))
 
-; bug: after optimization, method exported from npm package breaks
-(deftask build-advanced []
+(deftask build-simple []
   (set-env!
-    :source-paths #{"cirru-src" "cirru-app"})
+    :source-paths #{"cirru/src" "cirru/app"})
   (comp
     (transform-cirru)
-    (cljs :compiler-options {:target :nodejs} :optimizations :advanced)
+    (cljs :compiler-options {:target :nodejs})
+    (target)))
+
+(deftask build-advanced []
+  (set-env!
+    :source-paths #{"cirru/src" "cirru/app"})
+  (comp
+    (transform-cirru)
+    (cljs :optimizations :advanced :compiler-options {:target :nodejs})
     (target)))
 
 (deftask rsync []
@@ -99,7 +104,7 @@
 ; some problems due to uglifying
 (deftask build []
   (set-env!
-    :source-paths #{"cirru-src"})
+    :source-paths #{"cirru/src"})
   (comp
     (transform-cirru)
     (pom)
@@ -108,14 +113,15 @@
     (target)))
 
 (deftask deploy []
+  (set-env! :repositories #(conj % ["clojars" {:url "https://clojars.org/repo/"}]))
   (comp
     (build)
     (push :repo "clojars" :gpg-sign (not (.endsWith +version+ "-SNAPSHOT")))))
 
 (deftask watch-test []
   (set-env!
-    :source-paths #{"cirru-src" "cirru-test"})
+    :source-paths #{"cirru/src" "cirru/test"})
   (comp
     (watch)
     (transform-cirru)
-    (test)))
+    (test :namespaces '#{respo.html-test})))

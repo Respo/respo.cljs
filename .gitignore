@@ -10,10 +10,6 @@ pom.xml.asc
 .hgignore
 .hg/
 
-
-/src/
 /figwheel_server.log
 /node_modules/
 /.nrepl-history
-/app
-/test
