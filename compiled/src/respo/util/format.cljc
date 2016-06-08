@@ -12,9 +12,7 @@
         (if (= cursor "-")
           (recur acc piece-followed true)
           (recur
-            (str
-              acc
-              (if promoted? (string/upper-case cursor) (cursor)))
+            (str acc (if promoted? (string/upper-case cursor) cursor))
             piece-followed
             false))))))
 

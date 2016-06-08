@@ -1,68 +1,34 @@
 
 (ns respo.main
-  (:require [respo.component.todolist :refer [todolist-component]]
-            [respo.render.expander :refer [render-app]]
-            [respo.update.core :refer [update-transform]]
-            [respo.render.differ :refer [find-element-diffs]]
-            [respo.util.time :refer [io-get-time]]
-            [respo.controller.deliver :refer [build-deliver-event
-                                              mutate-factory]]
-            [respo.controller.resolver :refer [get-markup-at]]
-            [respo.util.format :refer [purify-element]]))
+  (:require [respo.core :refer [render]]
+            [respo.schema :as schema]
+            [respo.updater.core :refer [updater]]
+            [respo.component.container :refer [comp-container]]))
 
-(defonce todolist-store
- (atom [{:id 101, :text "101"} {:id 102, :text "102"}]))
+(defonce global-store (atom schema/store))
 
 (defonce global-states (atom {}))
 
-(defonce global-element (atom nil))
+(defn dispatch [op op-data]
+  (let [op-id (.valueOf (js/Date.))
+        new-store (updater @global-store op op-data op-id)]
+    (reset! global-store new-store)))
 
-(defonce clients-list (atom []))
-
-(defonce id-counter (atom 10))
-
-(defn dispatch [dispatch-type dispatch-data]
-  (println "dispatch:" dispatch-type (pr-str dispatch-data))
-  (reset! id-counter (inc @id-counter))
-  (let [op-id @id-counter
-        new-store (update-transform
-                    @todolist-store
-                    dispatch-type
-                    dispatch-data
-                    op-id)]
-    (println "new store:" (pr-str new-store))
-    (reset! todolist-store new-store)))
-
-(def build-mutate (mutate-factory global-element global-states))
-
-(defn mount-demo []
-  (let [todo-demo (todolist-component {:tasks @todolist-store})
-        element (render-app todo-demo @global-states build-mutate)]
-    (comment
-      println
-      "store to mount:"
-      (pr-str @todolist-store)
-      (pr-str (purify-element element)))
-    (reset! global-element element)))
-
-(defn rerender-demo []
-  (let [todo-demo (todolist-component {:tasks @todolist-store})
-        element (render-app todo-demo @global-states build-mutate)
-        changes (find-element-diffs
-                  []
-                  []
-                  (purify-element @global-element)
-                  (purify-element element))]
-    (reset! global-element element)
-    (println "states:" @global-states)))
+(defn render-app []
+  (let [target (.querySelector js/document "#app")]
+    (render
+      (comp-container @global-store)
+      target
+      dispatch
+      global-states)))
 
 (defn -main []
   (enable-console-print!)
-  (println "App is running...")
-  (mount-demo)
-  (add-watch todolist-store :rerender rerender-demo)
-  (add-watch global-states :rerender rerender-demo))
+  (println "main...")
+  (render-app)
+  (add-watch global-store :rerender render-app)
+  (add-watch global-states :rerender render-app))
 
-(set! *main-cli-fn* -main)
+(set! (.-onload js/window) -main)
 
-(defn on-jsload [] (println "reload!") (rerender-demo))
+(defn on-jsload [] (render-app) (.log js/console "code updated."))

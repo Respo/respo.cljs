@@ -1,7 +1,5 @@
 
 (set-env!
-  :source-paths #{"compiled/src/"}
-
   :dependencies '[[org.clojure/clojure         "1.8.0"       :scope "provided"]
                   [org.clojure/clojurescript   "1.9.36"      :scope "provided"]
                   [adzerk/boot-cljs            "1.7.228-1"   :scope "test"]
@@ -13,10 +11,7 @@
 (require '[adzerk.boot-cljs   :refer [cljs]]
          '[adzerk.boot-reload :refer [reload]]
          '[cirru-sepal.core   :refer [transform-cirru]]
-         '[respo.alias        :refer [html head title script style meta' div link body]]
-         '[respo.render.static-html :refer [make-html]]
-         '[adzerk.boot-test   :refer :all]
-         '[clojure.java.io    :as    io])
+         '[adzerk.boot-test   :refer :all])
 
 (def +version+ "0.1.22")
 
@@ -35,42 +30,11 @@
     (transform-cirru)
     (target :dir #{"compiled/"})))
 
-(defn use-text [x] {:attrs {:innerHTML x}})
-(defn html-dsl [data fileset]
-  (make-html
-    (html {}
-    (head {}
-      (title (use-text "Respo"))
-      (link {:attrs {:rel "icon" :type "image/png" :href "respo.png"}})
-      (if (:build? data)
-        (link (:attrs {:rel "manifest" :href "manifest.json"})))
-      (meta'{:attrs {:charset "utf-8"}})
-      (meta' {:attrs {:name "viewport" :content "width=device-width, initial-scale=1"}})
-      (style (use-text "body {margin: 0;}"))
-      (style (use-text "body * {box-sizing: border-box;}"))
-      (script {:attrs {:id "config" :type "text/edn" :innerHTML (pr-str data)}}))
-    (body {}
-      (div {:attrs {:id "app"}})
-      (script {:attrs {:src "main.js"}})))))
-
-(deftask html-file
-  "task to generate HTML file"
-  [d data VAL edn "data piece for rendering"]
-  (with-pre-wrap fileset
-    (let [tmp (tmp-dir!)
-          out (io/file tmp "index.html")]
-      (empty-dir! tmp)
-      (spit out (html-dsl data fileset))
-      (-> fileset
-        (add-resource tmp)
-        (commit!)))))
-
 (deftask dev []
   (set-env!
     :asset-paths #{"assets"}
     :source-paths #{"cirru/src" "cirru/app"})
   (comp
-    (html-file :data {:build? false})
     (watch)
     (transform-cirru)
     (reload :on-jsload 'respo.main/on-jsload)
@@ -84,7 +48,6 @@
   (comp
     (transform-cirru)
     (cljs :compiler-options {:target :nodejs})
-    (html-file :data {:build? false})
     (target)))
 
 (deftask build-advanced []
@@ -94,7 +57,6 @@
   (comp
     (transform-cirru)
     (cljs :optimizations :advanced :compiler-options {:target :nodejs})
-    (html-file :data {:build? true})
     (target)))
 
 (deftask rsync []

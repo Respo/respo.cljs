@@ -1,8 +1,8 @@
 
-(ns respo.update.core
+(ns respo.updater.core
   (:require [clojure.string :as string]))
 
-(defn update-transform [old-store op-type op-data op-id]
+(defn updater [old-store op-type op-data op-id]
   (println (pr-str old-store) (pr-str op-type) (pr-str op-data))
   (case
     op-type

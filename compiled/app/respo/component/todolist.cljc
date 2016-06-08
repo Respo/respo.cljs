@@ -61,7 +61,7 @@
 (defn init-state [props] {:draft ""})
 
 (defn update-state [old-state changes]
-  (println "changes:" (pr-str old-state) (pr-str changes))
+  (comment println "changes:" (pr-str old-state) (pr-str changes))
   (merge old-state changes))
 
 (defn render [props]
@@ -69,7 +69,7 @@
     (let [tasks (:tasks props)]
       (div
         {:style style-root}
-        (comp-debug state {:left "80px"})
+        (comment comp-debug state {:left "80px"})
         (div
           {:style style-panel}
           (input
@@ -100,7 +100,8 @@
             (div
               {:style style-button,
                :event {:click (clear-done props state)}}
-              (span {:attrs {:inner-text "Clear2"}}))))))))
+              (span {:attrs {:inner-text "Clear2"}}))))
+        (comment comp-debug props {})))))
 
-(def todolist-component
+(def comp-todolist
  (create-comp :todolist init-state update-state render))
