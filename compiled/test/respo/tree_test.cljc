@@ -1,5 +1,5 @@
 
-(ns respo.examples.dom-tree
+(ns respo.tree-test
   (:require [clojure.string :as string]
             [respo.render.differ :refer [find-element-diffs
                                          find-props-diffs]]))
