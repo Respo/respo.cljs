@@ -1,0 +1,15 @@
+{
+  "short_name": "Respo",
+  "name": "Respo",
+  "icons": [
+    {
+      "src": "respo.png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eeeeff",
+  "theme_color": "#eeeeff"
+}

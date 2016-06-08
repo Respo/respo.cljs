@@ -26,6 +26,11 @@ A responsive DOM library.
 (respo.alias/create-comp :demo (fn [] (fn [state] (div))))
 (respo.alias/create-element :demo props children)
 (respo.component/debug/comp-debug data {})
+
+(respo.controller.client/initialize-instance mount-point deliver-event)
+(respo.controller.client/activate-instance virtual-element mount-point deliver-event)
+(respo.controller.client/patch-instance changes mount-point deliver-event)
+(respo.controller.client/release-instance mount-point)
 ```
 
 ## Component Definition
