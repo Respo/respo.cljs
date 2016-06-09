@@ -11,20 +11,6 @@
 
 (declare render-element)
 
-(defn vector-contains? [outer-vec inner-vec]
-  (cond
-    (and (>= (count outer-vec) 0) (= (count inner-vec) 0)) true
-    (and (= (count outer-vec) 0) (> (count inner-vec) 0)) false
-    :else (if (= (first outer-vec) (first inner-vec))
-            (recur (subvec outer-vec 1) (subvec inner-vec 1))
-            false)))
-
-(defn filter-states [partial-states coord]
-  (->>
-    partial-states
-    (filter (fn [entry] (vector-contains? (key entry) coord)))
-    (into {})))
-
 (defn render-markup [markup states build-mutate coord component-coord]
   (if (component? markup)
     (render-component markup states build-mutate coord)

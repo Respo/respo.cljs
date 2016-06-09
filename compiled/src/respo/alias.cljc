@@ -15,7 +15,10 @@
         (if (or (= Element (type cursor)) (= Component (type cursor)))
           (->> children (map-indexed vector))
           cursor))
-      (->> children (map-indexed vector)))))
+      (->>
+        children
+        (map-indexed vector)
+        (filter (fn [pair] (some? (last pair))))))))
 
 (defn create-element [tag-name props children]
   (let [attrs (if (contains? props :attrs)

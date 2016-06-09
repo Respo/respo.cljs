@@ -270,9 +270,6 @@
               (rest new-events))
             (recur acc coord (rest old-events) (rest new-events)))))
 
-(defn purify-children [children-map]
-  (->> children-map (filter (fn [entry] (some? (val entry))))))
-
 (defn find-element-diffs [acc n-coord old-tree new-tree]
   (comment
     .log
