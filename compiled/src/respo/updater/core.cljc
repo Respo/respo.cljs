@@ -3,7 +3,11 @@
   (:require [clojure.string :as string]))
 
 (defn updater [old-store op-type op-data op-id]
-  (println (pr-str old-store) (pr-str op-type) (pr-str op-data))
+  (comment
+    println
+    (pr-str old-store)
+    (pr-str op-type)
+    (pr-str op-data))
   (case
     op-type
     :add

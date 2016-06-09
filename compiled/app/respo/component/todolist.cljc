@@ -31,7 +31,9 @@
   :flex-direction "row"})
 
 (def style-button
- {:margin-left "8px",
+ {:color (hsl 0 0 100),
+  :margin-left "8px",
+  :background-color (hsl 0 80 70),
   :cursor "pointer",
   :padding "0 6px 0 6px",
   :display "inline-block",
@@ -54,7 +56,7 @@
 (defn handle-add [props state mutate]
   (comment println "state built inside:" (pr-str props) (pr-str state))
   (fn [event dispatch]
-    (println "click add!" (pr-str props) (pr-str state))
+    (comment println "click add!" (pr-str props) (pr-str state))
     (dispatch :add (:draft state))
     (mutate {:draft ""})))
 

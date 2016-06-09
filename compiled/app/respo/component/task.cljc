@@ -2,8 +2,11 @@
 (ns respo.component.task
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
-            [respo.alias :refer [div input span create-comp]]
-            [respo.component.debug :refer [comp-debug]]))
+            [respo.alias :refer [div input span create-comp button]]
+            [respo.component.debug :refer [comp-debug]]
+            [respo.component.space :refer [comp-space]]))
+
+(def style-task {:display "flex"})
 
 (def style-input
  {:line-height "24px",
@@ -14,13 +17,22 @@
 
 (def style-button
  {:color (hsl 40 80 100),
-  :margin-left "8px",
   :background-color (hsl 200 80 50),
   :cursor "pointer",
   :padding "0 6px",
   :display "inline-block",
   :border-radius "4px",
   :font-family "Verdana"})
+
+(defn style-done [done?]
+  {:vertical-align "middle",
+   :background-color (hsl 200 80 70),
+   :width "32px",
+   :outline "none",
+   :border "none",
+   :height "32px"})
+
+(def style-time {:color (hsl 0 0 80)})
 
 (defn on-click [props state]
   (fn [event dispatch mutate] (println "clicked")))
@@ -37,15 +49,26 @@
   (fn [state mutate]
     (let [task (:task props)]
       (div
-        {}
-        (comp-debug task {:left "60px"})
+        {:style style-task}
+        (comp-debug task {:left "160px"})
+        (button {:style (style-done (:done task))})
+        (comp-space 8 nil)
         (input
           {:style style-input,
            :event {:input (on-text-change props state)},
            :attrs {:value (:text task)}})
-        (span
-          {:style style-button,
-           :event {:click (handle-remove props state)},
-           :attrs {:inner-text "Remove"}})))))
+        (comp-space 8 nil)
+        (div {} (span {:attrs {:inner-text (:text task)}}))
+        (comp-space 8 nil)
+        (div
+          {:style style-button}
+          (span
+            {:event {:click (handle-remove props state)},
+             :attrs {:inner-text "Remove"}}))
+        (div
+          {:style style-time}
+          (span
+            {:style style-time,
+             :attrs {:inner-text (:time state)}}))))))
 
 (def task-component (create-comp :task render))
