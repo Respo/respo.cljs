@@ -34,8 +34,7 @@
                (conj coord k)
                comp-coord)
              nil)])))
-    (filter (fn [entry] (some? (last entry))))
-    (into {})))
+    (filter (fn [entry] (some? (last entry))))))
 
 (defn render-element [markup states build-mutate coord comp-coord]
   (let [children (:children markup)

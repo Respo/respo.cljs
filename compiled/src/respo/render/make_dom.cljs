@@ -17,7 +17,7 @@
   (let [tag-name (name (:name virtual-element))
         attrs (:attrs virtual-element)
         style (:style virtual-element)
-        children (into (sorted-map) (:children virtual-element))
+        children (:children virtual-element)
         element (.createElement js/document tag-name)
         child-elements (->>
                          children

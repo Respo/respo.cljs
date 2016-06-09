@@ -45,11 +45,11 @@
       (into
         {}
         (-> markup
-         (assoc :event (purify-events (:event markup)))
-         (assoc
+         (update :event purify-events)
+         (update
            :children
-           (->>
-             (:children markup)
+           (fn [children]
              (map
-               (fn [entry] [(key entry)
-                            (purify-element (val entry))])))))))))
+               (fn [entry] [(first entry)
+                            (purify-element (last entry))])
+               children))))))))

@@ -31,6 +31,7 @@
                   []
                   (purify-element @global-element)
                   (purify-element element))]
+    (comment println "changes:" (pr-str changes))
     (patch-instance changes target deliver-event)
     (reset! global-element element)))
 

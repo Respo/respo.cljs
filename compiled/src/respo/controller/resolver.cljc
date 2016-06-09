@@ -11,12 +11,19 @@
     markup
     (if (component? markup)
       (recur (:tree markup) (subvec coord 1))
-      (let [coord-first (first coord)
-            child (get-in markup [:children coord-first])]
+      (let [child (->>
+                    (:children markup)
+                    (filter
+                      (fn [child-entry]
+                        (= (first child-entry) (first coord))))
+                    (first))]
         (if (some? child)
-          (recur child (subvec coord 1))
+          (recur (val child) (subvec coord 1))
           (raise
-            (str "child not found:" coord (purify-element markup))))))))
+            (str
+              "child not found:"
+              coord
+              (map first (:children markup)))))))))
 
 (defn find-event-target [element coord event-name]
   (let [target-element (get-markup-at element coord)
