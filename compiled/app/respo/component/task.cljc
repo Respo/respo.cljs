@@ -68,6 +68,7 @@
           {:style style-input,
            :event {:input (on-text-state mutate)},
            :attrs {:value state}})
+        (comp-space 8 nil)
         (div {} (span {:attrs {:inner-text state}}))
         (comp-space 8 nil)
         (div
@@ -75,6 +76,7 @@
           (span
             {:event {:click (handle-remove props state)},
              :attrs {:inner-text "Remove"}}))
+        (comp-space 8 nil)
         (div
           {:style style-time}
           (span

@@ -35,10 +35,7 @@
     {:msg "not recognized event", :type (.-type event)}))
 
 (defn purify-events [events]
-  (->>
-    events
-    (map (fn [entry] [(key entry) true]))
-    (into (sorted-map))))
+  (->> events (map (fn [entry] [(key entry) true])) (into {})))
 
 (defn purify-element [markup]
   (if (nil? markup)
@@ -54,5 +51,5 @@
            (->>
              (:children markup)
              (map
-               (fn [entry] [(key entry) (purify-element (val entry))]))
-             (into (sorted-map)))))))))
+               (fn [entry] [(key entry)
+                            (purify-element (val entry))])))))))))

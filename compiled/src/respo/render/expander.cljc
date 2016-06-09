@@ -74,28 +74,38 @@
       :children
       child-elements)))
 
+(def component-cached (atom {}))
+
 (defn render-component [markup states build-mutate coord]
-  (let [begin-time (io-get-time)
-        args (:args markup)
-        component (first markup)
-        init-state (:init-state markup)
-        new-coord (conj coord (:name markup))
-        inner-states (or (get states (:name markup)) {})
-        state (or (get inner-states 'data) (apply init-state args))
-        render (:render markup)
-        half-render (apply render args)
-        mutate (build-mutate new-coord)
-        markup-tree (half-render state mutate)
-        tree (render-element
-               markup-tree
-               inner-states
-               build-mutate
-               new-coord
-               new-coord)
-        cost (- (io-get-time) begin-time)]
-    (comment println "markup tree:" (pr-str markup-tree))
-    (comment println "component state:" coord states)
-    (assoc markup :coord coord :tree tree :cost cost)))
+  (let [cache-items [markup states coord]]
+    (if (contains? @component-cached cache-items)
+      (do
+        (comment println "hitted cache:" coord)
+        (get @component-cached cache-items))
+      (let [begin-time (io-get-time)
+            args (:args markup)
+            component (first markup)
+            init-state (:init-state markup)
+            new-coord (conj coord (:name markup))
+            inner-states (or (get states (:name markup)) {})
+            state (or (get inner-states 'data) (apply init-state args))
+            render (:render markup)
+            half-render (apply render args)
+            mutate (build-mutate new-coord)
+            markup-tree (half-render state mutate)
+            tree (render-element
+                   markup-tree
+                   inner-states
+                   build-mutate
+                   new-coord
+                   new-coord)
+            cost (- (io-get-time) begin-time)
+            result (assoc markup :coord coord :tree tree :cost cost)]
+        (comment println "markup tree:" (pr-str markup-tree))
+        (comment println "component state:" coord states)
+        (comment println "no cache" coord (count @component-cached))
+        (swap! component-cached assoc cache-items result)
+        result))))
 
 (defn render-app [markup states build-mutate]
   (comment .info js/console "render loop, states:" (pr-str states))

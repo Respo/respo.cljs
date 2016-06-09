@@ -95,66 +95,68 @@
                   new-follows))))))
 
 (defn find-style-diffs [acc coord old-style new-style]
-  (cond
-    (and (= 0 (count old-style)) (= 0 (count new-style))) acc
-    (and (= 0 (count old-style)) (> (count new-style) 0)) (let 
-                                                            [entry
-                                                             (first
-                                                               new-style)
-                                                             follows
-                                                             (rest
-                                                               new-style)]
-                                                            (recur
-                                                              (conj
-                                                                acc
-                                                                [:add-style
-                                                                 coord
-                                                                 entry])
-                                                              coord
-                                                              old-style
-                                                              follows))
-    (and (> (count old-style) 0) (= 0 (count new-style))) (let 
-                                                            [entry
-                                                             (first
-                                                               old-style)
-                                                             follows
-                                                             (rest
-                                                               old-style)]
-                                                            (recur
-                                                              (conj
-                                                                acc
-                                                                [:rm-style
-                                                                 coord
-                                                                 (key
-                                                                   entry)])
-                                                              coord
-                                                              follows
-                                                              new-style))
-    :else (let [old-entry (first old-style)
-                new-entry (first new-style)
-                old-follows (rest old-style)
-                new-follows (rest new-style)]
-            (case
-              (compare (key old-entry) (key new-entry))
-              -1
-              (recur
-                (conj acc [:rm-style coord (key old-entry)])
-                coord
-                old-follows
-                new-style)
-              1
-              (recur
-                (conj acc [:add-style coord new-entry])
-                coord
-                old-style
-                new-follows)
-              (recur
-                (if (= (val old-entry) (val new-entry))
-                  acc
-                  (conj acc [:replace-style coord new-entry]))
-                coord
-                old-follows
-                new-follows)))))
+  (if (identical? old-style new-style)
+    acc
+    (cond
+      (and (= 0 (count old-style)) (= 0 (count new-style))) acc
+      (and (= 0 (count old-style)) (> (count new-style) 0)) (let 
+                                                              [entry
+                                                               (first
+                                                                 new-style)
+                                                               follows
+                                                               (rest
+                                                                 new-style)]
+                                                              (recur
+                                                                (conj
+                                                                  acc
+                                                                  [:add-style
+                                                                   coord
+                                                                   entry])
+                                                                coord
+                                                                old-style
+                                                                follows))
+      (and (> (count old-style) 0) (= 0 (count new-style))) (let 
+                                                              [entry
+                                                               (first
+                                                                 old-style)
+                                                               follows
+                                                               (rest
+                                                                 old-style)]
+                                                              (recur
+                                                                (conj
+                                                                  acc
+                                                                  [:rm-style
+                                                                   coord
+                                                                   (key
+                                                                     entry)])
+                                                                coord
+                                                                follows
+                                                                new-style))
+      :else (let [old-entry (first old-style)
+                  new-entry (first new-style)
+                  old-follows (rest old-style)
+                  new-follows (rest new-style)]
+              (case
+                (compare (key old-entry) (key new-entry))
+                -1
+                (recur
+                  (conj acc [:rm-style coord (key old-entry)])
+                  coord
+                  old-follows
+                  new-style)
+                1
+                (recur
+                  (conj acc [:add-style coord new-entry])
+                  coord
+                  old-style
+                  new-follows)
+                (recur
+                  (if (= (val old-entry) (val new-entry))
+                    acc
+                    (conj acc [:replace-style coord new-entry]))
+                  coord
+                  old-follows
+                  new-follows))))))
 
 (defn find-props-diffs [acc coord old-props new-props]
   (comment
@@ -280,24 +282,20 @@
     n-coord
     old-tree
     new-tree)
-  (let [old-children (sort-by first (:children old-tree))
-        new-children (sort-by first (:children new-tree))]
-    (if (or
-          (not= (:coord old-tree) (:coord new-tree))
-          (not= (:name old-tree) (:name new-tree))
-          (not= (:c-name old-tree) (:c-name new-tree)))
-      (conj acc [:replace n-coord new-tree])
-      (-> acc
-       (find-style-diffs
-         n-coord
-         (sort-by first (:style old-tree))
-         (sort-by first (:style new-tree)))
-       (find-props-diffs
-         n-coord
-         (sort-by first (:attrs old-tree))
-         (sort-by first (:attrs new-tree)))
-       (find-events-diffs
-         n-coord
-         (sort (keys (:event old-tree)))
-         (sort (keys (:event new-tree))))
-       (find-children-diffs n-coord 0 old-children new-children)))))
+  (if (identical? old-tree new-tree)
+    acc
+    (let [old-children (:children old-tree)
+          new-children (:children new-tree)]
+      (if (or
+            (not= (:coord old-tree) (:coord new-tree))
+            (not= (:name old-tree) (:name new-tree))
+            (not= (:c-name old-tree) (:c-name new-tree)))
+        (conj acc [:replace n-coord new-tree])
+        (-> acc
+         (find-style-diffs n-coord (:style old-tree) (:style new-tree))
+         (find-props-diffs n-coord (:attrs old-tree) (:attrs new-tree))
+         (find-events-diffs
+           n-coord
+           (sort (keys (:event old-tree)))
+           (sort (keys (:event new-tree))))
+         (find-children-diffs n-coord 0 old-children new-children))))))

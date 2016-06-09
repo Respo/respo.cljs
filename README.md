@@ -35,45 +35,37 @@ A responsive DOM library.
 
 ## Component Definition
 
-Imagine this is ClojureScript code:
+```clojure
+(ns respo.component.space
+  (:require [respo.alias :refer [create-comp div]]))
 
-```cirru
-defn handle-event (data)
-  fn (simple-event dispatch mutate)
-    dispatch :op ({} :data :op-data)
-    mutate :para1 :para2
+(defn style-space [w h]
+  (if (some? w)
+    {:width w, :display "inline-block", :height "1px"}
+    {:width "1px", :display "inline-block", :height h}))
 
-defn init-state (prop1 prop2)
-  {}
+(defn render [w h] (fn [state mutate] (div {:style (style-space w h)})))
 
-defn update-state (old-state para1 para2)
-  merge old-state para1 para2
-
-defn render (prop1 prop2)
-  fn (state)
-    div ({} :on-click (handle-event data))
-      div ({})
-
-def demo-component $ create-comp :demo init-state update-state render
+(def comp-space (create-comp :space render))
 ```
 
 `mutable` is previously `set-state` but changed a lot.
-Now you have to define `update-state` and `get-state` in every component.
+Now you have to define `init-state` and `update-state` in every component.
 
 ## Develop
 
+Clojure code is compiled from JSON from `cirru/` to `compiled/`...
+
+Project workflow https://github.com/mvc-works/boot-workflow
+
 ```bash
 boot dev
-
-cd target
-node app.js
+# open index.html
 ```
 
 ```bash
-boot build-simple
-
-cd target
-node main.js
+boot build-simple # without optimizations
+boot build-advanced
 ```
 
 ```bash

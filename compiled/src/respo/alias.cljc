@@ -19,14 +19,12 @@
 
 (defn create-element [tag-name props children]
   (let [attrs (if (contains? props :attrs)
-                (into (sorted-map) (:attrs props))
-                {})
+                (sort-by first (:attrs props))
+                (list))
         style (if (contains? props :style)
-                (into (sorted-map) (:style props))
-                {})
-        event (if (contains? props :event)
-                (into (sorted-map) (:event props))
-                {})
+                (sort-by first (:style props))
+                (list))
+        event (if (contains? props :event) (:event props) (list))
         children-map (arrange-children children)]
     (->Element tag-name nil nil attrs style event children-map)))
 

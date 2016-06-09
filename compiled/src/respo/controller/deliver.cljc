@@ -52,8 +52,7 @@
   (fn [coord]
     (if (contains? @global-mutate-methods coord)
       (get @global-mutate-methods coord)
-      (let [hint "compare states:"
-            method (fn [& state-args]
+      (let [method (fn [& state-args]
                      (let [component (get-markup-at
                                        @global-element
                                        (subvec
@@ -76,7 +75,7 @@
                                           @global-element)]
                        (comment
                          println
-                         hint
+                         "compare states:"
                          (pr-str @global-states)
                          (pr-str old-state)
                          (pr-str new-state))

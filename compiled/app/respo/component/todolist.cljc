@@ -94,7 +94,8 @@
           (->>
             tasks
             (map
-              (fn [task] [(:id task) (task-component {:task task})]))))
+              (fn [task] [(:id task) (task-component {:task task})]))
+            (sort-by first)))
         (if (> (count tasks) 0)
           (div
             {:style style-toolbar, :attrs {:spell-check true}}
