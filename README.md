@@ -5,6 +5,10 @@ A responsive DOM library.
 
 ![](assets/respo.png)
 
+Demo http://repo.tiye.me/mvc-works/respo/
+
+> This project is during refactoring, check old version here https://github.com/mvc-works/respo-spa
+
 ## Installation
 
 [![Respo](https://img.shields.io/clojars/v/mvc-works/respo.svg)](https://clojars.org/mvc-works/respo)
@@ -54,8 +58,6 @@ Now you have to define `init-state` and `update-state` in every component.
 
 ## Develop
 
-Clojure code is compiled from JSON from `cirru/` to `compiled/`...
-
 Project workflow https://github.com/mvc-works/boot-workflow
 
 ```bash
@@ -72,9 +74,25 @@ boot build-advanced
 boot watch-test
 ```
 
+Clojure code is compiled from JSON from `cirru/` to `compiled/` by:
+
+```bash
+boot compile-cirru
+```
+
+My way of programming is with my graphical editor, like doing this:
+
+```bash
+npm i -g cirru-light-editor
+boot dev
+cle cirru/
+# open http://repo.cirru.org/light-editor/
+# # try Command P, Command Shift P, Command S, Left, Right, Up, Down...
+```
+
 ## Options
 
-This project is mainly inspired by:
+This project is inspired by:
 
 * React
 * Reagent

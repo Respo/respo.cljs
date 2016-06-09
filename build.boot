@@ -47,7 +47,7 @@
     :source-paths #{"cirru/src" "cirru/app"})
   (comp
     (transform-cirru)
-    (cljs :compiler-options {:target :nodejs})
+    (cljs :compiler-options {})
     (target)))
 
 (deftask build-advanced []
@@ -56,14 +56,13 @@
     :source-paths #{"cirru/src" "cirru/app"})
   (comp
     (transform-cirru)
-    (cljs :optimizations :advanced :compiler-options {:target :nodejs})
+    (cljs :optimizations :advanced :compiler-options {})
     (target)))
 
 (deftask rsync []
-  (fn [next-task]
-    (fn [fileset]
-      (sh "rsync" "-r" "target/" "tiye:repo/mvc-works/respo" "--exclude" "main.out" "--delete")
-      (next-task fileset))))
+  (with-pre-wrap fileset
+    (sh "rsync" "-r" "target/" "tiye:repo/mvc-works/respo" "--exclude" "main.out" "--delete")
+    fileset))
 
 (deftask send-tiye []
   (comp
