@@ -27,11 +27,7 @@
 
 (defn render-markup [markup states build-mutate coord component-coord]
   (if (component? markup)
-    (render-component
-      markup
-      (filter-states states coord)
-      build-mutate
-      coord)
+    (render-component markup states build-mutate coord)
     (render-element markup states build-mutate coord component-coord)))
 
 (defn render-children [children states build-mutate coord comp-coord]
@@ -40,18 +36,20 @@
     children
     (map
       (fn [child-entry]
-        (let [k (first child-entry) child-element (last child-entry)]
+        (let [k (first child-entry)
+              child-element (last child-entry)
+              inner-states (or (get states k) {})]
           [k
            (if (some? child-element)
              (render-markup
                child-element
-               states
+               inner-states
                build-mutate
                (conj coord k)
                comp-coord)
              nil)])))
     (filter (fn [entry] (some? (last entry))))
-    (into (sorted-map))))
+    (into {})))
 
 (defn render-element [markup states build-mutate coord comp-coord]
   (let [children (:children markup)
@@ -82,21 +80,21 @@
         component (first markup)
         init-state (:init-state markup)
         new-coord (conj coord (:name markup))
-        state (if (contains? states new-coord)
-                (get states new-coord)
-                (apply init-state args))
+        inner-states (or (get states (:name markup)) {})
+        state (or (get inner-states 'data) (apply init-state args))
         render (:render markup)
         half-render (apply render args)
         mutate (build-mutate new-coord)
         markup-tree (half-render state mutate)
         tree (render-element
                markup-tree
-               states
+               inner-states
                build-mutate
                new-coord
                new-coord)
         cost (- (io-get-time) begin-time)]
     (comment println "markup tree:" (pr-str markup-tree))
+    (comment println "component state:" coord states)
     (assoc markup :coord coord :tree tree :cost cost)))
 
 (defn render-app [markup states build-mutate]

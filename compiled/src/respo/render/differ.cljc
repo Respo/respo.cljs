@@ -4,8 +4,6 @@
 
 (declare find-element-diffs)
 
-(defn sorted-rest [map-x] (into (sorted-map) (rest map-x)))
-
 (defn find-children-diffs [acc n-coord index old-children new-children]
   (comment
     .log
@@ -35,7 +33,7 @@
                                                                   (inc
                                                                     index)
                                                                   old-children
-                                                                  (sorted-rest
+                                                                  (rest
                                                                     new-children))
     (and (> (count old-children) 0) (= 0 (count new-children))) (recur
                                                                   (conj
@@ -53,13 +51,13 @@
                                                                          index)]))
                                                                   n-coord
                                                                   index
-                                                                  (sorted-rest
+                                                                  (rest
                                                                     old-children)
                                                                   new-children)
     :else (let [first-old-entry (first old-children)
                 first-new-entry (first new-children)
-                old-follows (sorted-rest old-children)
-                new-follows (sorted-rest new-children)]
+                old-follows (rest old-children)
+                new-follows (rest new-children)]
             (case
               (compare (key first-old-entry) (key first-new-entry))
               -1
@@ -104,7 +102,7 @@
                                                              (first
                                                                new-style)
                                                              follows
-                                                             (sorted-rest
+                                                             (rest
                                                                new-style)]
                                                             (recur
                                                               (conj
@@ -120,7 +118,7 @@
                                                              (first
                                                                old-style)
                                                              follows
-                                                             (sorted-rest
+                                                             (rest
                                                                old-style)]
                                                             (recur
                                                               (conj
@@ -134,8 +132,8 @@
                                                               new-style))
     :else (let [old-entry (first old-style)
                 new-entry (first new-style)
-                old-follows (sorted-rest old-style)
-                new-follows (sorted-rest new-style)]
+                old-follows (rest old-style)
+                new-follows (rest new-style)]
             (case
               (compare (key old-entry) (key new-entry))
               -1
@@ -180,7 +178,7 @@
                                                                  new-props)])
                                                             coord
                                                             old-props
-                                                            (sorted-rest
+                                                            (rest
                                                               new-props))
     (and (> (count old-props) 0) (= 0 (count new-props))) (recur
                                                             (conj
@@ -191,15 +189,15 @@
                                                                  (first
                                                                    old-props))])
                                                             coord
-                                                            (sorted-rest
+                                                            (rest
                                                               old-props)
                                                             new-props)
     :else (let [old-entry (first old-props)
                 new-entry (first new-props)
                 [old-k old-v] (first old-props)
                 [new-k new-v] (first new-props)
-                old-follows (sorted-rest old-props)
-                new-follows (sorted-rest new-props)]
+                old-follows (rest old-props)
+                new-follows (rest new-props)]
             (comment .log js/console old-k new-k old-v new-v)
             (case
               (compare old-k new-k)
@@ -271,10 +269,7 @@
             (recur acc coord (rest old-events) (rest new-events)))))
 
 (defn purify-children [children-map]
-  (->>
-    children-map
-    (filter (fn [entry] (some? (val entry))))
-    (into (sorted-map))))
+  (->> children-map (filter (fn [entry] (some? (val entry))))))
 
 (defn find-element-diffs [acc n-coord old-tree new-tree]
   (comment
@@ -285,16 +280,22 @@
     n-coord
     old-tree
     new-tree)
-  (let [old-children (:children old-tree)
-        new-children (:children new-tree)]
+  (let [old-children (sort-by first (:children old-tree))
+        new-children (sort-by first (:children new-tree))]
     (if (or
           (not= (:coord old-tree) (:coord new-tree))
           (not= (:name old-tree) (:name new-tree))
           (not= (:c-name old-tree) (:c-name new-tree)))
       (conj acc [:replace n-coord new-tree])
       (-> acc
-       (find-style-diffs n-coord (:style old-tree) (:style new-tree))
-       (find-props-diffs n-coord (:attrs old-tree) (:attrs new-tree))
+       (find-style-diffs
+         n-coord
+         (sort-by first (:style old-tree))
+         (sort-by first (:style new-tree)))
+       (find-props-diffs
+         n-coord
+         (sort-by first (:attrs old-tree))
+         (sort-by first (:attrs new-tree)))
        (find-events-diffs
          n-coord
          (sort (keys (:event old-tree)))

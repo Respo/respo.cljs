@@ -22,6 +22,8 @@
 
 (defn render-app []
   (let [target (.querySelector js/document "#app")]
+    (println "store:" @global-store)
+    (println "states:" @global-states)
     (render
       (comp-container @global-store)
       target

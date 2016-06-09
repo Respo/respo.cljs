@@ -80,6 +80,10 @@
                          (pr-str @global-states)
                          (pr-str old-state)
                          (pr-str new-state))
-                       (swap! global-states assoc coord new-state)))]
+                       (swap!
+                         global-states
+                         assoc-in
+                         (conj coord 'data)
+                         new-state)))]
         (swap! global-mutate-methods assoc coord method)
         method))))
