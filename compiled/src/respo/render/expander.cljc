@@ -66,7 +66,11 @@
   (if (= (count cache-list) 0)
     nil
     (let [cursor (first cache-list)
-          [old-name old-args old-states old-coord old-result] cursor]
+          old-name (get cursor 0)
+          old-args (get cursor 1)
+          old-states (get cursor 2)
+          old-coord (get cursor 3)
+          old-result (get cursor 4)]
       (if (and
             (identical? states old-states)
             (= (:name markup) old-name)
@@ -78,8 +82,14 @@
 (defn register-component [markup states coord result]
   (swap!
     component-cached
-    conj
-    [(:name markup) (:args markup) states coord result]))
+    (fn [caches]
+      (cons
+        [(:name markup) (:args markup) states coord result]
+        caches))))
+
+(defn perform-gc! []
+  (if (> (count @component-cached) 800)
+    (do (swap! component-cached (fn [caches] (take 400 caches))))))
 
 (defn render-component [markup states build-mutate coord]
   (let [maybe-component (get-component
@@ -115,5 +125,6 @@
         result))))
 
 (defn render-app [markup states build-mutate]
-  (comment .info js/console "render loop, states:" (pr-str states))
+  (comment println "render loop, states:" (pr-str states))
+  (perform-gc!)
   (render-markup markup states build-mutate [] []))

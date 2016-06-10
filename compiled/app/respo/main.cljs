@@ -32,7 +32,6 @@
 
 (defn -main []
   (enable-console-print!)
-  (println "main...")
   (render-app)
   (add-watch global-store :rerender render-app)
   (add-watch global-states :rerender render-app))
