@@ -59,14 +59,36 @@
       :children
       child-elements)))
 
-(def component-cached (atom {}))
+(defonce component-cached (atom (list)))
+
+(defn get-component [cache-list markup states coord]
+  (comment println "compare markup:" (:name markup) (first cache-list))
+  (if (= (count cache-list) 0)
+    nil
+    (let [cursor (first cache-list)
+          [old-name old-args old-states old-coord old-result] cursor]
+      (if (and
+            (identical? states old-states)
+            (= (:name markup) old-name)
+            (= coord old-coord)
+            (= (:args markup) old-args))
+        old-result
+        (recur (rest cache-list) markup states coord)))))
+
+(defn register-component [markup states coord result]
+  (swap!
+    component-cached
+    conj
+    [(:name markup) (:args markup) states coord result]))
 
 (defn render-component [markup states build-mutate coord]
-  (let [cache-items [markup states coord]]
-    (if (contains? @component-cached cache-items)
-      (do
-        (comment println "hitted cache:" coord)
-        (get @component-cached cache-items))
+  (let [maybe-component (get-component
+                          @component-cached
+                          markup
+                          states
+                          coord)]
+    (if (some? maybe-component)
+      (do (comment println "hitted cache:" coord) maybe-component)
       (let [begin-time (io-get-time)
             args (:args markup)
             component (first markup)
@@ -88,8 +110,8 @@
             result (assoc markup :coord coord :tree tree :cost cost)]
         (comment println "markup tree:" (pr-str markup-tree))
         (comment println "component state:" coord states)
-        (comment println "no cache" coord (count @component-cached))
-        (swap! component-cached assoc cache-items result)
+        (comment println "no cache:" coord)
+        (register-component markup states coord result)
         result))))
 
 (defn render-app [markup states build-mutate]
