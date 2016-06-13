@@ -81,10 +81,9 @@
               :input (on-text-change props state mutate)},
              :attrs {:placeholder "Text", :value (:draft state)}})
           (span
-            {:style style-button}
-            (span
-              {:event {:click (handle-add props state mutate)},
-               :attrs {:inner-text "Add"}}))
+            {:style style-button,
+             :event {:click (handle-add props state mutate)}}
+            (span {:attrs {:inner-text "Add"}}))
           (span
             {:style style-button,
              :event {:click (clear-done props state)},
