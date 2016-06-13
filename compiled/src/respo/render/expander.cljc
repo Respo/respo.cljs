@@ -59,13 +59,13 @@
       :children
       child-elements)))
 
-(defonce component-cached (atom (list)))
+(defonce component-cached (atom []))
 
 (defn get-component [cache-list markup states coord]
   (comment println "compare markup:" (:name markup) (first cache-list))
   (if (= (count cache-list) 0)
     nil
-    (let [cursor (first cache-list)
+    (let [cursor (get cache-list 0)
           old-name (get cursor 0)
           old-args (get cursor 1)
           old-states (get cursor 2)
@@ -73,23 +73,21 @@
           old-result (get cursor 4)]
       (if (and
             (identical? states old-states)
-            (= (:name markup) old-name)
+            (identical? (:name markup) old-name)
             (= coord old-coord)
             (= (:args markup) old-args))
         old-result
-        (recur (rest cache-list) markup states coord)))))
+        (recur (subvec cache-list 1) markup states coord)))))
 
 (defn register-component [markup states coord result]
   (swap!
     component-cached
-    (fn [caches]
-      (cons
-        [(:name markup) (:args markup) states coord result]
-        caches))))
+    conj
+    [(:name markup) (:args markup) states coord result]))
 
 (defn perform-gc! []
   (if (> (count @component-cached) 800)
-    (do (swap! component-cached (fn [caches] (take 400 caches))))))
+    (do (swap! component-cached subvec 0 400))))
 
 (defn render-component [markup states build-mutate coord]
   (let [maybe-component (get-component

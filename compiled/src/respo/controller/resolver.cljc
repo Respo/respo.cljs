@@ -5,10 +5,10 @@
             [respo.util.detect :refer [component? element?]]
             [respo.util.error :refer [raise]]))
 
-(def cached-nodes (atom (list)))
+(def cached-nodes (atom []))
 
 (defn register-node! [markup coord node]
-  (swap! cached-nodes (fn [caches] (cons [markup coord node] caches))))
+  (swap! cached-nodes conj [markup coord node]))
 
 (defn look-up-node [caches markup coord]
   (if (= (count caches) 0)
@@ -19,7 +19,7 @@
           old-node (get cursor 2)]
       (if (and (identical? old-markup markup) (= old-coord coord))
         old-node
-        (recur (rest caches) markup coord)))))
+        (recur (subvec caches 1) markup coord)))))
 
 (defn perform-gc! [])
 
