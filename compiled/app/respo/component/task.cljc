@@ -14,7 +14,7 @@
 
 (def style-input
  {:line-height "24px",
-  :min-width "300px",
+  :min-width "200px",
   :font-size "16px",
   :padding "0px 8px",
   :outline "none"})
@@ -72,10 +72,9 @@
         (div {} (span {:attrs {:inner-text state}}))
         (comp-space 8 nil)
         (div
-          {:style style-button}
-          (span
-            {:event {:click (handle-remove props state)},
-             :attrs {:inner-text "Remove"}}))
+          {:style style-button,
+           :event {:click (handle-remove props state)}}
+          (span {:attrs {:inner-text "Remove"}}))
         (comp-space 8 nil)
         (div
           {:style style-time}

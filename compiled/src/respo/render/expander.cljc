@@ -20,7 +20,7 @@
   (comment println "render children:" children)
   (->>
     children
-    (map
+    (mapv
       (fn [child-entry]
         (let [k (first child-entry)
               child-element (last child-entry)
@@ -33,8 +33,7 @@
                build-mutate
                (conj coord k)
                comp-coord)
-             nil)])))
-    (into [])))
+             nil)])))))
 
 (defn render-element [markup states build-mutate coord comp-coord]
   (let [children (:children markup)
