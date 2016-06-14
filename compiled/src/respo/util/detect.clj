@@ -5,3 +5,5 @@
 (defn component? [x] (= Component (type x)))
 
 (defn element? [x] (= Element (type x)))
+
+(defn =vector [a b] false)

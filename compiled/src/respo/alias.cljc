@@ -42,7 +42,7 @@
       (->Component
         comp-name
         nil
-        args
+        (into [] args)
         init-state
         update-state
         render

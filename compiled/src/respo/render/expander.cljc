@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [respo.util.time :refer [io-get-time]]
             [respo.util.format :refer [purify-element]]
-            [respo.util.detect :refer [component? element?]]))
+            [respo.util.detect :refer [component? element? =vector]]))
 
 (defn keyword->string [x] (subs (str x) 1))
 
@@ -63,6 +63,7 @@
 
 (defn get-component [cache-list markup states coord]
   (comment println "compare markup:" (:name markup) (first cache-list))
+  (comment println (:args markup))
   (if (= (count cache-list) 0)
     nil
     (let [cursor (get cache-list 0)
@@ -74,8 +75,8 @@
       (if (and
             (identical? states old-states)
             (identical? (:name markup) old-name)
-            (= coord old-coord)
-            (= (:args markup) old-args))
+            (=vector coord old-coord)
+            (=vector (:args markup) old-args))
         old-result
         (recur (subvec cache-list 1) markup states coord)))))
 
