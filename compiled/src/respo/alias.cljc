@@ -8,16 +8,16 @@
   [name coord args init-state update-state render tree cost])
 
 (defn arrange-children [children]
-  (if (and
-        (= 1 (count children))
-        (not= Element (type (first children)))
-        (not= Component (type (first children))))
-    (first children)
-    (->>
-      children
-      (map-indexed vector)
-      (filter (fn [pair] (some? (last pair))))
-      (sort-by first))))
+  (->>
+    (if (and
+          (= 1 (count children))
+          (not= Element (type (first children)))
+          (not= Component (type (first children))))
+      (first children)
+      (map-indexed vector children))
+    (filter (fn [pair] (some? (last pair))))
+    (sort-by first)
+    (into [])))
 
 (defn create-element [tag-name props children]
   (let [attrs (if (contains? props :attrs)

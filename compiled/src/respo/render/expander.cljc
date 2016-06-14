@@ -34,7 +34,7 @@
                (conj coord k)
                comp-coord)
              nil)])))
-    (filter (fn [entry] (some? (last entry))))))
+    (into [])))
 
 (defn render-element [markup states build-mutate coord comp-coord]
   (let [children (:children markup)
@@ -45,7 +45,8 @@
                          coord
                          comp-coord)]
     (comment
-      println
+      .log
+      js/console
       "children should have order:"
       (pr-str children)
       (pr-str child-elements)
@@ -66,18 +67,13 @@
   (comment println (:args markup))
   (if (= (count cache-list) 0)
     nil
-    (let [cursor (get cache-list 0)
-          old-name (get cursor 0)
-          old-args (get cursor 1)
-          old-states (get cursor 2)
-          old-coord (get cursor 3)
-          old-result (get cursor 4)]
+    (let [cursor (get cache-list 0)]
       (if (and
-            (identical? states old-states)
-            (identical? (:name markup) old-name)
-            (=vector coord old-coord)
-            (=vector (:args markup) old-args))
-        old-result
+            (identical? states (get cursor 2))
+            (identical? (:name markup) (get cursor 0))
+            (=vector coord (get cursor 3))
+            (=vector (:args markup) (get cursor 1)))
+        (get cursor 4)
         (recur (subvec cache-list 1) markup states coord)))))
 
 (defn register-component [markup states coord result]

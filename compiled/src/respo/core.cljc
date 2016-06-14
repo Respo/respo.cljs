@@ -26,11 +26,7 @@
 (defn rerender-app [markup target dispatch states-ref]
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event global-element dispatch)
-        changes (find-element-diffs
-                  []
-                  []
-                  (purify-element @global-element)
-                  (purify-element element))]
+        changes (find-element-diffs [] [] @global-element element)]
     (comment println "changes:" (pr-str changes))
     (patch-instance changes target deliver-event)
     (reset! global-element element)))

@@ -1,6 +1,8 @@
 
 (ns respo.render.differ
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [respo.util.format :refer [purify-element]]
+            [respo.util.detect :refer [component?]]))
 
 (declare find-element-diffs)
 
@@ -24,8 +26,9 @@
                                                                        (first
                                                                          new-children)
                                                                        item
-                                                                       (val
-                                                                         entry)]
+                                                                       (purify-element
+                                                                         (val
+                                                                           entry))]
                                                                       [:append
                                                                        n-coord
                                                                        item]))
@@ -33,8 +36,9 @@
                                                                   (inc
                                                                     index)
                                                                   old-children
-                                                                  (rest
-                                                                    new-children))
+                                                                  (subvec
+                                                                    new-children
+                                                                    1))
     (and (> (count old-children) 0) (= 0 (count new-children))) (recur
                                                                   (conj
                                                                     acc
@@ -51,13 +55,14 @@
                                                                          index)]))
                                                                   n-coord
                                                                   index
-                                                                  (rest
-                                                                    old-children)
+                                                                  (subvec
+                                                                    old-children
+                                                                    1)
                                                                   new-children)
     :else (let [first-old-entry (first old-children)
                 first-new-entry (first new-children)
-                old-follows (rest old-children)
-                new-follows (rest new-children)]
+                old-follows (subvec old-children 1)
+                new-follows (subvec new-children 1)]
             (case
               (compare (key first-old-entry) (key first-new-entry))
               -1
@@ -75,7 +80,8 @@
                                        acc
                                        [:add
                                         (conj n-coord index)
-                                        (val first-new-entry)])]
+                                        (purify-element
+                                          (val first-new-entry))])]
                 (recur
                   acc-after-cursor
                   n-coord
@@ -281,18 +287,39 @@
     new-tree)
   (if (identical? old-tree new-tree)
     acc
-    (let [old-children (:children old-tree)
-          new-children (:children new-tree)]
-      (if (or
-            (not= (:coord old-tree) (:coord new-tree))
-            (not= (:name old-tree) (:name new-tree))
-            (not= (:c-name old-tree) (:c-name new-tree)))
-        (conj acc [:replace n-coord new-tree])
-        (-> acc
-         (find-style-diffs n-coord (:style old-tree) (:style new-tree))
-         (find-props-diffs n-coord (:attrs old-tree) (:attrs new-tree))
-         (find-events-diffs
-           n-coord
-           (sort (keys (:event old-tree)))
-           (sort (keys (:event new-tree))))
-         (find-children-diffs n-coord 0 old-children new-children))))))
+    (cond
+      (component? old-tree) (recur
+                              acc
+                              n-coord
+                              (get old-tree :tree)
+                              new-tree)
+      (component? new-tree) (recur
+                              acc
+                              n-coord
+                              old-tree
+                              (get new-tree :tree))
+      :else (let [old-children (:children old-tree)
+                  new-children (:children new-tree)]
+              (if (or
+                    (not= (:coord old-tree) (:coord new-tree))
+                    (not= (:name old-tree) (:name new-tree))
+                    (not= (:c-name old-tree) (:c-name new-tree)))
+                (conj acc [:replace n-coord new-tree])
+                (-> acc
+                 (find-style-diffs
+                   n-coord
+                   (:style old-tree)
+                   (:style new-tree))
+                 (find-props-diffs
+                   n-coord
+                   (:attrs old-tree)
+                   (:attrs new-tree))
+                 (find-events-diffs
+                   n-coord
+                   (sort (keys (:event old-tree)))
+                   (sort (keys (:event new-tree))))
+                 (find-children-diffs
+                   n-coord
+                   0
+                   old-children
+                   new-children)))))))

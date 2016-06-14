@@ -49,7 +49,9 @@
          (update
            :children
            (fn [children]
-             (map
-               (fn [entry] [(first entry)
-                            (purify-element (last entry))])
-               children))))))))
+             (->>
+               children
+               (map
+                 (fn [entry] [(first entry)
+                              (purify-element (last entry))]))
+               (into [])))))))))
