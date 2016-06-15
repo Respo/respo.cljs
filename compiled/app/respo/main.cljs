@@ -25,11 +25,13 @@
   (let [target (.querySelector js/document "#app")]
     (comment println "store:" @global-store)
     (comment println "states:" @global-states)
-    (render
-      (comp-container @global-store)
-      target
-      dispatch
-      global-states)))
+    (js/requestAnimationFrame
+      (fn []
+        (render
+          (comp-container @global-store)
+          target
+          dispatch
+          global-states)))))
 
 (defn -main []
   (enable-console-print!)

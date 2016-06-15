@@ -1,7 +1,7 @@
 
 (ns respo.alias)
 
-(defrecord Element [name coord c-coord attrs style event children])
+(defrecord Element [name coord attrs style event children])
 
 (defrecord
   Component
@@ -26,7 +26,7 @@
         style (:style props)
         event (if (contains? props :event) (:event props) (list))
         children-map (arrange-children children)]
-    (->Element tag-name nil nil attrs style event children-map)))
+    (->Element tag-name nil attrs style event children-map)))
 
 (defn default-init [& args] {})
 

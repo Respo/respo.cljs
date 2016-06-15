@@ -23,8 +23,9 @@
                                                                     acc
                                                                     (let 
                                                                       [entry
-                                                                       (first
-                                                                         new-children)
+                                                                       (get
+                                                                         new-children
+                                                                         0)
                                                                        item
                                                                        (purify-element
                                                                          (val
@@ -44,8 +45,9 @@
                                                                     acc
                                                                     (let 
                                                                       [entry
-                                                                       (first
-                                                                         old-children)
+                                                                       (get
+                                                                         old-children
+                                                                         0)
                                                                        item
                                                                        (val
                                                                          entry)]
@@ -59,8 +61,8 @@
                                                                     old-children
                                                                     1)
                                                                   new-children)
-    :else (let [first-old-entry (first old-children)
-                first-new-entry (first new-children)
+    :else (let [first-old-entry (get old-children 0)
+                first-new-entry (get new-children 0)
                 old-follows (subvec old-children 1)
                 new-follows (subvec new-children 1)]
             (case
@@ -109,8 +111,9 @@
         (identical? 0 (count new-style))) acc
       (and (identical? 0 (count old-style)) (> (count new-style) 0)) (let 
                                                                        [entry
-                                                                        (first
-                                                                          new-style)
+                                                                        (get
+                                                                          new-style
+                                                                          0)
                                                                         follows
                                                                         (subvec
                                                                           new-style
@@ -126,8 +129,9 @@
                                                                          follows))
       (and (> (count old-style) 0) (identical? 0 (count new-style))) (let 
                                                                        [entry
-                                                                        (first
-                                                                          old-style)
+                                                                        (get
+                                                                          old-style
+                                                                          0)
                                                                         follows
                                                                         (subvec
                                                                           old-style
@@ -142,8 +146,8 @@
                                                                          coord
                                                                          follows
                                                                          new-style))
-      :else (let [old-entry (first old-style)
-                  new-entry (first new-style)
+      :else (let [old-entry (get old-style 0)
+                  new-entry (get new-style 0)
                   old-follows (subvec old-style 1)
                   new-follows (subvec new-style 1)]
               (case
@@ -186,8 +190,9 @@
                                                               acc
                                                               [:add-prop
                                                                coord
-                                                               (first
-                                                                 new-props)])
+                                                               (get
+                                                                 new-props
+                                                                 0)])
                                                             coord
                                                             old-props
                                                             (subvec
@@ -199,17 +204,18 @@
                                                               [:rm-prop
                                                                coord
                                                                (key
-                                                                 (first
-                                                                   old-props))])
+                                                                 (get
+                                                                   old-props
+                                                                   0))])
                                                             coord
                                                             (subvec
                                                               old-props
                                                               1)
                                                             new-props)
-    :else (let [old-entry (first old-props)
-                new-entry (first new-props)
-                [old-k old-v] (first old-props)
-                [new-k new-v] (first new-props)
+    :else (let [old-entry (get old-props 0)
+                new-entry (get new-props 0)
+                [old-k old-v] (get old-props 0)
+                [new-k new-v] (get new-props 0)
                 old-follows (subvec old-props 1)
                 new-follows (subvec new-props 1)]
             (comment .log js/console old-k new-k old-v new-v)
@@ -253,8 +259,9 @@
                                                                    new-events)])
                                                               coord
                                                               old-events
-                                                              (rest
-                                                                new-events))
+                                                              (subvec
+                                                                new-events
+                                                                1))
     (and (> (count old-events) 0) (= (count new-events) 0)) (recur
                                                               (conj
                                                                 acc
@@ -263,8 +270,9 @@
                                                                  (first
                                                                    old-events)])
                                                               coord
-                                                              (rest
-                                                                old-events)
+                                                              (subvec
+                                                                old-events
+                                                                1)
                                                               new-events)
     :else (case
             (compare (first old-events) (first new-events))
@@ -272,15 +280,19 @@
             (recur
               (conj acc [:rm-event coord (first old-events)])
               coord
-              (rest old-events)
+              (subvec old-events 1)
               new-events)
             1
             (recur
               (conj acc [:add-event coord (first new-events)])
               coord
               old-events
-              (rest new-events))
-            (recur acc coord (rest old-events) (rest new-events)))))
+              (subvec new-events 1))
+            (recur
+              acc
+              coord
+              (subvec old-events 1)
+              (subvec new-events 1)))))
 
 (defn find-element-diffs [acc n-coord old-tree new-tree]
   (comment
@@ -328,8 +340,8 @@
                    (into [] (sort-by first (:attrs new-tree))))
                  (find-events-diffs
                    n-coord
-                   (sort (keys (:event old-tree)))
-                   (sort (keys (:event new-tree))))
+                   (into [] (sort (keys (:event old-tree))))
+                   (into [] (sort (keys (:event new-tree)))))
                  (find-children-diffs
                    n-coord
                    0
