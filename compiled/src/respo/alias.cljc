@@ -23,9 +23,7 @@
   (let [attrs (if (contains? props :attrs)
                 (sort-by first (:attrs props))
                 (list))
-        style (if (contains? props :style)
-                (sort-by first (:style props))
-                (list))
+        style (:style props)
         event (if (contains? props :event) (:event props) (list))
         children-map (arrange-children children)]
     (->Element tag-name nil nil attrs style event children-map)))

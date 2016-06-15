@@ -3,7 +3,8 @@
   (:require [clojure.string :as string]
             [respo.util.time :refer [io-get-time]]
             [respo.util.format :refer [purify-element]]
-            [respo.util.detect :refer [component? element? =vector]]))
+            [respo.util.detect :refer [component? element? =vector]]
+            [respo.util.error :refer [raise]]))
 
 (defn keyword->string [x] (subs (str x) 1))
 
@@ -11,12 +12,28 @@
 
 (declare render-element)
 
-(defn render-markup [markup states build-mutate coord component-coord]
+(defn render-markup [markup
+                     states
+                     build-mutate
+                     coord
+                     component-coord
+                     old-element]
   (if (component? markup)
-    (render-component markup states build-mutate coord)
-    (render-element markup states build-mutate coord component-coord)))
+    (render-component markup states build-mutate coord old-element)
+    (render-element
+      markup
+      states
+      build-mutate
+      coord
+      component-coord
+      old-element)))
 
-(defn render-children [children states build-mutate coord comp-coord]
+(defn render-children [children
+                       states
+                       build-mutate
+                       coord
+                       comp-coord
+                       old-children]
   (comment println "render children:" children)
   (->>
     children
@@ -24,7 +41,14 @@
       (fn [child-entry]
         (let [k (first child-entry)
               child-element (last child-entry)
-              inner-states (or (get states k) {})]
+              inner-states (or (get states k) {})
+              old-pair (first
+                         (filter
+                           (fn [pair] (= (first pair) k))
+                           old-children))
+              old-child (get old-pair 1)]
+          (if (nil? old-child)
+            (do (println "old child:" coord (some? old-child))))
           [k
            (if (some? child-element)
              (render-markup
@@ -32,17 +56,24 @@
                inner-states
                build-mutate
                (conj coord k)
-               comp-coord)
+               comp-coord
+               old-child)
              nil)])))))
 
-(defn render-element [markup states build-mutate coord comp-coord]
+(defn render-element [markup
+                      states
+                      build-mutate
+                      coord
+                      comp-coord
+                      old-element]
   (let [children (:children markup)
         child-elements (render-children
                          children
                          states
                          build-mutate
                          coord
-                         comp-coord)]
+                         comp-coord
+                         (:children old-element))]
     (comment
       .log
       js/console
@@ -59,46 +90,20 @@
       :children
       child-elements)))
 
-(defonce component-cached (atom []))
-
-(defn get-component [cache-list markup states coord]
-  (comment println "compare markup:" (:name markup) (first cache-list))
-  (comment println (:args markup))
-  (if (= (count cache-list) 0)
-    nil
-    (let [cursor (get cache-list 0)]
-      (if (and
-            (identical? states (get cursor 2))
-            (identical? (:name markup) (get cursor 0))
-            (=vector coord (get cursor 3))
-            (=vector (:args markup) (get cursor 1)))
-        (get cursor 4)
-        (recur (subvec cache-list 1) markup states coord)))))
-
-(defn register-component [markup states coord result]
-  (swap!
-    component-cached
-    conj
-    [(:name markup) (:args markup) states coord result]))
-
-(defn perform-gc! []
-  (if (> (count @component-cached) 800)
-    (do (swap! component-cached subvec 0 400))))
-
-(defn render-component [markup states build-mutate coord]
-  (let [maybe-component (get-component
-                          @component-cached
-                          markup
-                          states
-                          coord)]
-    (if (some? maybe-component)
-      (do (comment println "hitted cache:" coord) maybe-component)
+(defn render-component [markup states build-mutate coord old-element]
+  (let [raw-states (get states (:name markup))]
+    (if (and
+          (some? old-element)
+          (identical? raw-states (:raw-states old-element))
+          (=vector (:args markup) (:args old-element))
+          (identical? (:render markup) (:render old-element)))
+      (do (comment println "not changed" coord) old-element)
       (let [begin-time (io-get-time)
             args (:args markup)
             component (first markup)
             init-state (:init-state markup)
             new-coord (conj coord (:name markup))
-            inner-states (or (get states (:name markup)) {})
+            inner-states (or raw-states {})
             state (or (get inner-states 'data) (apply init-state args))
             render (:render markup)
             half-render (apply render args)
@@ -109,16 +114,24 @@
                    inner-states
                    build-mutate
                    new-coord
-                   new-coord)
+                   new-coord
+                   (:tree old-element))
             cost (- (io-get-time) begin-time)
-            result (assoc markup :coord coord :tree tree :cost cost)]
+            result (assoc
+                     markup
+                     :coord
+                     coord
+                     :tree
+                     tree
+                     :cost
+                     cost
+                     :raw-states
+                     raw-states)]
         (comment println "markup tree:" (pr-str markup-tree))
         (comment println "component state:" coord states)
         (comment println "no cache:" coord)
-        (register-component markup states coord result)
         result))))
 
-(defn render-app [markup states build-mutate]
+(defn render-app [markup states build-mutate old-element]
   (comment println "render loop, states:" (pr-str states))
-  (perform-gc!)
-  (render-markup markup states build-mutate [] []))
+  (render-markup markup states build-mutate [] [] old-element))

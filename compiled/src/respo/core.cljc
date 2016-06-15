@@ -10,11 +10,11 @@
                                              activate-instance
                                              patch-instance]]))
 
-(defonce global-element (atom nil))
+(def global-element (atom nil))
 
 (defn render-element [markup states-ref]
   (let [build-mutate (mutate-factory global-element states-ref)]
-    (render-app markup @states-ref build-mutate)))
+    (render-app markup @states-ref build-mutate @global-element)))
 
 (defn mount-app [markup target dispatch states-ref]
   (let [element (render-element markup states-ref)

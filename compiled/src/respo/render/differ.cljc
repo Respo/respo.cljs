@@ -306,10 +306,16 @@
                     (not= (:c-name old-tree) (:c-name new-tree)))
                 (conj acc [:replace n-coord new-tree])
                 (-> acc
-                 (find-style-diffs
-                   n-coord
-                   (:style old-tree)
-                   (:style new-tree))
+                 ((fn [acc1]
+                    (let [old-style (:style old-tree)
+                          new-style (:style new-tree)]
+                      (if (identical? old-style new-style)
+                        acc1
+                        (find-style-diffs
+                          acc1
+                          n-coord
+                          (sort-by first (or old-style (list)))
+                          (sort-by first (or new-style (list))))))))
                  (find-props-diffs
                    n-coord
                    (:attrs old-tree)

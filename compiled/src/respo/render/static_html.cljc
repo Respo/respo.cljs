@@ -95,9 +95,9 @@
 (def build-mutate (mutate-factory global-element global-states))
 
 (defn make-string [tree]
-  (let [element (render-app tree @global-states build-mutate)]
+  (let [element (render-app tree @global-states build-mutate nil)]
     (element->string (purify-element element))))
 
 (defn make-html [tree]
-  (let [element (render-app tree @global-states build-mutate)]
+  (let [element (render-app tree @global-states build-mutate nil)]
     (element->html (purify-element element))))
