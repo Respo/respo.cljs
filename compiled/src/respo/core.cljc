@@ -10,7 +10,7 @@
                                              activate-instance
                                              patch-instance]]))
 
-(def global-element (atom nil))
+(defonce global-element (atom nil))
 
 (defn render-element [markup states-ref]
   (let [build-mutate (mutate-factory global-element states-ref)]

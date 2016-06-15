@@ -3,39 +3,32 @@
   (:require [clojure.string :as string]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element?]]
-            [respo.util.error :refer [raise]]))
+            [respo.util.error :refer [raise]]
+            [respo.util.list :refer [filter-first]]))
 
 (defn get-markup-at [markup coord]
-  (comment println "get markup:" (pr-str coord))
-  (let [node (if (= coord [])
-               markup
-               (if (component? markup)
-                 (get-markup-at (:tree markup) (subvec coord 1))
-                 (let [child (->>
-                               (:children markup)
-                               (filter
-                                 (fn 
-                                   [child-entry]
-                                   (=
-                                     (first child-entry)
-                                     (first coord))))
-                               (first))]
-                   (if (some? child)
-                     (get-markup-at (val child) (subvec coord 1))
-                     (raise
-                       (str
-                         "child not found:"
-                         coord
-                         (map first (:children markup))))))))]
-    node))
+  (comment println "markup:" (pr-str coord))
+  (if (= coord [])
+    markup
+    (if (component? markup)
+      (recur (:tree markup) (subvec coord 1))
+      (let [coord-head (first coord)
+            child-pair (filter-first
+                         (fn [child-entry]
+                           (= (get child-entry 0) coord-head))
+                         (:children markup))]
+        (if (some? child-pair)
+          (get-markup-at (get child-pair 1) (subvec coord 1))
+          (raise
+            (str
+              "child not found:"
+              coord
+              (map first (:children markup)))))))))
 
 (defn find-event-target [element coord event-name]
   (let [target-element (get-markup-at element coord)
         element-exists? (some? target-element)]
-    (comment
-      println
-      "target element:"
-      (pr-str (:c-coord target-element) event-name))
+    (comment println "target element:" (pr-str event-name))
     (if (and
           element-exists?
           (contains? (:event target-element) event-name))

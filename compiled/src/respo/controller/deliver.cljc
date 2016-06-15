@@ -12,27 +12,6 @@
       (map (fn [child-entry] (all-component-coords (val child-entry))))
       (apply concat))))
 
-(defn purify-states [new-states old-states all-coords]
-  (if (= (count old-states) 0)
-    new-states
-    (let [first-entry (first old-states)]
-      (recur
-        (if (some
-              (fn [component-coord]
-                (= component-coord (key first-entry)))
-              all-coords)
-          (assoc new-states (key first-entry) (val first-entry))
-          new-states)
-        (rest old-states)
-        all-coords))))
-
-(defn gc-states [states element]
-  (comment println "states GC:" (pr-str states))
-  (let [all-coords (distinct (all-component-coords element))
-        new-states (purify-states {} states all-coords)]
-    (comment println (pr-str all-coords))
-    new-states))
-
 (defn build-deliver-event [element-ref dispatch]
   (fn [coord event-name simple-event]
     (let [target-element (find-event-target
@@ -69,10 +48,7 @@
                                          (:args component)))
                            new-state (apply
                                        update-state
-                                       (cons old-state state-args))
-                           clean-states (gc-states
-                                          @global-states
-                                          @global-element)]
+                                       (cons old-state state-args))]
                        (comment
                          println
                          "compare states:"

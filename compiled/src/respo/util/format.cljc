@@ -51,7 +51,6 @@
            (fn [children]
              (->>
                children
-               (map
+               (mapv
                  (fn [entry] [(first entry)
-                              (purify-element (last entry))]))
-               (into [])))))))))
+                              (purify-element (last entry))]))))))))))

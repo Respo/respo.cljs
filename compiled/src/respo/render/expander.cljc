@@ -4,7 +4,8 @@
             [respo.util.time :refer [io-get-time]]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element? =vector]]
-            [respo.util.error :refer [raise]]))
+            [respo.util.error :refer [raise]]
+            [respo.util.list :refer [filter-first]]))
 
 (defn keyword->string [x] (subs (str x) 1))
 
@@ -42,12 +43,13 @@
         (let [k (first child-entry)
               child-element (last child-entry)
               inner-states (or (get states k) {})
-              old-pair (first
-                         (filter
-                           (fn [pair] (= (first pair) k))
-                           old-children))
+              old-pair (filter-first
+                         (fn [pair] (identical? (first pair) k))
+                         old-children)
               old-child (get old-pair 1)]
-          (if (nil? old-child)
+          (comment
+            if
+            (nil? old-child)
             (do (println "old child:" coord (some? old-child))))
           [k
            (if (some? child-element)
@@ -81,14 +83,7 @@
       (pr-str children)
       (pr-str child-elements)
       (pr-str markup))
-    (assoc
-      markup
-      :coord
-      coord
-      :c-coord
-      comp-coord
-      :children
-      child-elements)))
+    (assoc markup :coord coord :children child-elements)))
 
 (defn render-component [markup states build-mutate coord old-element]
   (let [raw-states (get states (:name markup))]
@@ -116,21 +111,20 @@
                    new-coord
                    new-coord
                    (:tree old-element))
-            cost (- (io-get-time) begin-time)
-            result (assoc
-                     markup
-                     :coord
-                     coord
-                     :tree
-                     tree
-                     :cost
-                     cost
-                     :raw-states
-                     raw-states)]
+            cost (- (io-get-time) begin-time)]
         (comment println "markup tree:" (pr-str markup-tree))
         (comment println "component state:" coord states)
         (comment println "no cache:" coord)
-        result))))
+        (assoc
+          markup
+          :coord
+          coord
+          :tree
+          tree
+          :cost
+          cost
+          :raw-states
+          raw-states)))))
 
 (defn render-app [markup states build-mutate old-element]
   (comment println "render loop, states:" (pr-str states))

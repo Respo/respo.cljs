@@ -39,7 +39,7 @@
 (def style-time {:color (hsl 0 0 80)})
 
 (defn on-click [props state]
-  (fn [event dispatch mutate] (println "clicked")))
+  (fn [event dispatch mutate] (println "clicked.")))
 
 (defn handle-remove [props state]
   (fn [event dispatch mutate] (dispatch :remove (:id (:task props)))))
