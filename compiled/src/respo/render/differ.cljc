@@ -322,7 +322,7 @@
                     (not= (:coord old-tree) (:coord new-tree))
                     (not= (:name old-tree) (:name new-tree))
                     (not= (:c-name old-tree) (:c-name new-tree)))
-                (conj acc [:replace n-coord new-tree])
+                (conj acc [:replace n-coord (purify-element new-tree)])
                 (-> acc
                  ((fn [acc1]
                     (let [old-style (:style old-tree)

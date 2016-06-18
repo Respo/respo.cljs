@@ -93,7 +93,7 @@
           (identical? raw-states (:raw-states old-element))
           (=vector (:args markup) (:args old-element))
           (identical? (:render markup) (:render old-element)))
-      (do (comment println "not changed" coord) old-element)
+      (do (println "not changed" coord) old-element)
       (let [begin-time (io-get-time)
             args (:args markup)
             component (first markup)

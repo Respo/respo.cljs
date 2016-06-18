@@ -27,7 +27,9 @@
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event global-element dispatch)
         changes (find-element-diffs [] [] @global-element element)]
-    (comment println "changes:" (pr-str changes))
+    (println
+      "changes:"
+      (pr-str (map (fn [change] (subvec change 0 2)) changes)))
     (patch-instance changes target deliver-event)
     (reset! global-element element)))
 

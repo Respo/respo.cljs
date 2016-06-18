@@ -36,16 +36,17 @@
   ([comp-name render]
     (create-comp comp-name default-init default-update render))
   ([comp-name init-state update-state render]
-    (fn [& args]
-      (->Component
-        comp-name
-        nil
-        (into [] args)
-        init-state
-        update-state
-        render
-        nil
-        nil))))
+    (println "create component:" comp-name)
+    (let [initial-comp (->Component
+                         comp-name
+                         nil
+                         []
+                         init-state
+                         update-state
+                         render
+                         nil
+                         nil)]
+      (fn [& args] (assoc initial-comp :args (into [] args))))))
 
 (defn div [props & children]
   (let [attrs (:attrs props)]
