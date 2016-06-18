@@ -35,7 +35,7 @@
 
 (defn element->string [element]
   (let [tag-name (name (:name element))
-        attrs (:attrs element)
+        attrs (into {} (:attrs element))
         text-inside (or (:innerHTML attrs) (:inner-text attrs))
         formatted-coord (pr-str (:coord element))
         formatted-event (pr-str (into [] (keys (:event element))))
@@ -65,7 +65,7 @@
 
 (defn element->html [element]
   (let [tag-name (name (:name element))
-        attrs (:attrs element)
+        attrs (into {} (:attrs element))
         text-inside (or (:innerHTML attrs) (:inner-text attrs))
         tailored-props (-> attrs
                         (dissoc :innerHTML)

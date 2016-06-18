@@ -10,7 +10,7 @@
                                  div
                                  link
                                  body]]
-            [respo.component.todolist :refer [todolist-component]]
+            [respo.test-component.todolist :refer [comp-todolist]]
             [respo.render.static-html :refer [make-string make-html]]))
 
 (def todolist-store
@@ -18,7 +18,7 @@
 
 (deftest
   html-test
-  (let [todo-demo (todolist-component {:tasks @todolist-store})]
+  (let [todo-demo (comp-todolist @todolist-store)]
     (testing
       "test generated HTML"
       (is (= (slurp "examples/demo.html") (make-string todo-demo))))))
