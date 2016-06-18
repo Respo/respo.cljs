@@ -40,9 +40,11 @@
                                          (- (count coord) 1)))
                            init-state (:init-state component)
                            update-state (:update-state component)
-                           old-state (if
-                                       (contains? @global-states coord)
-                                       (get @global-states coord)
+                           state-path (conj coord 'data)
+                           old-state (or
+                                       (get-in
+                                         @global-states
+                                         state-path)
                                        (apply
                                          init-state
                                          (:args component)))
@@ -53,6 +55,7 @@
                          println
                          "compare states:"
                          (pr-str @global-states)
+                         state-path
                          (pr-str old-state)
                          (pr-str new-state))
                        (swap!

@@ -3,38 +3,32 @@
 
 A responsive DOM library.
 
-![](assets/respo.png)
-
 Demo http://repo.tiye.me/mvc-works/respo/
 
-> This project is during refactoring, check old version here https://github.com/mvc-works/respo-spa
+[Quick Start](https://github.com/mvc-works/respo/wiki/Quick-Start)
 
-## Installation
+## Usage
 
 [![Respo](https://img.shields.io/clojars/v/mvc-works/respo.svg)](https://clojars.org/mvc-works/respo)
 
 ```clojure
-[mvc-works/respo "0.1.22"]
+[mvc-works/respo "0.2.1"]
 ```
 
 ```clojure
-(respo.controller.deliver/build-deliver-event virtual-element-ref dispatch states-ref)
-(def build-mutate (respo.controller.deliver/mutate-factory element-ref states-ref))
-(respo.controller.resolver/get-element-at element coord)
-(respo.render.expander/render-app element-markup global-states)
-(respo.render.differ/find-element-diffs [] [] old-virtual-element virtual-element)
-(respo.render.static-html/make-string virtual-element)
-(respo.render.static-html/make-html virtual-element)
-(respo.util.format/purify-element virtual-element)
-(respo.alias/div {})
-(respo.alias/create-comp :demo (fn [] (fn [state] (div))))
-(respo.alias/create-element :demo props children)
-(respo.component/debug/comp-debug data {})
+(require '[respo.core :refer [render]])
 
-(respo.controller.client/initialize-instance mount-point deliver-event)
-(respo.controller.client/activate-instance virtual-element mount-point deliver-event)
-(respo.controller.client/patch-instance changes mount-point deliver-event)
-(respo.controller.client/release-instance mount-point)
+(defonce store-ref (atom 0))
+(defonce states-ref (atom {}))
+
+(defn dispatch [op op-data]
+  (reset! store-ref (updater @store-ref op op-data)))
+
+(defn render-app []
+  (let [target (.querySelector js/document "#app")]
+    (render (comp-container @store-ref) target dispatch states-ref)))
+
+(render-app)
 ```
 
 ## Component Definition
@@ -55,6 +49,36 @@ Demo http://repo.tiye.me/mvc-works/respo/
 
 `mutable` is previously `set-state` but changed a lot.
 Now you have to define `init-state` and `update-state` in every component.
+
+### Low level APIs
+
+```clojure
+(respo.alias/div {})
+(respo.alias/create-comp :demo (fn [] (fn [state] (div))))
+(respo.alias/create-element :demo props children)
+
+(respo.component/comp-debug data {})
+(respo.component/comp-space w h)
+
+(respo.controller.client/initialize-instance mount-point deliver-event)
+(respo.controller.client/activate-instance virtual-element mount-point deliver-event)
+(respo.controller.client/patch-instance changes mount-point deliver-event)
+(respo.controller.client/release-instance mount-point)
+
+(respo.render.static-html/make-string virtual-element)
+(respo.render.static-html/make-html virtual-element)
+
+(respo.controller.deliver/build-deliver-event virtual-element-ref dispatch states-ref)
+(def build-mutate (respo.controller.deliver/mutate-factory element-ref states-ref))
+
+(respo.controller.resolver/get-element-at element coord)
+
+(respo.render.expander/render-app element-markup global-states)
+
+(respo.render.differ/find-element-diffs [] [] old-virtual-element virtual-element)
+
+(respo.util.format/purify-element virtual-element)
+```
 
 ## Develop
 

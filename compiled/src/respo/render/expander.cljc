@@ -87,6 +87,7 @@
 
 (defn render-component [markup states build-mutate coord old-element]
   (let [raw-states (get states (:name markup))]
+    (comment println "raw states:" raw-states (get raw-states 'data))
     (if (and
           (some? old-element)
           (identical? raw-states (:raw-states old-element))
