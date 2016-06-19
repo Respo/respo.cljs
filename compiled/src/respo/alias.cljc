@@ -36,7 +36,7 @@
   ([comp-name render]
     (create-comp comp-name default-init default-update render))
   ([comp-name init-state update-state render]
-    (println "create component:" comp-name)
+    (comment println "create component:" comp-name)
     (let [initial-comp (->Component
                          comp-name
                          nil
@@ -51,7 +51,7 @@
 (defn div [props & children]
   (let [attrs (:attrs props)]
     (if (contains? attrs :inner-text)
-      (println "useing in div is dangerous!"))
+      (println "using inner-text in div is dangerous!"))
     (create-element :div props children)))
 
 (defn img [props & children] (create-element :img props children))
