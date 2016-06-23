@@ -54,3 +54,8 @@
                (mapv
                  (fn [entry] [(first entry)
                               (purify-element (last entry))]))))))))))
+
+(defn restrain-element [element]
+  (if (component? element)
+    (recur (:tree element))
+    (update element :event (fn [events] (list)))))
