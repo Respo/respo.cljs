@@ -36,6 +36,7 @@
 (defn element->string [element]
   (let [tag-name (name (:name element))
         attrs (into {} (:attrs element))
+        styles (or (:style element) {})
         text-inside (or (:innerHTML attrs) (:inner-text attrs))
         formatted-coord (pr-str (:coord element))
         formatted-event (pr-str (into [] (keys (:event element))))
@@ -44,7 +45,11 @@
                         (dissoc :inner-text)
                         (merge
                           {:data-coord formatted-coord,
-                           :data-event formatted-event}))
+                           :data-event formatted-event})
+                        ((fn [props]
+                           (if (> (count styles) 0)
+                             (assoc props :style styles)
+                             props))))
         props-in-string (props->string tailored-props)
         children (->>
                    (:children element)

@@ -54,6 +54,8 @@
       (println "using inner-text in div is dangerous!"))
     (create-element :div props children)))
 
+(defn a [props & children] (create-element :a props children))
+
 (defn img [props & children] (create-element :img props children))
 
 (defn span [props & children] (create-element :span props children))
