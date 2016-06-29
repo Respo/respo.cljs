@@ -39,47 +39,44 @@
 (def style-time {:color (hsl 0 0 80)})
 
 (defn on-click [props state]
-  (fn [event dispatch mutate] (println "clicked.")))
+  (fn [event dispatch! mutate!] (println "clicked.")))
 
-(defn handle-remove [props state]
-  (fn [event dispatch mutate] (dispatch :remove (:id (:task props)))))
+(defn handle-remove [task]
+  (fn [e dispatch! mutate!] (dispatch! :remove (:id task))))
 
-(defn on-text-state [e dispatch mutate] (mutate (:value e)))
+(defn on-text-state [e dispatch! mutate!] (mutate! (:value e)))
 
-(defn on-text-change [props state]
-  (fn [event dispatch mutate!]
-    (let [task-id (:id (:task props)) text (:value event)]
-      (dispatch :update {:id task-id, :text text}))))
+(defn on-text-change [task]
+  (fn [event dispatch! mutate!]
+    (let [task-id (:id task) text (:value event)]
+      (dispatch! :update {:id task-id, :text text}))))
 
-(defn render [props]
+(defn render [task]
   (fn [state mutate!]
-    (let [task (:task props)]
+    (div
+      {:style style-task}
+      (comp-debug task {:left "160px"})
+      (button {:style (style-done (:done task))})
+      (comp-space 8 nil)
+      (input
+        {:style style-input,
+         :event {:input (on-text-change task)},
+         :attrs {:value (:text task)}})
+      (comp-space 8 nil)
+      (input
+        {:style style-input,
+         :event {:input on-text-state},
+         :attrs {:value state}})
+      (comp-space 8 nil)
+      (div {} (span {:attrs {:inner-text state}}))
+      (comp-space 8 nil)
       (div
-        {:style style-task}
-        (comp-debug task {:left "160px"})
-        (button {:style (style-done (:done task))})
-        (comp-space 8 nil)
-        (input
-          {:style style-input,
-           :event {:input (on-text-change props state)},
-           :attrs {:value (:text task)}})
-        (comp-space 8 nil)
-        (input
-          {:style style-input,
-           :event {:input on-text-state},
-           :attrs {:value state}})
-        (comp-space 8 nil)
-        (div {} (span {:attrs {:inner-text state}}))
-        (comp-space 8 nil)
-        (div
-          {:style style-button,
-           :event {:click (handle-remove props state)}}
-          (span {:attrs {:inner-text "Remove"}}))
-        (comp-space 8 nil)
-        (div
-          {:style style-time}
-          (span
-            {:style style-time,
-             :attrs {:inner-text (:time state)}}))))))
+        {:style style-button, :event {:click (handle-remove task)}}
+        (span {:attrs {:inner-text "Remove"}}))
+      (comp-space 8 nil)
+      (div
+        {:style style-time}
+        (span
+          {:style style-time, :attrs {:inner-text (:time state)}})))))
 
 (def task-component (create-comp :task init-state update-state render))

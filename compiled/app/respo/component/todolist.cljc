@@ -42,17 +42,17 @@
 
 (def style-panel {:display "flex"})
 
-(defn clear-done [event dispatch! mutate!]
+(defn clear-done [e dispatch! mutate!]
   (println "dispatch clear-done")
   (dispatch! :clear nil))
 
-(defn on-focus [event dispatch] (println "Just focused~"))
+(defn on-focus [e dispatch! mutate!] (println "Just focused~"))
 
 (defn on-text-change [e dispatch! mutate!]
   (mutate! {:draft (:value e)}))
 
 (defn handle-add [state]
-  (fn [event dispatch! mutate!]
+  (fn [e dispatch! mutate!]
     (dispatch! :add (:draft state))
     (mutate! {:draft ""})))
 
@@ -84,7 +84,7 @@
         {:style style-list, :attrs {:class-name "task-list"}}
         (->>
           tasks
-          (map (fn [task] [(:id task) (task-component {:task task})]))
+          (map (fn [task] [(:id task) (task-component task)]))
           (sort-by first)))
       (if (> (count tasks) 0)
         (div
