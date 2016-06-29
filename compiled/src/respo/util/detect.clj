@@ -1,6 +1,5 @@
 
-(ns respo.util.detect
-  (:import [respo.alias Component Element]))
+(ns respo.util.detect)
 
 (defn component? [x] (contains? x :tree))
 

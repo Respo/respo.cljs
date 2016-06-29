@@ -1,6 +1,5 @@
 
-(ns respo.util.detect
-  (:require [respo.alias :refer [Component Element]]))
+(ns respo.util.detect)
 
 (defn component? [x] (contains? x :tree))
 

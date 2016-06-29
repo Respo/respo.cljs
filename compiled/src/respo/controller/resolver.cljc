@@ -6,6 +6,24 @@
             [respo.util.error :refer [raise]]
             [respo.util.list :refer [filter-first]]))
 
+(defn get-component-at
+  ([markup coord] (get-component-at nil markup coord))
+  ([acc markup coord]
+    (if (= (count coord) 0)
+      acc
+      (let [coord-head (first coord)]
+        (if (component? markup)
+          (if (= (:name markup) coord-head)
+            (recur markup (:tree markup) (subvec coord 1))
+            nil)
+          (let [child-pair (filter-first
+                             (fn [child-entry]
+                               (= (get child-entry 0) coord-head))
+                             (:children markup))]
+            (if (some? child-pair)
+              (recur acc (last child-pair) (subvec coord 1))
+              nil)))))))
+
 (defn get-markup-at [markup coord]
   (comment println "markup:" (pr-str coord))
   (if (= coord [])

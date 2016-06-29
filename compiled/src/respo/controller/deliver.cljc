@@ -1,7 +1,8 @@
 
 (ns respo.controller.deliver
   (:require [respo.controller.resolver :refer [find-event-target
-                                               get-markup-at]]
+                                               get-markup-at
+                                               get-component-at]]
             [respo.util.detect :refer [component? element?]]))
 
 (defn all-component-coords [markup]
@@ -18,7 +19,9 @@
                            @element-ref
                            coord
                            event-name)
+          target-component (get-component-at @element-ref coord)
           target-listener (get (:event target-element) event-name)]
+      (println "find element:" (:name target-component))
       (if (some? target-listener)
         (do
           (comment println "listener found:" coord event-name)
