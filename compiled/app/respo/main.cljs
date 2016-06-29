@@ -16,12 +16,12 @@
 
 (defonce global-states (atom {}))
 
-(defn dispatch [op op-data]
+(defn dispatch! [op op-data]
   (let [op-id (.valueOf (js/Date.))
         new-store (updater @global-store op op-data op-id)]
     (reset! global-store new-store)))
 
-(defn render-app []
+(defn render-app! []
   (let [target (.querySelector js/document "#app")]
     (comment println "store:" @global-store)
     (comment println "states:" @global-states)
@@ -30,21 +30,21 @@
         (render
           (comp-container @global-store)
           target
-          dispatch
+          dispatch!
           global-states)))))
 
 (defn -main []
   (enable-console-print!)
   (devtools/install!)
-  (render-app)
-  (add-watch global-store :rerender render-app)
-  (add-watch global-states :rerender render-app))
+  (render-app!)
+  (add-watch global-store :rerender render-app!)
+  (add-watch global-states :rerender render-app!))
 
 (set! (.-onload js/window) -main)
 
-(defn save-store []
+(defn save-store! []
   (.setItem js/localStorage "respo" (pr-str @global-store)))
 
-(set! (.-onbeforeunload js/window) save-store)
+(set! (.-onbeforeunload js/window) save-store!)
 
-(defn on-jsload [] (render-app) (.log js/console "code updated."))
+(defn on-jsload [] (render-app!) (.log js/console "code updated."))

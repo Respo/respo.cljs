@@ -16,7 +16,7 @@
   :font-family "Menlo"})
 
 (defn render [data more-style]
-  (fn [state mutate]
+  (fn [state mutate!]
     (div
       {:style (merge default-style more-style)}
       (span {:attrs {:inner-text (pr-str data)}}))))

@@ -42,24 +42,19 @@
 
 (def style-panel {:display "flex"})
 
-(defn clear-done [props state]
-  (fn [event dispatch]
-    (println "dispatch clear-done")
-    (dispatch :clear nil)))
+(defn clear-done [event dispatch! mutate!]
+  (println "dispatch clear-done")
+  (dispatch! :clear nil))
 
-(defn on-focus [props state]
-  (fn [event dispatch] (println "Just focused~")))
+(defn on-focus [event dispatch] (println "Just focused~"))
 
-(defn on-text-change [props state]
-  (fn [simple-event dispatch mutate!]
-    (mutate! {:draft (:value simple-event)})))
+(defn on-text-change [e dispatch! mutate!]
+  (mutate! {:draft (:value e)}))
 
-(defn handle-add [props state mutate]
-  (comment println "state built inside:" (pr-str props) (pr-str state))
-  (fn [event dispatch]
-    (comment println "click add!" (pr-str props) (pr-str state))
-    (dispatch :add (:draft state))
-    (mutate {:draft ""})))
+(defn handle-add [state]
+  (fn [event dispatch! mutate!]
+    (dispatch! :add (:draft state))
+    (mutate! {:draft ""})))
 
 (defn init-state [props] {:draft ""})
 
@@ -67,43 +62,37 @@
   (comment println "changes:" (pr-str old-state) (pr-str changes))
   (merge old-state changes))
 
-(defn render [props]
+(defn render [tasks]
   (fn [state mutate]
-    (let [tasks (:tasks props)]
+    (div
+      {:style style-root}
+      (comment comp-debug state {:left "80px"})
       (div
-        {:style style-root}
-        (comment comp-debug state {:left "80px"})
+        {:style style-panel}
+        (input
+          {:style style-input,
+           :event {:focus on-focus, :input on-text-change},
+           :attrs {:placeholder "Text", :value (:draft state)}})
+        (span
+          {:style style-button, :event {:click (handle-add state)}}
+          (span {:attrs {:inner-text "Add"}}))
+        (span
+          {:style style-button,
+           :event {:click clear-done},
+           :attrs {:inner-text "Clear"}}))
+      (div
+        {:style style-list, :attrs {:class-name "task-list"}}
+        (->>
+          tasks
+          (map (fn [task] [(:id task) (task-component {:task task})]))
+          (sort-by first)))
+      (if (> (count tasks) 0)
         (div
-          {:style style-panel}
-          (input
-            {:style style-input,
-             :event
-             {:focus (on-focus props state),
-              :input (on-text-change props state)},
-             :attrs {:placeholder "Text", :value (:draft state)}})
-          (span
-            {:style style-button,
-             :event {:click (handle-add props state mutate)}}
-            (span {:attrs {:inner-text "Add"}}))
-          (span
-            {:style style-button,
-             :event {:click (clear-done props state)},
-             :attrs {:inner-text "Clear"}}))
-        (div
-          {:style style-list, :attrs {:class-name "task-list"}}
-          (->>
-            tasks
-            (map
-              (fn [task] [(:id task) (task-component {:task task})]))
-            (sort-by first)))
-        (if (> (count tasks) 0)
+          {:style style-toolbar, :attrs {:spell-check true}}
           (div
-            {:style style-toolbar, :attrs {:spell-check true}}
-            (div
-              {:style style-button,
-               :event {:click (clear-done props state)}}
-              (span {:attrs {:inner-text "Clear2"}}))))
-        (comment comp-debug props {})))))
+            {:style style-button, :event {:click clear-done}}
+            (span {:attrs {:inner-text "Clear2"}}))))
+      (comment comp-debug tasks {}))))
 
 (def comp-todolist
  (create-comp :todolist init-state update-state render))

@@ -52,7 +52,7 @@
       (dispatch :update {:id task-id, :text text}))))
 
 (defn render [props]
-  (fn [state mutate]
+  (fn [state mutate!]
     (let [task (:task props)]
       (div
         {:style style-task}
