@@ -1,6 +1,6 @@
 
 (ns respo.main
-  (:require [respo.core :refer [render]]
+  (:require [respo.core :refer [render!]]
             [respo.schema :as schema]
             [respo.updater.core :refer [updater]]
             [respo.component.container :refer [comp-container]]
@@ -27,7 +27,7 @@
     (comment println "states:" @global-states)
     (js/requestAnimationFrame
       (fn []
-        (render
+        (render!
           (comp-container @global-store)
           target
           dispatch!

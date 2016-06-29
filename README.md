@@ -16,17 +16,17 @@ Demo http://repo.tiye.me/mvc-works/respo/
 ```
 
 ```clojure
-(require '[respo.core :refer [render]])
+(require '[respo.core :refer [render!]])
 
 (defonce store-ref (atom 0))
 (defonce states-ref (atom {}))
 
-(defn dispatch [op op-data]
+(defn dispatch! [op op-data]
   (reset! store-ref (updater @store-ref op op-data)))
 
 (defn render-app []
   (let [target (.querySelector js/document "#app")]
-    (render (comp-container @store-ref) target dispatch states-ref)))
+    (render! (comp-container @store-ref) target dispatch! states-ref)))
 
 (render-app)
 ```
@@ -42,7 +42,7 @@ Demo http://repo.tiye.me/mvc-works/respo/
     {:width w, :display "inline-block", :height "1px"}
     {:width "1px", :display "inline-block", :height h}))
 
-(defn render [w h] (fn [state mutate] (div {:style (style-space w h)})))
+(defn render [w h] (fn [state mutate!] (div {:style (style-space w h)})))
 
 (def comp-space (create-comp :space render))
 ```
@@ -68,7 +68,7 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.render.static-html/make-string virtual-element)
 (respo.render.static-html/make-html virtual-element)
 
-(respo.controller.deliver/build-deliver-event virtual-element-ref dispatch states-ref)
+(respo.controller.deliver/build-deliver-event virtual-element-ref dispatch! states-ref)
 (def build-mutate (respo.controller.deliver/mutate-factory element-ref states-ref))
 
 (respo.controller.resolver/get-element-at element coord)

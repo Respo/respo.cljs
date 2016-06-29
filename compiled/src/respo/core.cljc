@@ -16,22 +16,22 @@
   (let [build-mutate (mutate-factory global-element states-ref)]
     (render-app markup @states-ref build-mutate @global-element)))
 
-(defn mount-app [markup target dispatch states-ref]
+(defn mount-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event
                         global-element
                         states-ref
-                        dispatch)]
+                        dispatch!)]
     (initialize-instance target deliver-event)
     (activate-instance (purify-element element) target deliver-event)
     (reset! global-element element)))
 
-(defn rerender-app [markup target dispatch states-ref]
+(defn rerender-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event
                         global-element
                         states-ref
-                        dispatch)
+                        dispatch!)
         changes (find-element-diffs [] [] @global-element element)]
     (comment
       println
@@ -40,13 +40,13 @@
     (patch-instance changes target deliver-event)
     (reset! global-element element)))
 
-(defn activate-app [markup target dispatch states-ref]
+(defn activate-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
         deaf-element (restrain-element element)
         deliver-event (build-deliver-event
                         global-element
                         states-ref
-                        dispatch)
+                        dispatch!)
         changes (find-element-diffs [] [] deaf-element element)]
     (comment
       println
@@ -55,7 +55,7 @@
     (patch-instance changes target deliver-event)
     (reset! global-element element)))
 
-(defn render [markup target dispatch states-ref]
+(defn render! [markup target dispatch states-ref]
   (if (some? @global-element)
     (rerender-app markup target dispatch states-ref)
     (mount-app markup target dispatch states-ref)))
