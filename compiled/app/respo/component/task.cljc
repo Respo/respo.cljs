@@ -44,10 +44,10 @@
 (defn handle-remove [props state]
   (fn [event dispatch mutate] (dispatch :remove (:id (:task props)))))
 
-(defn on-text-state [mutate] (fn [e dispatch] (mutate (:value e))))
+(defn on-text-state [e dispatch mutate] (mutate (:value e)))
 
 (defn on-text-change [props state]
-  (fn [event dispatch mutate]
+  (fn [event dispatch mutate!]
     (let [task-id (:id (:task props)) text (:value event)]
       (dispatch :update {:id task-id, :text text}))))
 
@@ -66,7 +66,7 @@
         (comp-space 8 nil)
         (input
           {:style style-input,
-           :event {:input (on-text-state mutate)},
+           :event {:input on-text-state},
            :attrs {:value state}})
         (comp-space 8 nil)
         (div {} (span {:attrs {:inner-text state}}))

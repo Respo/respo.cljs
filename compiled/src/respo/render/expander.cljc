@@ -103,8 +103,8 @@
             state (or (get inner-states 'data) (apply init-state args))
             render (:render markup)
             half-render (apply render args)
-            mutate (build-mutate new-coord)
-            markup-tree (half-render state mutate)
+            mutate! (build-mutate new-coord)
+            markup-tree (half-render state mutate!)
             tree (render-element
                    markup-tree
                    inner-states

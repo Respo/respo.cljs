@@ -50,8 +50,9 @@
 (defn on-focus [props state]
   (fn [event dispatch] (println "Just focused~")))
 
-(defn on-text-change [props state mutate]
-  (fn [simple-event dispatch] (mutate {:draft (:value simple-event)})))
+(defn on-text-change [props state]
+  (fn [simple-event dispatch mutate!]
+    (mutate! {:draft (:value simple-event)})))
 
 (defn handle-add [props state mutate]
   (comment println "state built inside:" (pr-str props) (pr-str state))
@@ -78,7 +79,7 @@
             {:style style-input,
              :event
              {:focus (on-focus props state),
-              :input (on-text-change props state mutate)},
+              :input (on-text-change props state)},
              :attrs {:placeholder "Text", :value (:draft state)}})
           (span
             {:style style-button,
