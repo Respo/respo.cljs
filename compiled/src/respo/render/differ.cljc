@@ -16,91 +16,126 @@
     index
     old-children
     new-children)
-  (cond
-    (and (= 0 (count old-children)) (= 0 (count new-children))) acc
-    (and (= 0 (count old-children)) (> (count new-children) 0)) (recur
-                                                                  (conj
-                                                                    acc
-                                                                    (let 
-                                                                      [entry
-                                                                       (get
-                                                                         new-children
-                                                                         0)
-                                                                       item
-                                                                       (purify-element
-                                                                         (val
-                                                                           entry))]
-                                                                      [:append
-                                                                       n-coord
-                                                                       item]))
-                                                                  n-coord
-                                                                  (inc
-                                                                    index)
-                                                                  old-children
-                                                                  (subvec
-                                                                    new-children
-                                                                    1))
-    (and (> (count old-children) 0) (= 0 (count new-children))) (recur
-                                                                  (conj
-                                                                    acc
-                                                                    (let 
-                                                                      [entry
-                                                                       (get
-                                                                         old-children
-                                                                         0)
-                                                                       item
-                                                                       (val
-                                                                         entry)]
-                                                                      [:rm
-                                                                       (conj
-                                                                         n-coord
-                                                                         index)]))
-                                                                  n-coord
-                                                                  index
-                                                                  (subvec
-                                                                    old-children
-                                                                    1)
-                                                                  new-children)
-    :else (let [first-old-entry (get old-children 0)
-                first-new-entry (get new-children 0)
-                old-follows (subvec old-children 1)
-                new-follows (subvec new-children 1)]
-            (case
-              (compare (key first-old-entry) (key first-new-entry))
-              -1
-              (let [acc-after-cursor (conj
-                                       acc
-                                       [:rm (conj n-coord index)])]
-                (recur
-                  acc-after-cursor
-                  n-coord
-                  index
-                  old-follows
-                  new-children))
-              1
-              (let [acc-after-cursor (conj
-                                       acc
-                                       [:add
-                                        (conj n-coord index)
-                                        (purify-element
-                                          (val first-new-entry))])]
-                (recur
-                  acc-after-cursor
-                  n-coord
-                  (inc index)
-                  old-children
-                  new-follows))
-              (let [acc-after-cursor (find-element-diffs
-                                       acc
-                                       (conj n-coord index)
-                                       (val first-old-entry)
-                                       (val first-new-entry))]
-                (recur
-                  acc-after-cursor
-                  n-coord
-                  (inc index)
-                  old-follows
-                  new-follows))))))
+  (let [old-size (count old-children) new-size (count new-children)]
+    (cond
+      (= old-size new-size 0) acc
+      (and (zero? old-size) (pos? new-size)) (let 
+                                               [element
+                                                (last
+                                                  (first new-children))
+                                                next-acc
+                                                (conj
+                                                  acc
+                                                  [:append
+                                                   n-coord
+                                                   (purify-element
+                                                     element)])]
+                                               (recur
+                                                 next-acc
+                                                 n-coord
+                                                 (inc index)
+                                                 []
+                                                 (subvec
+                                                   new-children
+                                                   1)))
+      (and (pos? old-size) (zero? new-size)) (let 
+                                               [next-acc
+                                                (conj
+                                                  acc
+                                                  [:rm
+                                                   (conj
+                                                     n-coord
+                                                     index)])]
+                                               (recur
+                                                 next-acc
+                                                 n-coord
+                                                 index
+                                                 (subvec
+                                                   old-children
+                                                   1)
+                                                 []))
+      :else (let [old-keys (mapv first old-children)
+                  new-keys (mapv first new-children)
+                  x1 (first old-keys)
+                  y1 (first new-keys)
+                  x1-remains? (contains? new-keys x1)
+                  y1-existed? (contains? old-keys y1)
+                  old-follows (subvec old-children 1)
+                  new-follows (subvec new-children 1)]
+              (cond
+                (= x1 y1) (let [old-element (last (first old-children))
+                                new-element (last (first new-children))
+                                next-acc
+                                (find-element-diffs
+                                  acc
+                                  (conj n-coord index)
+                                  old-element
+                                  new-element)]
+                            (recur
+                              next-acc
+                              n-coord
+                              (inc index)
+                              old-follows
+                              new-follows))
+                (and x1-remains? (not y1-existed?)) (let 
+                                                      [next-acc
+                                                       (conj
+                                                         acc
+                                                         (let 
+                                                           [element
+                                                            (last
+                                                              (first
+                                                                new-children))]
+                                                           [:append
+                                                            n-coord
+                                                            (purify-element
+                                                              element)]))]
+                                                      (recur
+                                                        next-acc
+                                                        n-coord
+                                                        (inc index)
+                                                        old-children
+                                                        new-follows))
+                (and (not x1-remains?) y1-existed?) (let 
+                                                      [next-acc
+                                                       (conj
+                                                         acc
+                                                         [:rm
+                                                          (conj
+                                                            n-coord
+                                                            index)])]
+                                                      (recur
+                                                        next-acc
+                                                        n-coord
+                                                        index
+                                                        old-follows
+                                                        new-children))
+                :else (let [xi (.indexOf (subvec new-keys 1) x1)
+                            yi (.indexOf (subvec old-keys 1) y1)
+                            first-old-entry (get old-children 0)
+                            first-new-entry (get new-children 0)]
+                        (if (<= xi yi)
+                          (let [new-element (last (first new-children))
+                                next-acc
+                                (conj
+                                  acc
+                                  [:add
+                                   (conj n-coord index)
+                                   (purify-element new-element)])]
+                            (recur
+                              next-acc
+                              n-coord
+                              (inc index)
+                              old-children
+                              new-follows))
+                          (let [next-acc
+                                (conj acc [:rm (conj n-coord index)])]
+                            (recur
+                              next-acc
+                              n-coord
+                              index
+                              old-follows
+                              new-children)))))))))
 
 (defn find-style-diffs [acc coord old-style new-style]
   (if (identical? old-style new-style)

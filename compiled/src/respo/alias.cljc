@@ -15,9 +15,8 @@
           (not= Component (type (first children))))
       (first children)
       (map-indexed vector children))
-    (filter (fn [pair] (some? (last pair))))
-    (sort-by first)
-    (into [])))
+    (into [])
+    (filterv (fn [pair] (some? (last pair))))))
 
 (defn create-element [tag-name props children]
   (let [attrs (if (contains? props :attrs)
