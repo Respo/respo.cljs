@@ -84,8 +84,8 @@
         {:style style-list, :attrs {:class-name "task-list"}}
         (->>
           tasks
-          (map (fn [task] [(:id task) (task-component task)]))
-          (sort-by first)))
+          (reverse)
+          (map (fn [task] [(:id task) (task-component task)]))))
       (if (> (count tasks) 0)
         (div
           {:style style-toolbar, :attrs {:spell-check true}}

@@ -12,9 +12,11 @@
 
 (defonce global-element (atom nil))
 
+(defonce cache-element (atom nil))
+
 (defn render-element [markup states-ref]
   (let [build-mutate (mutate-factory global-element states-ref)]
-    (render-app markup @states-ref build-mutate @global-element)))
+    (render-app markup @states-ref build-mutate @cache-element)))
 
 (defn mount-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
@@ -24,7 +26,8 @@
                         dispatch!)]
     (initialize-instance target deliver-event)
     (activate-instance (purify-element element) target deliver-event)
-    (reset! global-element element)))
+    (reset! global-element element)
+    (reset! cache-element element)))
 
 (defn rerender-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
@@ -35,7 +38,8 @@
         changes (find-element-diffs [] [] @global-element element)]
     (comment println "changes:" changes)
     (patch-instance changes target deliver-event)
-    (reset! global-element element)))
+    (reset! global-element element)
+    (reset! cache-element element)))
 
 (defn activate-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
@@ -45,12 +49,9 @@
                         states-ref
                         dispatch!)
         changes (find-element-diffs [] [] deaf-element element)]
-    (comment
-      println
-      "changes:"
-      (pr-str (map (fn [change] (subvec change 0 2)) changes)))
     (patch-instance changes target deliver-event)
-    (reset! global-element element)))
+    (reset! global-element element)
+    (reset! cache-element element)))
 
 (defn render! [markup target dispatch states-ref]
   (if (some? @global-element)
@@ -62,3 +63,5 @@
   (if (some? @global-element)
     (rerender-app markup target dispatch states-ref)
     (activate-app markup target dispatch states-ref)))
+
+(defn clear-cache! [] (reset! cache-element nil))

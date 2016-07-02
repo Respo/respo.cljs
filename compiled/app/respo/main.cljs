@@ -1,6 +1,6 @@
 
 (ns respo.main
-  (:require [respo.core :refer [render!]]
+  (:require [respo.core :refer [render! clear-cache!]]
             [respo.schema :as schema]
             [respo.updater.core :refer [updater]]
             [respo.component.container :refer [comp-container]]
@@ -47,4 +47,7 @@
 
 (set! (.-onbeforeunload js/window) save-store!)
 
-(defn on-jsload [] (render-app!) (.log js/console "code updated."))
+(defn on-jsload []
+  (clear-cache!)
+  (render-app!)
+  (.log js/console "code updated."))

@@ -81,6 +81,8 @@
 
 (defn html [props & children] (create-element :html props children))
 
+(defn hr [props & children] (create-element :hr props children))
+
 (defn head [props & children] (create-element :head props children))
 
 (defn body [props & children] (create-element :body props children))
