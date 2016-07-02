@@ -30,7 +30,7 @@
 
 (defn style-done [done?]
   {:vertical-align "middle",
-   :background-color (hsl 200 80 70),
+   :background-color (if done? (hsl 200 20 80) (hsl 200 80 70)),
    :width "32px",
    :outline "none",
    :border "none",
@@ -44,6 +44,9 @@
 (defn handle-remove [task]
   (fn [e dispatch! mutate!] (dispatch! :remove (:id task))))
 
+(defn handle-done [task-id]
+  (fn [e dispatch! mutate!] (dispatch! :toggle task-id)))
+
 (defn on-text-state [e dispatch! mutate!] (mutate! (:value e)))
 
 (defn on-text-change [task]
@@ -56,7 +59,9 @@
     (div
       {:style style-task}
       (comp-debug task {:left "160px"})
-      (button {:style (style-done (:done task))})
+      (button
+        {:style (style-done (:done? task)),
+         :event {:click (handle-done (:id task))}})
       (comp-space 8 nil)
       (input
         {:style style-input,

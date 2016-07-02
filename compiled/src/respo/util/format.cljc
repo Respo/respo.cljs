@@ -32,7 +32,12 @@
     {:key-code (.-keyCode event), :type :keydown}
     "input"
     {:value (.-value (.-target event)), :type :input}
-    {:msg "not recognized event", :type (.-type event)}))
+    "change"
+    {:value (.-value (.-target event)), :type :change}
+    "focus"
+    {:type :focus}
+    {:msg (str "Unhandled event: " (.-type event)),
+     :type (.-type event)}))
 
 (defn purify-events [events]
   (->> events (map (fn [entry] [(key entry) true])) (into {})))
