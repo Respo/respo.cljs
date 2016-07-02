@@ -36,7 +36,10 @@
                         states-ref
                         dispatch!)
         changes (find-element-diffs [] [] @global-element element)]
-    (comment println "changes:" changes)
+    (comment
+      println
+      "changes:"
+      (pr-str (mapv (partial take 2) changes)))
     (patch-instance changes target deliver-event)
     (reset! global-element element)
     (reset! cache-element element)))

@@ -58,10 +58,19 @@
                   new-keys (mapv first new-children)
                   x1 (first old-keys)
                   y1 (first new-keys)
-                  x1-remains? (contains? new-keys x1)
-                  y1-existed? (contains? old-keys y1)
+                  x1-remains? (some (partial = x1) new-keys)
+                  y1-existed? (some (partial = y1) old-keys)
                   old-follows (subvec old-children 1)
                   new-follows (subvec new-children 1)]
+              (comment
+                println
+                "compare:"
+                x1
+                new-keys
+                x1-remains?
+                y1
+                y1-existed?
+                old-keys)
               (cond
                 (= x1 y1) (let [old-element (last (first old-children))
                                 new-element (last (first new-children))
@@ -86,8 +95,10 @@
                                                             (last
                                                               (first
                                                                 new-children))]
-                                                           [:append
-                                                            n-coord
+                                                           [:add
+                                                            (conj
+                                                              n-coord
+                                                              index)
                                                             (purify-element
                                                               element)]))]
                                                       (recur
@@ -110,10 +121,11 @@
                                                         index
                                                         old-follows
                                                         new-children))
-                :else (let [xi (.indexOf (subvec new-keys 1) x1)
-                            yi (.indexOf (subvec old-keys 1) y1)
+                :else (let [xi (.indexOf new-keys x1)
+                            yi (.indexOf old-keys y1)
                             first-old-entry (get old-children 0)
                             first-new-entry (get new-children 0)]
+                        (comment println "index:" xi yi)
                         (if (<= xi yi)
                           (let [new-element (last (first new-children))
                                 next-acc
