@@ -4,7 +4,8 @@
             [hsl.core :refer [hsl]]
             [respo.alias :refer [div input span create-comp button]]
             [respo.component.debug :refer [comp-debug]]
-            [respo.component.space :refer [comp-space]]))
+            [respo.component.space :refer [comp-space]]
+            [respo.component.text :refer [comp-text]]))
 
 (defn init-state [props] "")
 
@@ -73,15 +74,14 @@
          :event {:input on-text-state},
          :attrs {:value state}})
       (comp-space 8 nil)
-      (div {} (span {:attrs {:inner-text state}}))
+      (div {} (comp-text state nil))
       (comp-space 8 nil)
       (div
         {:style style-button, :event {:click (handle-remove task)}}
-        (span {:attrs {:inner-text "Remove"}}))
+        (comp-text "Remove"))
       (comp-space 8 nil)
       (div
         {:style style-time}
-        (span
-          {:style style-time, :attrs {:inner-text (:time state)}})))))
+        (comp-text (or (:time state) "none") nil)))))
 
 (def task-component (create-comp :task init-state update-state render))

@@ -57,8 +57,9 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.alias/create-comp :demo (fn [] (fn [state] (div))))
 (respo.alias/create-element :demo props children)
 
-(respo.component/comp-debug data {})
-(respo.component/comp-space w h)
+(respo.component.debug/comp-debug data style)
+(respo.component.space/comp-space w h)
+(respo.component.text/comp-text content style)
 
 (respo.controller.client/initialize-instance mount-point deliver-event)
 (respo.controller.client/activate-instance virtual-element mount-point deliver-event)

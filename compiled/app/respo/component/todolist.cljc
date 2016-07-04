@@ -5,7 +5,8 @@
             [respo.component.task :refer [task-component]]
             [respo.alias :refer [div span input create-comp]]
             [respo.component.zero :refer [component-zero]]
-            [respo.component.debug :refer [comp-debug]]))
+            [respo.component.debug :refer [comp-debug]]
+            [respo.component.text :refer [comp-text]]))
 
 (def style-root
  {:line-height "24px",
@@ -75,7 +76,7 @@
            :attrs {:placeholder "Text", :value (:draft state)}})
         (span
           {:style style-button, :event {:click (handle-add state)}}
-          (span {:attrs {:inner-text "Add"}}))
+          (comp-text "Add" nil))
         (span
           {:style style-button,
            :event {:click clear-done},
@@ -91,7 +92,7 @@
           {:style style-toolbar, :attrs {:spell-check true}}
           (div
             {:style style-button, :event {:click clear-done}}
-            (span {:attrs {:inner-text "Clear2"}}))))
+            (comp-text "Clear2"))))
       (comment comp-debug tasks {}))))
 
 (def comp-todolist
