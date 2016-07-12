@@ -20,7 +20,7 @@
 
 (defn event->string [x] (subs (name x) 3))
 
-(defn event->prop [x] (string/replace (name x) "-" ""))
+(defn event->prop [x] (str "on" (name x)))
 
 (defn event->edn [event]
   (comment .log js/console "simplify event:" event)

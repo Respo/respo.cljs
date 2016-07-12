@@ -54,6 +54,12 @@
             (let [event-name (key entry)
                   name-in-string (event->prop event-name)
                   maybe-listener (get no-bubble-collection event-name)]
+              (comment
+                println
+                "listener:"
+                event-name
+                maybe-listener
+                name-in-string)
               (if (some? maybe-listener)
                 (aset element name-in-string maybe-listener)))))))
     (doall
