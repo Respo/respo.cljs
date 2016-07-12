@@ -10,6 +10,7 @@
   :change
   :input
   :keydown
+  :keyup
   :wheel
   :mousedown
   :touchstart])

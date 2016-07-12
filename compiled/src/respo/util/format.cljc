@@ -30,6 +30,8 @@
     {:type :click}
     "keydown"
     {:key-code (.-keyCode event), :type :keydown}
+    "keyup"
+    {:key-code (.-keyCode event), :type :keyup}
     "input"
     {:value (.-value (.-target event)), :type :input}
     "change"
