@@ -47,7 +47,7 @@
   (println "dispatch clear-done")
   (dispatch! :clear nil))
 
-(defn on-focus [e dispatch! mutate!] (println "Just focused~"))
+(defn on-focus [e dispatch!] (println "Just focused~"))
 
 (defn on-text-change [e dispatch! mutate!]
   (mutate! {:draft (:value e)}))

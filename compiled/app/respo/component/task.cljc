@@ -40,18 +40,18 @@
 (def style-time {:color (hsl 0 0 80)})
 
 (defn on-click [props state]
-  (fn [event dispatch! mutate!] (println "clicked.")))
+  (fn [event dispatch!] (println "clicked.")))
 
 (defn handle-remove [task]
-  (fn [e dispatch! mutate!] (dispatch! :remove (:id task))))
+  (fn [e dispatch!] (dispatch! :remove (:id task))))
 
 (defn handle-done [task-id]
-  (fn [e dispatch! mutate!] (dispatch! :toggle task-id)))
+  (fn [e dispatch!] (dispatch! :toggle task-id)))
 
 (defn on-text-state [e dispatch! mutate!] (mutate! (:value e)))
 
 (defn on-text-change [task]
-  (fn [event dispatch! mutate!]
+  (fn [event dispatch!]
     (let [task-id (:id task) text (:value event)]
       (dispatch! :update {:id task-id, :text text}))))
 
