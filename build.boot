@@ -5,7 +5,7 @@
                   [adzerk/boot-cljs            "1.7.228-1"   :scope "test"]
                   [adzerk/boot-reload          "0.4.11"      :scope "test"]
                   [binaryage/devtools          "0.7.2"       :scope "test"]
-                  [cirru/boot-cirru-sepal      "0.1.8"       :scope "test"]
+                  [cirru/boot-cirru-sepal      "0.1.9"       :scope "test"]
                   [adzerk/boot-test            "1.1.1"       :scope "test"]
                   [mvc-works/hsl               "0.1.2"       :scope "test"]])
 
