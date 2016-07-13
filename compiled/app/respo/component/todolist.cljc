@@ -43,17 +43,17 @@
 
 (def style-panel {:display "flex"})
 
-(defn clear-done [e dispatch! mutate!]
+(defn clear-done [e dispatch!]
   (println "dispatch clear-done")
   (dispatch! :clear nil))
 
 (defn on-focus [e dispatch!] (println "Just focused~"))
 
-(defn on-text-change [e dispatch! mutate!]
-  (mutate! {:draft (:value e)}))
+(defn on-text-change [mutate!]
+  (fn [e dispatch!] (mutate! {:draft (:value e)})))
 
-(defn handle-add [state]
-  (fn [e dispatch! mutate!]
+(defn handle-add [state mutate!]
+  (fn [e dispatch!]
     (dispatch! :add (:draft state))
     (mutate! {:draft ""})))
 
@@ -64,7 +64,7 @@
   (merge old-state changes))
 
 (defn render [tasks]
-  (fn [state mutate]
+  (fn [state mutate!]
     (div
       {:style style-root}
       (comment comp-debug state {:left "80px"})
@@ -72,10 +72,11 @@
         {:style style-panel}
         (input
           {:style style-input,
-           :event {:focus on-focus, :input on-text-change},
+           :event {:focus on-focus, :input (on-text-change mutate!)},
            :attrs {:placeholder "Text", :value (:draft state)}})
         (span
-          {:style style-button, :event {:click (handle-add state)}}
+          {:style style-button,
+           :event {:click (handle-add state mutate!)}}
           (comp-text "Add" nil))
         (span
           {:style style-button,

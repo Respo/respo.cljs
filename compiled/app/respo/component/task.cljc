@@ -48,7 +48,7 @@
 (defn handle-done [task-id]
   (fn [e dispatch!] (dispatch! :toggle task-id)))
 
-(defn on-text-state [e dispatch! mutate!] (mutate! (:value e)))
+(defn on-text-state [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
 (defn on-text-change [task]
   (fn [event dispatch!]
@@ -71,7 +71,7 @@
       (comp-space 8 nil)
       (input
         {:style style-input,
-         :event {:input on-text-state},
+         :event {:input (on-text-state mutate!)},
          :attrs {:value state}})
       (comp-space 8 nil)
       (div {} (comp-text state nil))

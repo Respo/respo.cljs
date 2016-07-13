@@ -20,10 +20,7 @@
 
 (defn mount-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
-        deliver-event (build-deliver-event
-                        global-element
-                        states-ref
-                        dispatch!)]
+        deliver-event (build-deliver-event global-element dispatch!)]
     (initialize-instance target deliver-event)
     (activate-instance (purify-element element) target deliver-event)
     (reset! global-element element)
@@ -31,10 +28,7 @@
 
 (defn rerender-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
-        deliver-event (build-deliver-event
-                        global-element
-                        states-ref
-                        dispatch!)
+        deliver-event (build-deliver-event global-element dispatch!)
         changes (find-element-diffs [] [] @global-element element)]
     (comment
       println
@@ -47,10 +41,7 @@
 (defn activate-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
         deaf-element (restrain-element element)
-        deliver-event (build-deliver-event
-                        global-element
-                        states-ref
-                        dispatch!)
+        deliver-event (build-deliver-event global-element dispatch!)
         changes (find-element-diffs [] [] deaf-element element)]
     (patch-instance changes target deliver-event)
     (reset! global-element element)

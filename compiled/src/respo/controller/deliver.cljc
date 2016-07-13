@@ -54,21 +54,16 @@
         (swap! global-mutate-methods assoc coord method)
         method))))
 
-(defn build-deliver-event [element-ref states-ref dispatch!]
+(defn build-deliver-event [element-ref dispatch!]
   (fn [coord event-name simple-event]
     (let [target-element (find-event-target
                            @element-ref
                            coord
                            event-name)
           target-component (get-component-at @element-ref coord)
-          target-listener (get (:event target-element) event-name)
-          build-mutate (mutate-factory element-ref states-ref)
-          new-coord (conj
-                      (:coord target-component)
-                      (:name target-component))
-          mutate! (build-mutate new-coord)]
+          target-listener (get (:event target-element) event-name)]
       (if (some? target-listener)
         (do
           (comment println "listener found:" coord event-name)
-          (target-listener simple-event dispatch! mutate!))
+          (target-listener simple-event dispatch!))
         (comment println "found no listener:" coord event-name)))))
