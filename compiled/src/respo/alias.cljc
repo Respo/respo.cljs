@@ -81,6 +81,8 @@
 
 (defn html [props & children] (create-element :html props children))
 
+(defn br [props & children] (create-element :br props children))
+
 (defn hr [props & children] (create-element :hr props children))
 
 (defn head [props & children] (create-element :head props children))
@@ -96,3 +98,9 @@
 (defn style [props & children] (create-element :style props children))
 
 (defn title [props & children] (create-element :title props children))
+
+(defn p [props & children] (create-element :p props children))
+
+(defn h1 [props & children] (create-element :h1 props children))
+
+(defn h2 [props & children] (create-element :h2 props children))
