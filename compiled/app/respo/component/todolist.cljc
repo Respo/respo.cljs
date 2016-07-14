@@ -6,7 +6,8 @@
             [respo.alias :refer [div span input create-comp]]
             [respo.component.zero :refer [component-zero]]
             [respo.component.debug :refer [comp-debug]]
-            [respo.component.text :refer [comp-text]]))
+            [respo.component.text :refer [comp-text]]
+            [respo.component.wrap :refer [comp-wrap]]))
 
 (def style-root
  {:line-height "24px",
@@ -93,7 +94,8 @@
           {:style style-toolbar, :attrs {:spell-check true}}
           (div
             {:style style-button, :event {:click clear-done}}
-            (comp-text "Clear2"))))
+            (comp-text "Clear2"))
+          (comp-wrap)))
       (comment comp-debug tasks {}))))
 
 (def comp-todolist

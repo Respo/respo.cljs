@@ -105,7 +105,7 @@
             half-render (apply render args)
             mutate! (build-mutate new-coord)
             markup-tree (half-render state mutate!)
-            tree (render-element
+            tree (render-markup
                    markup-tree
                    inner-states
                    build-mutate
