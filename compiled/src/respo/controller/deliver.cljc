@@ -29,13 +29,15 @@
                            init-state (:init-state component)
                            update-state (:update-state component)
                            state-path (conj coord 'data)
-                           old-state (or
-                                       (get-in
-                                         @global-states
-                                         state-path)
-                                       (apply
-                                         init-state
-                                         (:args component)))
+                           old-state (let 
+                                       [inner-states
+                                        (get-in @global-states coord)]
+                                       (if
+                                         (contains? inner-states 'data)
+                                         (get inner-states 'data)
+                                         (apply
+                                           init-state
+                                           (:args component))))
                            new-state (apply
                                        update-state
                                        (cons old-state state-args))]
