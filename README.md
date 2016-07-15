@@ -12,7 +12,7 @@ Demo http://repo.tiye.me/mvc-works/respo/
 [![Respo](https://img.shields.io/clojars/v/mvc-works/respo.svg)](https://clojars.org/mvc-works/respo)
 
 ```clojure
-[mvc-works/respo "0.2.1"]
+[respo "0.2.1"]
 ```
 
 ```clojure

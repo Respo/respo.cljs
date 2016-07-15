@@ -17,11 +17,11 @@
 (def +version+ "0.3.7")
 
 (task-options!
-  pom {:project     'mvc-works/respo
+  pom {:project     'respo/respo
        :version     +version+
        :description "Responsive DOM library"
-       :url         "https://github.com/mvc-works/respo"
-       :scm         {:url "https://github.com/mvc-works/respo"}
+       :url         "https://github.com/respo-mvc/respo"
+       :scm         {:url "https://github.com/respo-mvc/respo"}
        :license     {"MIT" "http://opensource.org/licenses/mit-license.php"}})
 
 (deftask compile-cirru []
@@ -63,7 +63,7 @@
 
 (deftask rsync []
   (with-pre-wrap fileset
-    (sh "rsync" "-r" "target/" "tiye:repo/mvc-works/respo" "--exclude" "main.out" "--delete")
+    (sh "rsync" "-r" "target/" "tiye:repo/respo-mvc/respo" "--exclude" "main.out" "--delete")
     fileset))
 
 (deftask send-tiye []
