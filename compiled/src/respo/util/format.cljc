@@ -24,22 +24,23 @@
 
 (defn event->edn [event]
   (comment .log js/console "simplify event:" event)
-  (case
-    (.-type event)
-    "click"
-    {:type :click}
-    "keydown"
-    {:key-code (.-keyCode event), :type :keydown}
-    "keyup"
-    {:key-code (.-keyCode event), :type :keyup}
-    "input"
-    {:value (.-value (.-target event)), :type :input}
-    "change"
-    {:value (.-value (.-target event)), :type :change}
-    "focus"
-    {:type :focus}
-    {:msg (str "Unhandled event: " (.-type event)),
-     :type (.-type event)}))
+  (-> (case
+        (.-type event)
+        "click"
+        {:type :click}
+        "keydown"
+        {:key-code (.-keyCode event), :type :keydown}
+        "keyup"
+        {:key-code (.-keyCode event), :type :keyup}
+        "input"
+        {:value (.-value (.-target event)), :type :input}
+        "change"
+        {:value (.-value (.-target event)), :type :change}
+        "focus"
+        {:type :focus}
+        {:msg (str "Unhandled event: " (.-type event)),
+         :type (.-type event)})
+   (assoc :original-event event)))
 
 (defn purify-events [events]
   (->> events (map (fn [entry] [(key entry) true])) (into {})))
