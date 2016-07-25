@@ -9,10 +9,10 @@ Demo http://repo.tiye.me/mvc-works/respo/
 
 ## Usage
 
-[![Respo](https://img.shields.io/clojars/v/mvc-works/respo.svg)](https://clojars.org/mvc-works/respo)
+[![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.2.1"]
+[respo "0.3.8"]
 ```
 
 ```clojure
