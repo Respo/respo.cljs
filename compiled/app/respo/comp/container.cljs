@@ -1,7 +1,7 @@
 
-(ns respo.component.container
+(ns respo.comp.container
   (:require [respo.alias :refer [create-comp div]]
-            [respo.component.todolist :refer [comp-todolist]]))
+            [respo.comp.todolist :refer [comp-todolist]]))
 
 (defn render [store]
   (fn [state mutate!] (div {} (comp-todolist store))))

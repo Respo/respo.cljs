@@ -1,5 +1,5 @@
 
-(ns respo.component.debug
+(ns respo.comp.debug
   (:require [hsl.core :refer [hsl]]
             [respo.alias :refer [create-comp div span]]))
 

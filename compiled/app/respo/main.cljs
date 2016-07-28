@@ -3,7 +3,7 @@
   (:require [respo.core :refer [render! clear-cache!]]
             [respo.schema :as schema]
             [respo.updater.core :refer [updater]]
-            [respo.component.container :refer [comp-container]]
+            [respo.comp.container :refer [comp-container]]
             [cljs.reader :refer [read-string]]
             [devtools.core :as devtools]))
 

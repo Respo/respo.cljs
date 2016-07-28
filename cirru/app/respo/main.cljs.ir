@@ -1,6 +1,6 @@
 
 [
-[ "ns" "respo.main" [ ":require" [ "[]" "respo.core" ":refer" [ "[]" "render!" "clear-cache!" ] ] [ "[]" "respo.schema" ":as" "schema" ] [ "[]" "respo.updater.core" ":refer" [ "[]" "updater" ] ] [ "[]" "respo.component.container" ":refer" [ "[]" "comp-container" ] ] [ "[]" "cljs.reader" ":refer" [ "[]" "read-string" ] ] [ "[]" "devtools.core" ":as" "devtools" ] ] ]
+[ "ns" "respo.main" [ ":require" [ "[]" "respo.core" ":refer" [ "[]" "render!" "clear-cache!" ] ] [ "[]" "respo.schema" ":as" "schema" ] [ "[]" "respo.updater.core" ":refer" [ "[]" "updater" ] ] [ "[]" "respo.comp.container" ":refer" [ "[]" "comp-container" ] ] [ "[]" "cljs.reader" ":refer" [ "[]" "read-string" ] ] [ "[]" "devtools.core" ":as" "devtools" ] ] ]
 [ "defonce" "global-store" [ "atom" [ "or" [ "let" [ [ "raw" [ "or" [ ".getItem" "js/localStorage" "|respo" ] "|[]" ] ] ] [ "read-string" "raw" ] ] "schema/store" ] ] ]
 [ "defonce" "global-states" [ "atom" [ "{}" ] ] ]
 [ "defn" "dispatch!" [ "op" "op-data" ] [ "let" [ [ "op-id" [ ".valueOf" [ "js/Date." ] ] ] [ "new-store" [ "updater" "@global-store" "op" "op-data" "op-id" ] ] ] [ "reset!" "global-store" "new-store" ] ] ]

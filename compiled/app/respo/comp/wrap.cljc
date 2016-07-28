@@ -1,7 +1,7 @@
 
-(ns respo.component.wrap
+(ns respo.comp.wrap
   (:require [respo.alias :refer [create-comp div]]
-            [respo.component.text :refer [comp-text]]))
+            [respo.comp.text :refer [comp-text]]))
 
 (defn render [] (fn [state mutate!] (comp-text "wrap" nil)))
 

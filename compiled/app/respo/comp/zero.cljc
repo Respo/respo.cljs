@@ -1,5 +1,5 @@
 
-(ns respo.component.zero
+(ns respo.comp.zero
   (:require [respo.alias :refer [create-comp div span]]))
 
 (defn render []

@@ -1,5 +1,5 @@
 
-(ns respo.component.text
+(ns respo.comp.text
   (:require [respo.alias :refer [create-comp span]]))
 
 (defn render [content style]

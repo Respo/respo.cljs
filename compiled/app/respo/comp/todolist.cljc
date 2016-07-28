@@ -1,13 +1,13 @@
 
-(ns respo.component.todolist
+(ns respo.comp.todolist
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
-            [respo.component.task :refer [task-component]]
+            [respo.comp.task :refer [task-component]]
             [respo.alias :refer [div span input create-comp]]
-            [respo.component.zero :refer [component-zero]]
-            [respo.component.debug :refer [comp-debug]]
-            [respo.component.text :refer [comp-text]]
-            [respo.component.wrap :refer [comp-wrap]]))
+            [respo.comp.zero :refer [component-zero]]
+            [respo.comp.debug :refer [comp-debug]]
+            [respo.comp.text :refer [comp-text]]
+            [respo.comp.wrap :refer [comp-wrap]]))
 
 (def style-root
  {:line-height "24px",

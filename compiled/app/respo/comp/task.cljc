@@ -1,11 +1,11 @@
 
-(ns respo.component.task
+(ns respo.comp.task
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
             [respo.alias :refer [div input span create-comp button]]
-            [respo.component.debug :refer [comp-debug]]
-            [respo.component.space :refer [comp-space]]
-            [respo.component.text :refer [comp-text]]))
+            [respo.comp.debug :refer [comp-debug]]
+            [respo.comp.space :refer [comp-space]]
+            [respo.comp.text :refer [comp-text]]))
 
 (defn init-state [props] "")
 

@@ -34,7 +34,7 @@ Demo http://repo.tiye.me/mvc-works/respo/
 ## Component Definition
 
 ```clojure
-(ns respo.component.space
+(ns respo.comp.space
   (:require [respo.alias :refer [create-comp div]]))
 
 (defn style-space [w h]
@@ -57,9 +57,9 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.alias/create-comp :demo (fn [] (fn [state] (div))))
 (respo.alias/create-element :demo props children)
 
-(respo.component.debug/comp-debug data style)
-(respo.component.space/comp-space w h)
-(respo.component.text/comp-text content style)
+(respo.comp.debug/comp-debug data style)
+(respo.comp.space/comp-space w h)
+(respo.comp.text/comp-text content style)
 
 (respo.controller.client/initialize-instance mount-point deliver-event)
 (respo.controller.client/activate-instance virtual-element mount-point deliver-event)
