@@ -16,20 +16,7 @@
 
 (defn replace-prop [target op]
   (let [prop-name (dashed->camel (name (key op))) prop-value (val op)]
-    (case
-      prop-name
-      "innerText"
-      (let [child-element-size (.-childElementCount target)]
-        (if (> child-element-size 0)
-          (.error
-            js/console
-            (str
-              "destroyed "
-              child-element-size
-              " elements during setting innerText!")))
-        (if (not= (.-innerText target) prop-value)
-          (set! (.-innerText target) prop-value)))
-      (aset target prop-name prop-value))))
+    (aset target prop-name prop-value)))
 
 (defn add-prop [target op]
   (let [prop-name (dashed->camel (name (key op))) prop-value (val op)]
@@ -37,16 +24,6 @@
       prop-name
       "style"
       (aset target prop-name (style->string prop-value))
-      "innerText"
-      (let [child-element-size (.-childElementCount target)]
-        (if (> child-element-size 0)
-          (.error
-            js/console
-            (str
-              "destroyed "
-              child-element-size
-              " elements during setting innerText!")))
-        (set! (.-innerText target) prop-value))
       (aset target prop-name prop-value))))
 
 (defn rm-prop [target op] (aset target (dashed->camel (name op)) nil))
