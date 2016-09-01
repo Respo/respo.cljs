@@ -27,7 +27,8 @@
               "destroyed "
               child-element-size
               " elements during setting innerText!")))
-        (set! (.-innerText target) prop-value))
+        (if (not= (.-innerText target) prop-value)
+          (set! (.-innerText target) prop-value)))
       (aset target prop-name prop-value))))
 
 (defn add-prop [target op]

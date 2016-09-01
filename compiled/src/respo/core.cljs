@@ -34,8 +34,7 @@
       println
       "changes:"
       (pr-str (mapv (partial take 2) changes)))
-    (js/setTimeout
-      (fn [] (patch-instance changes target deliver-event)))
+    (patch-instance changes target deliver-event)
     (reset! global-element element)
     (reset! cache-element element)))
 
