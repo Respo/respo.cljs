@@ -16,7 +16,10 @@
 
 (defn replace-prop [target op]
   (let [prop-name (dashed->camel (name (key op))) prop-value (val op)]
-    (aset target prop-name prop-value)))
+    (if (= prop-name "value")
+      (if (not= prop-value (.-value target))
+        (aset target prop-name prop-value))
+      (aset target prop-name prop-value))))
 
 (defn add-prop [target op]
   (let [prop-name (dashed->camel (name (key op))) prop-value (val op)]

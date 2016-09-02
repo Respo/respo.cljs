@@ -2,7 +2,7 @@
 [
 [ "ns" "respo.render.patcher" [ ":require" [ "[]" "clojure.string" ":as" "string" ] [ "[]" "cljs.reader" ":refer" [ "[]" "read-string" ] ] [ "[]" "respo.util.format" ":refer" [ "[]" "dashed->camel" "event->prop" ] ] [ "[]" "respo.render.make-dom" ":refer" [ "[]" "make-element" "style->string" ] ] [ "[]" "respo.util.information" ":refer" [ "[]" "no-bubble-events" ] ] ] ]
 [ "defn" "find-target" [ "root" "coord" ] [ "if" [ "=" "coord" [ "[]" ] ] "root" [ "let" [ [ "index" [ "first" "coord" ] ] [ "follows" [ "subvec" "coord" "1" ] ] [ "child" [ "aget" [ ".-children" "root" ] "index" ] ] ] [ "recur" "child" "follows" ] ] ] ]
-[ "defn" "replace-prop" [ "target" "op" ] [ "let" [ [ "prop-name" [ "dashed->camel" [ "name" [ "key" "op" ] ] ] ] [ "prop-value" [ "val" "op" ] ] ] [ "aset" "target" "prop-name" "prop-value" ] ] ]
+[ "defn" "replace-prop" [ "target" "op" ] [ "let" [ [ "prop-name" [ "dashed->camel" [ "name" [ "key" "op" ] ] ] ] [ "prop-value" [ "val" "op" ] ] ] [ "if" [ "=" "prop-name" "|value" ] [ "if" [ "not=" "prop-value" [ ".-value" "target" ] ] [ "aset" "target" "prop-name" "prop-value" ] ] [ "aset" "target" "prop-name" "prop-value" ] ] ] ]
 [ "defn" "add-prop" [ "target" "op" ] [ "let" [ [ "prop-name" [ "dashed->camel" [ "name" [ "key" "op" ] ] ] ] [ "prop-value" [ "val" "op" ] ] ] [ "case" "prop-name" [ "|style" [ "aset" "target" "prop-name" [ "style->string" "prop-value" ] ] ] [ "aset" "target" "prop-name" "prop-value" ] ] ] ]
 [ "defn" "rm-prop" [ "target" "op" ] [ "aset" "target" [ "dashed->camel" [ "name" "op" ] ] "nil" ] ]
 [ "defn" "add-style" [ "target" "op" ] [ "let" [ [ "style-name" [ "dashed->camel" [ "name" [ "key" "op" ] ] ] ] [ "style-value" [ "val" "op" ] ] ] [ "aset" [ ".-style" "target" ] "style-name" "style-value" ] ] ]
