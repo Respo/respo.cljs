@@ -63,9 +63,9 @@
                  (fn [entry] [(first entry)
                               (purify-element (last entry))]))))))))))
 
-(defn rigidify-element [element]
+(defn mute-element [element]
   (if (component? element)
-    (recur (:tree element))
+    (update element :tree mute-element)
     (-> element
      (update :event (fn [events] (list)))
      (update
@@ -75,4 +75,4 @@
            children
            (mapv
              (fn [entry] [(first entry)
-                          (rigidify-element (last entry))]))))))))
+                          (mute-element (last entry))]))))))))

@@ -21,6 +21,7 @@
 (defn mount-app [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event global-element dispatch!)]
+    (comment println "mount app")
     (initialize-instance target deliver-event)
     (activate-instance (purify-element element) target deliver-event)
     (reset! global-element element)
@@ -30,6 +31,7 @@
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event global-element dispatch!)
         changes (find-element-diffs [] [] @global-element element)]
+    (comment println @global-element)
     (comment
       println
       "changes:"
