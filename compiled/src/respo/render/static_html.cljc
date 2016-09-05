@@ -1,7 +1,7 @@
 
 (ns respo.render.static-html
   (:require [clojure.string :as string]
-            [respo.util.format :refer [prop->attr purify-element]]
+            [respo.util.format :refer [prop->attr rigidify-element]]
             [respo.util.detect :refer [component? element?]]
             [respo.render.expander :refer [render-app]]
             [respo.controller.deliver :refer [mutate-factory]]))
@@ -101,8 +101,8 @@
 
 (defn make-string [tree]
   (let [element (render-app tree @global-states build-mutate nil)]
-    (element->string (purify-element element))))
+    (element->string (rigidify-element element))))
 
 (defn make-html [tree]
   (let [element (render-app tree @global-states build-mutate nil)]
-    (element->html (purify-element element))))
+    (element->html (rigidify-element element))))
