@@ -63,7 +63,16 @@
                  (fn [entry] [(first entry)
                               (purify-element (last entry))]))))))))))
 
-(defn restrain-element [element]
+(defn rigidify-element [element]
   (if (component? element)
     (recur (:tree element))
-    (update element :event (fn [events] (list)))))
+    (-> element
+     (update :event (fn [events] (list)))
+     (update
+       :children
+       (fn [children]
+         (->>
+           children
+           (mapv
+             (fn [entry] [(first entry)
+                          (rigidify-element (last entry))]))))))))

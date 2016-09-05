@@ -53,6 +53,8 @@ Now you have to define `init-state` and `update-state` in every component.
 ### Low level APIs
 
 ```clojure
+(repo.core/falsify-stage! element)
+
 (respo.alias/div {})
 (respo.alias/create-comp :demo (fn [] (fn [state] (div))))
 (respo.alias/create-element :demo props children)
@@ -79,6 +81,7 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.render.differ/find-element-diffs [] [] old-virtual-element virtual-element)
 
 (respo.util.format/purify-element virtual-element)
+(respo.util.format/regidify-element virtual-element)
 ```
 
 ## Develop
