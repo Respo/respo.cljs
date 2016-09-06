@@ -33,9 +33,9 @@
         "keyup"
         {:key-code (.-keyCode event), :type :keyup}
         "input"
-        {:value (.-value (.-target event)), :type :input}
+        {:value (aget (.-target event) "value"), :type :input}
         "change"
-        {:value (.-value (.-target event)), :type :change}
+        {:value (aget (.-target event) "value"), :type :change}
         "focus"
         {:type :focus}
         {:msg (str "Unhandled event: " (.-type event)),

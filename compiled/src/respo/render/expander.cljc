@@ -7,8 +7,6 @@
             [respo.util.error :refer [raise]]
             [respo.util.list :refer [filter-first]]))
 
-(defn keyword->string [x] (subs (str x) 1))
-
 (declare render-component)
 
 (declare render-element)

@@ -11,10 +11,10 @@
 (defonce dom-registry (atom {}))
 
 (defn read-coord [target]
-  (read-string (->> target (.-dataset) (.-coord))))
+  (read-string (aget (.-dataset target) "coord")))
 
 (defn read-events [target]
-  (read-string (->> target (.-dataset) (.-event))))
+  (read-string (aget (.-dataset target) "event")))
 
 (defn maybe-trigger [target event-name simple-event deliver-event]
   (let [coord (read-coord target) active-events (read-events target)]

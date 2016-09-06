@@ -31,10 +31,11 @@
                                    item
                                    no-bubble-collection))))))
         event-keys (into [] (keys (:event virtual-element)))]
-    (set!
-      (->> element (.-dataset) (.-coord))
+    (aset
+      (.-dataset element)
+      "coord"
       (pr-str (:coord virtual-element)))
-    (set! (->> element (.-dataset) (.-event)) (pr-str event-keys))
+    (aset (.-dataset element) "event" (pr-str event-keys))
     (doall
       (->>
         attrs

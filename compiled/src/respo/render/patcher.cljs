@@ -50,22 +50,22 @@
 
 (defn add-event [target event-name no-bubble-collection]
   (let [event-prop (event->prop event-name)
-        existing-events (read-string (-> target (.-dataset) (.-event)))
+        existing-events (read-string (aget (.-dataset target) "event"))
         new-events-list (pr-str (conj existing-events event-name))
         maybe-listener (get no-bubble-collection event-name)]
     (if (some? maybe-listener) (aset target event-prop maybe-listener))
-    (set! (-> target (.-dataset) (.-event)) new-events-list)))
+    (aset (.-dataset target) "event" new-events-list)))
 
 (defn rm-event [target event-name]
   (let [event-prop (event->prop event-name)
-        existing-events (read-string (-> target (.-dataset) (.-event)))
+        existing-events (read-string (aget (.-dataset target) "event"))
         new-events-list (pr-str
                           (->>
                             existing-events
                             (filter (fn [x] (not= x event-name)))
                             (into [])))]
     (if (is-no-bubble? event-name) (aset target event-prop nil))
-    (set! (-> target (.-dataset) (.-event)) new-events-list)))
+    (aset (.-dataset target) "event" new-events-list)))
 
 (defn add-element [target op no-bubble-collection]
   (let [new-element (make-element op no-bubble-collection)
