@@ -45,8 +45,10 @@
     (rerender-app markup target dispatch states-ref)
     (mount-app markup target dispatch states-ref)))
 
-(defn falsify-stage! [element]
+(defn falsify-stage! [target element dispatch!]
   (reset! global-element element)
-  (reset! cache-element element))
+  (reset! cache-element element)
+  (let [deliver-event (build-deliver-event global-element dispatch!)]
+    (initialize-instance target deliver-event)))
 
 (defn clear-cache! [] (reset! cache-element nil))

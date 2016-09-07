@@ -12,7 +12,7 @@ Demo http://repo.tiye.me/mvc-works/respo/
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.3.16"]
+[respo "0.3.17"]
 ```
 
 ```clojure
@@ -53,7 +53,7 @@ Now you have to define `init-state` and `update-state` in every component.
 ### Low level APIs
 
 ```clojure
-(repo.core/falsify-stage! element)
+(repo.core/falsify-stage! mount-point element dispatch!)
 
 (respo.alias/div {})
 (respo.alias/create-comp :demo (fn [] (fn [state] (div))))

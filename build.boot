@@ -14,7 +14,7 @@
          '[cirru-sepal.core   :refer [transform-cirru]]
          '[adzerk.boot-test   :refer :all])
 
-(def +version+ "0.3.16")
+(def +version+ "0.3.17")
 
 (task-options!
   pom {:project     'respo/respo
