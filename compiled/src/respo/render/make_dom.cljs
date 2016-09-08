@@ -30,7 +30,7 @@
                                  (make-element
                                    item
                                    no-bubble-collection))))))
-        event-keys (into [] (keys (:event virtual-element)))]
+        event-keys (into #{} (keys (:event virtual-element)))]
     (aset
       (.-dataset element)
       "coord"

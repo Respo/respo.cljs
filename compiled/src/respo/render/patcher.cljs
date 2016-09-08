@@ -59,11 +59,7 @@
 (defn rm-event [target event-name]
   (let [event-prop (event->prop event-name)
         existing-events (read-string (aget (.-dataset target) "event"))
-        new-events-list (pr-str
-                          (->>
-                            existing-events
-                            (filter (fn [x] (not= x event-name)))
-                            (into [])))]
+        new-events-list (pr-str (disj existing-events event-name))]
     (if (is-no-bubble? event-name) (aset target event-prop nil))
     (aset (.-dataset target) "event" new-events-list)))
 

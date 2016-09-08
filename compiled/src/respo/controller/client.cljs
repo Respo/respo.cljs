@@ -19,9 +19,7 @@
 (defn maybe-trigger [target event-name simple-event deliver-event]
   (let [coord (read-coord target) active-events (read-events target)]
     (comment .log js/console coord active-events event-name)
-    (if (some
-          (fn [defined-event] (= event-name defined-event))
-          active-events)
+    (if (contains? active-events event-name)
       (deliver-event coord event-name simple-event)
       (if (> (count coord) 1)
         (recur
