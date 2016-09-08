@@ -63,7 +63,7 @@
 
 (deftask rsync []
   (with-pre-wrap fileset
-    (sh "rsync" "-r" "target/" "tiye:repo/respo-mvc/respo" "--exclude" "main.out" "--delete")
+    (sh "rsync" "-r" "target/" "repo.tiye.me:repo/Respo/respo" "--exclude" "main.out" "--delete")
     fileset))
 
 (deftask send-tiye []
