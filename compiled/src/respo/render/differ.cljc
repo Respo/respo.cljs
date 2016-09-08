@@ -334,8 +334,12 @@
                    (into [] (sort-by first (:attrs old-tree)))
                    (into [] (sort-by first (:attrs new-tree))))
                  ((fn [acc1]
-                    (let [old-events (:events :old-tree)
-                          new-events (:events :new-tree)
+                    (let [old-events (into
+                                       #{}
+                                       (keys (:event old-tree)))
+                          new-events (into
+                                       #{}
+                                       (keys (:event new-tree)))
                           added-events (difference
                                          new-events
                                          old-events)
@@ -353,9 +357,7 @@
                                     (map
                                       (fn 
                                         [event-name]
-                                        [(:rm-event
-                                           n-coord
-                                           event-name)])
+                                        [:rm-event n-coord event-name])
                                       removed-events))]
                       (if (empty? changes)
                         acc1

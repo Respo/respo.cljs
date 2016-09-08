@@ -26,7 +26,8 @@
   :outline "none"})
 
 (def style-toolbar
- {:width "300px",
+ {:white-space "nowrap",
+  :width "300px",
   :padding "4px 0",
   :justify-content "center",
   :display "flex",
@@ -58,11 +59,14 @@
     (dispatch! :add (:draft state))
     (mutate! {:draft ""})))
 
-(defn init-state [props] {:draft ""})
+(defn init-state [props] {:draft "", :locked? false})
 
 (defn update-state [old-state changes]
   (comment println "changes:" (pr-str old-state) (pr-str changes))
   (merge old-state changes))
+
+(defn on-lock [locked? mutate!]
+  (fn [e dispatch!] (mutate! {:locked? (not locked?)})))
 
 (defn render [tasks]
   (fn [state mutate!]
@@ -93,8 +97,13 @@
         (div
           {:style style-toolbar, :attrs {:spell-check true}}
           (div
-            {:style style-button, :event {:click clear-done}}
+            {:style style-button,
+             :event (if (:locked? state) {} {:click clear-done})}
             (comp-text "Clear2"))
+          (div
+            {:style style-button,
+             :event {:click (on-lock (:locked? state) mutate!)}}
+            (comp-text (str "Lock?" (:locked? state)) nil))
           (comp-wrap)))
       (comment comp-debug tasks {}))))
 

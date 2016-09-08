@@ -41,7 +41,7 @@
         styles (or (:style element) {})
         text-inside (or (:innerHTML attrs) (:inner-text attrs))
         formatted-coord (pr-str (:coord element))
-        formatted-event (pr-str (into [] (keys (:event element))))
+        formatted-event (pr-str (into #{} (keys (:event element))))
         tailored-props (-> attrs
                         (dissoc :innerHTML)
                         (dissoc :inner-text)
