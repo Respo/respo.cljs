@@ -2,7 +2,8 @@
 (ns respo.render.differ
   (:require [clojure.string :as string]
             [respo.util.format :refer [purify-element]]
-            [respo.util.detect :refer [component?]]))
+            [respo.util.detect :refer [component?]]
+            [clojure.set :refer [difference]]))
 
 (declare find-element-diffs)
 
@@ -288,59 +289,6 @@
                 old-follows
                 new-follows)))))
 
-(defn find-events-diffs [acc coord old-events new-events]
-  (comment
-    .log
-    js/console
-    "compare events:"
-    (pr-str old-events)
-    (pr-str new-events))
-  (cond
-    (and (= (count old-events) 0) (= (count new-events) 0)) acc
-    (and (= (count old-events) 0) (> (count new-events) 0)) (recur
-                                                              (conj
-                                                                acc
-                                                                [:add-event
-                                                                 coord
-                                                                 (first
-                                                                   new-events)])
-                                                              coord
-                                                              old-events
-                                                              (subvec
-                                                                new-events
-                                                                1))
-    (and (> (count old-events) 0) (= (count new-events) 0)) (recur
-                                                              (conj
-                                                                acc
-                                                                [:rm-event
-                                                                 coord
-                                                                 (first
-                                                                   old-events)])
-                                                              coord
-                                                              (subvec
-                                                                old-events
-                                                                1)
-                                                              new-events)
-    :else (case
-            (compare (first old-events) (first new-events))
-            -1
-            (recur
-              (conj acc [:rm-event coord (first old-events)])
-              coord
-              (subvec old-events 1)
-              new-events)
-            1
-            (recur
-              (conj acc [:add-event coord (first new-events)])
-              coord
-              old-events
-              (subvec new-events 1))
-            (recur
-              acc
-              coord
-              (subvec old-events 1)
-              (subvec new-events 1)))))
-
 (defn find-element-diffs [acc n-coord old-tree new-tree]
   (comment
     .log
@@ -385,10 +333,33 @@
                    n-coord
                    (into [] (sort-by first (:attrs old-tree)))
                    (into [] (sort-by first (:attrs new-tree))))
-                 (find-events-diffs
-                   n-coord
-                   (into [] (sort (keys (:event old-tree))))
-                   (into [] (sort (keys (:event new-tree)))))
+                 ((fn [acc1]
+                    (let [old-events (:events :old-tree)
+                          new-events (:events :new-tree)
+                          added-events (difference
+                                         new-events
+                                         old-events)
+                          removed-events (difference
+                                           old-events
+                                           new-events)
+                          changes (concat
+                                    (map
+                                      (fn 
+                                        [event-name]
+                                        [:add-event
+                                         n-coord
+                                         event-name])
+                                      added-events)
+                                    (map
+                                      (fn 
+                                        [event-name]
+                                        [(:rm-event
+                                           n-coord
+                                           event-name)])
+                                      removed-events))]
+                      (if (empty? changes)
+                        acc1
+                        (into [] (concat acc1 changes))))))
                  (find-children-diffs
                    n-coord
                    0
