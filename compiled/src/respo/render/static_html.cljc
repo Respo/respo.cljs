@@ -18,8 +18,12 @@
       styles
       (map
         (fn [entry]
-          (let [k (first entry) v (escape-html (last entry))]
-            (str (name k) ":" v ";")))))))
+          (let [k (first entry) v (last entry)]
+            (str
+              (name k)
+              ":"
+              (if (string? v) (escape-html v) v)
+              ";")))))))
 
 (defn entry->string [entry]
   (let [k (first entry) v (last entry)]
