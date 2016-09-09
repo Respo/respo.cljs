@@ -3,7 +3,7 @@
   (:require [respo.alias :refer [create-comp div]]
             [respo.test-component.task :refer [comp-task]]))
 
-(def style-todolist {:color "blue"})
+(def style-todolist {:color "blue", :font-family "\"微软雅黑b\", Verdana"})
 
 (defn render [tasks]
   (fn [state mutate]

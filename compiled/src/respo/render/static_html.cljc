@@ -8,6 +8,9 @@
             [respo.render.expander :refer [render-app]]
             [respo.controller.deliver :refer [mutate-factory]]))
 
+(defn escape-html [text]
+  (-> text (string/replace (re-pattern "\"") "&quot;")))
+
 (defn style->string [styles]
   (string/join
     ""
@@ -15,7 +18,7 @@
       styles
       (map
         (fn [entry]
-          (let [k (first entry) v (last entry)]
+          (let [k (first entry) v (escape-html (last entry))]
             (str (name k) ":" v ";")))))))
 
 (defn entry->string [entry]

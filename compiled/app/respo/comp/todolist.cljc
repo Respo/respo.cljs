@@ -14,7 +14,8 @@
   :color "black",
   :font-size "16px",
   :background-color (hsl 120 20 93),
-  :padding "10px"})
+  :padding "10px",
+  :font-family "\"微软雅黑\", Verdana"})
 
 (def style-list {:color "black", :background-color (hsl 120 20 96)})
 
@@ -41,7 +42,7 @@
   :padding "0 6px 0 6px",
   :display "inline-block",
   :border-radius "4px",
-  :font-family "Verdana"})
+  :font-family "\"微软雅黑\", Verdana"})
 
 (def style-panel {:display "flex"})
 
