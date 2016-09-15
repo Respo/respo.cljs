@@ -6,3 +6,5 @@
 (defn element? [x] (contains? x :event))
 
 (defn =vector [a b] false)
+
+(defn text-width [content font-size font-family] 0)

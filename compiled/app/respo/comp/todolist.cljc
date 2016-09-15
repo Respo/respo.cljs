@@ -7,7 +7,8 @@
             [respo.comp.zero :refer [component-zero]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.text :refer [comp-text]]
-            [respo.comp.wrap :refer [comp-wrap]]))
+            [respo.comp.wrap :refer [comp-wrap]]
+            [respo.util.detect :refer [text-width]]))
 
 (def style-root
  {:line-height "24px",
@@ -77,7 +78,18 @@
       (div
         {:style style-panel}
         (input
-          {:style style-input,
+          {:style
+           (merge
+             style-input
+             {:width
+              (max
+                200
+                (+
+                  24
+                  (text-width
+                    (:draft state)
+                    16
+                    "BlinkMacSystemFont")))}),
            :event {:focus on-focus, :input (on-text-change mutate!)},
            :attrs {:placeholder "Text", :value (:draft state)}})
         (span

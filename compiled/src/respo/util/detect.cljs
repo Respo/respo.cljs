@@ -14,3 +14,9 @@
         (if (identical? (get ax 0) (get bx 0))
           (recur (subvec ax 1) (subvec bx 1))
           false)))))
+
+(defonce ctx (.getContext (.createElement js/document "canvas") "2d"))
+
+(defn text-width [content font-size font-family]
+  (set! (.-font ctx) (str font-size "px " font-family))
+  (.-width (.measureText ctx content)))
