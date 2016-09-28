@@ -81,7 +81,7 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.render.differ/find-element-diffs [] [] old-virtual-element virtual-element)
 
 (respo.util.format/purify-element virtual-element)
-(respo.util.format/regidify-element virtual-element)
+(respo.util.format/mute-element virtual-element)
 ```
 
 ## Develop
