@@ -74,7 +74,8 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.controller.deliver/build-deliver-event virtual-element-ref dispatch! states-ref)
 (def build-mutate (respo.controller.deliver/mutate-factory element-ref states-ref))
 
-(respo.controller.resolver/get-element-at element coord)
+(respo.controller.resolver/get-component-at element coord)
+(respo.controller.resolver/get-markup-at element coord)
 
 (respo.render.expander/render-app element-markup global-states)
 
