@@ -29,9 +29,8 @@
 
 (def style-toolbar
  {:white-space "nowrap",
-  :width "300px",
   :padding "4px 0",
-  :justify-content "center",
+  :justify-content "start",
   :display "flex",
   :flex-direction "row"})
 

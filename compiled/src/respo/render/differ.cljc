@@ -327,12 +327,12 @@
                         (find-style-diffs
                           acc1
                           n-coord
-                          (into [] (sort-by first old-style))
-                          (into [] (sort-by first new-style)))))))
+                          old-style
+                          new-style)))))
                  (find-props-diffs
                    n-coord
-                   (into [] (sort-by first (:attrs old-tree)))
-                   (into [] (sort-by first (:attrs new-tree))))
+                   (:attrs old-tree)
+                   (:attrs new-tree))
                  ((fn [acc1]
                     (let [old-events (into
                                        #{}
