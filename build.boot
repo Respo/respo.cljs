@@ -43,15 +43,6 @@
     (cljs)
     (target)))
 
-(deftask build-simple []
-  (set-env!
-    :asset-paths #{"assets"}
-    :source-paths #{"cirru/src" "cirru/app"})
-  (comp
-    (transform-cirru)
-    (cljs :compiler-options {})
-    (target)))
-
 (deftask build-advanced []
   (set-env!
     :asset-paths #{"assets"}
@@ -63,13 +54,8 @@
 
 (deftask rsync []
   (with-pre-wrap fileset
-    (sh "rsync" "-r" "target/" "repo.tiye.me:repo/Respo/respo" "--exclude" "main.out" "--delete")
+    (sh "rsync" "-r" "target/" "repo.respo.site:repo/Respo/respo" "--exclude" "main.out" "--delete")
     fileset))
-
-(deftask send-tiye []
-  (comp
-    (build-advanced)
-    (rsync)))
 
 ; some problems due to uglifying
 (deftask build []

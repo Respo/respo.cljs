@@ -1,13 +1,20 @@
 
-# Respo
+Respo
+----
 
-A responsive DOM library.
+A front-end MVC library in ClojureScript.
 
-Demo http://repo.tiye.me/mvc-works/respo/
+* Home http://respo.site
+* Quick Start https://github.com/mvc-works/respo/wiki/Quick-Start
+* Demo http://repo.respo.site/respo/
 
-[Quick Start](https://github.com/mvc-works/respo/wiki/Quick-Start)
+This project is inspired by:
 
-## Usage
+* React
+* Reagent
+* Deku
+
+### Usage
 
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
@@ -31,7 +38,7 @@ Demo http://repo.tiye.me/mvc-works/respo/
 (render-app)
 ```
 
-## Component Definition
+### Component Definition
 
 ```clojure
 (ns respo.comp.space
@@ -85,7 +92,7 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.util.format/mute-element virtual-element)
 ```
 
-## Develop
+### Develop
 
 Project workflow https://github.com/mvc-works/boot-workflow
 
@@ -119,14 +126,6 @@ cle cirru/
 # # try Command P, Command Shift P, Command S, Left, Right, Up, Down...
 ```
 
-## Options
-
-This project is inspired by:
-
-* React
-* Reagent
-* Deku
-
-## License
+### License
 
 MIT
