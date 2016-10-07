@@ -75,8 +75,8 @@ Now you have to define `init-state` and `update-state` in every component.
 (respo.controller.client/patch-instance changes mount-point deliver-event)
 (respo.controller.client/release-instance mount-point)
 
-(respo.render.static-html/make-string virtual-element)
-(respo.render.static-html/make-html virtual-element)
+(respo.render.html/make-string virtual-element)
+(respo.render.html/make-html virtual-element)
 
 (respo.controller.deliver/build-deliver-event virtual-element-ref dispatch! states-ref)
 (def build-mutate (respo.controller.deliver/mutate-factory element-ref states-ref))

@@ -11,7 +11,7 @@
                                  link
                                  body]]
             [respo.test-component.todolist :refer [comp-todolist]]
-            [respo.render.static-html :refer [make-string make-html]]))
+            [respo.render.html :refer [make-string make-html]]))
 
 (def todolist-store
  (atom [{:id 101, :text "101"} {:id 102, :text "102"}]))

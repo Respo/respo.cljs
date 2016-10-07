@@ -1,5 +1,5 @@
 
-(ns respo.render.static-html
+(ns respo.render.html
   (:require [clojure.string :as string]
             [respo.util.format :refer [prop->attr
                                        purify-element
