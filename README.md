@@ -94,15 +94,12 @@ Now you have to define `init-state` and `update-state` in every component.
 
 ### Develop
 
-Project workflow https://github.com/mvc-works/boot-workflow
-
 ```bash
-boot dev
-# open index.html
+boot dev!
+# open target/dev.html
 ```
 
 ```bash
-boot build-simple # without optimizations
 boot build-advanced
 ```
 
@@ -110,21 +107,22 @@ boot build-advanced
 boot watch-test
 ```
 
-Clojure code is compiled from JSON from `cirru/` to `compiled/` by:
+Clojure code is compiled from `stack-sepal.ir` to `src/` by:
 
 ```bash
-boot compile-cirru
+boot generate-code
 ```
 
 My way of programming is with my graphical editor, like doing this:
 
 ```bash
-npm i -g cirru-light-editor
-boot dev
-cle cirru/
-# open http://repo.cirru.org/light-editor/
-# # try Command P, Command Shift P, Command S, Left, Right, Up, Down...
+boot dev!
+# open repo.cirru.org/stack-editor
 ```
+
+### Develop
+
+Workflow https://github.com/mvc-works/stack-workflow
 
 ### License
 
