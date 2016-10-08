@@ -14,7 +14,7 @@
          '[stack-server.core  :refer [start-stack-editor! transform-stack]]
          '[adzerk.boot-test   :refer :all])
 
-(def +version+ "0.3.24")
+(def +version+ "0.3.25")
 
 (task-options!
   pom {:project     'respo/respo
@@ -63,7 +63,7 @@
 ; some problems due to uglifying
 (deftask build []
   (set-env!
-    :source-paths #{"polyfill"})
+    :resource-paths #{"polyfill/"})
   (comp
     (transform-stack :filename "stack-sepal.ir" :extname ".cljc")
     (pom)
