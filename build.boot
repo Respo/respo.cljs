@@ -35,7 +35,8 @@
     (reload :on-jsload 'respo.main/on-jsload
             :cljs-asset-path ".")
     (cljs :compiler-options {:language-in :ecmascript5})
-    (target)))
+    (target)
+    ))
 
 (deftask generate-code []
   (set-env!
@@ -78,7 +79,7 @@
 
 (deftask watch-test []
   (set-env!
-    :source-paths #{"src"})
+    :source-paths #{"src" "test"})
   (comp
     (watch)
     (test :namespaces '#{respo.html-test})))

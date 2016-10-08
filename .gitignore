@@ -13,3 +13,5 @@ pom.xml.asc
 /figwheel_server.log
 /node_modules/
 /.nrepl-history
+
+/src/*.*

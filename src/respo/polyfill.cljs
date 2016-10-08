@@ -22,3 +22,6 @@
       (set! (.-font ctx) (str font-size "px " font-family))
       (.-width (.measureText ctx content)))
     nil))
+
+(defn log* [arg]
+  (.log js/console arg))

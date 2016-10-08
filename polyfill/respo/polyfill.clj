@@ -10,3 +10,6 @@
 (defn raise* [x] (throw (Exception. x)))
 
 (defn text-width* [content font-size font-family] 0)
+
+(defn log* [arg]
+  (println arg))

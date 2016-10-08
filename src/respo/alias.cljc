@@ -1,22 +1,13 @@
 
-(ns respo.alias)
-
-(defrecord
-  Component
-  [name coord args init-state update-state render tree cost])
-
-(declare create-element)
-
-(defrecord Element [name coord attrs style event children])
-
-(defn style [props & children] (create-element :style props children))
+(ns respo.alias
+  (:require [respo.util.detect :refer [component? element?]]))
 
 (defn arrange-children [children]
   (->>
     (if (and
           (= 1 (count children))
-          (not= Element (type (first children)))
-          (not= Component (type (first children))))
+          (not (component? (first children)))
+          (not (element? (first children))))
       (first children)
       (map-indexed vector children))
     (into [])
@@ -26,12 +17,17 @@
   (let [attrs (if (contains? props :attrs)
                 (into [] (sort-by first (:attrs props)))
                 [])
-        style (if (contains? props :style)
-                (into [] (sort-by first (:style props)))
-                [])
+        style-map (if (contains? props :style)
+                    (into [] (sort-by first (:style props)))
+                    [])
         event (if (contains? props :event) (:event props) {})
         children-map (arrange-children children)]
-    (->Element tag-name nil attrs style event children-map)))
+    {:coord nil,
+     :children children-map,
+     :name tag-name,
+     :style style-map,
+     :event event,
+     :attrs attrs}))
 
 (defn canvas [props & children] (create-element :canvas props children))
 
@@ -56,18 +52,19 @@
     (create-comp comp-name default-init default-update render))
   ([comp-name init-state update-state render]
     (comment println "create component:" comp-name)
-    (let [initial-comp (->Component
-                         comp-name
-                         nil
-                         []
-                         init-state
-                         update-state
-                         render
-                         nil
-                         nil)]
+    (let [initial-comp {:args [],
+                        :coord nil,
+                        :tree nil,
+                        :name comp-name,
+                        :init-state init-state,
+                        :render render,
+                        :cost nil,
+                        :update-state update-state}]
       (fn [& args] (assoc initial-comp :args (into [] args))))))
 
 (defn hr [props & children] (create-element :hr props children))
+
+(defn style [props & children] (create-element :style props children))
 
 (defn section [props & children]
   (create-element :section props children))
