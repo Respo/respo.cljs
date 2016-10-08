@@ -35,8 +35,7 @@
     (reload :on-jsload 'respo.main/on-jsload
             :cljs-asset-path ".")
     (cljs :compiler-options {:language-in :ecmascript5})
-    (target)
-    ))
+    (target)))
 
 (deftask generate-code []
   (set-env!

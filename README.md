@@ -31,11 +31,11 @@ This project is inspired by:
 (defn dispatch! [op op-data]
   (reset! store-ref (updater @store-ref op op-data)))
 
-(defn render-app []
+(defn render-app! []
   (let [target (.querySelector js/document "#app")]
     (render! (comp-container @store-ref) target dispatch! states-ref)))
 
-(render-app)
+(render-app!)
 ```
 
 ### Component Definition
@@ -54,75 +54,37 @@ This project is inspired by:
 (def comp-space (create-comp :space render))
 ```
 
-`mutable` is previously `set-state` but changed a lot.
+`mutate!` is previously `set-state` but changed a lot.
 Now you have to define `init-state` and `update-state` in every component.
 
-### Low level APIs
-
-```clojure
-(repo.core/falsify-stage! mount-point element dispatch!)
-
-(respo.alias/div {})
-(respo.alias/create-comp :demo (fn [] (fn [state] (div))))
-(respo.alias/create-element :demo props children)
-
-(respo.comp.debug/comp-debug data style)
-(respo.comp.space/comp-space w h)
-(respo.comp.text/comp-text content style)
-
-(respo.controller.client/initialize-instance mount-point deliver-event)
-(respo.controller.client/activate-instance virtual-element mount-point deliver-event)
-(respo.controller.client/patch-instance changes mount-point deliver-event)
-(respo.controller.client/release-instance mount-point)
-
-(respo.render.html/make-string virtual-element)
-(respo.render.html/make-html virtual-element)
-
-(respo.controller.deliver/build-deliver-event virtual-element-ref dispatch! states-ref)
-(def build-mutate (respo.controller.deliver/mutate-factory element-ref states-ref))
-
-(respo.controller.resolver/get-component-at element coord)
-(respo.controller.resolver/get-markup-at element coord)
-
-(respo.render.expander/render-app element-markup global-states)
-
-(respo.render.differ/find-element-diffs [] [] old-virtual-element virtual-element)
-
-(respo.util.format/purify-element virtual-element)
-(respo.util.format/mute-element virtual-element)
-```
-
 ### Develop
+
+Workflow https://github.com/mvc-works/stack-workflow
 
 ```bash
 boot dev!
 # open target/dev.html
 ```
 
-```bash
-boot build-advanced
-```
+Edit code with Stack Editor http://repo.cirru.org/stack-editor
+
+To test static HTML rendering:
 
 ```bash
 boot watch-test
 ```
 
-Clojure code is compiled from `stack-sepal.ir` to `src/` by:
+Clojure code can be compiled from `stack-sepal.ir` to `src/` by:
 
 ```bash
 boot generate-code
 ```
 
-My way of programming is with my graphical editor, like doing this:
+To compile the whole project:
 
 ```bash
-boot dev!
-# open repo.cirru.org/stack-editor
+boot build-advanced
 ```
-
-### Develop
-
-Workflow https://github.com/mvc-works/stack-workflow
 
 ### License
 
