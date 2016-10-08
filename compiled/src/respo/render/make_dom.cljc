@@ -1,7 +1,8 @@
 
 (ns respo.render.make-dom
   (:require [clojure.string :as string]
-            [respo.util.format :refer [dashed->camel event->prop]]))
+            [respo.util.format :refer [dashed->camel event->prop]]
+            [respo.polyfill :refer [document-create-element*]]))
 
 (defn style->string [styles]
   (string/join
@@ -18,7 +19,7 @@
         attrs (:attrs virtual-element)
         style (:style virtual-element)
         children (:children virtual-element)
-        element (.createElement js/document tag-name)
+        element (document-create-element* tag-name)
         child-elements (->>
                          children
                          (map
@@ -47,7 +48,7 @@
         (:event virtual-element)
         (map
           (fn [entry]
-            (comment .log js/console "Looking into event:" entry)
+            (comment println "Looking into event:" entry)
             (let [event-name (key entry)
                   name-in-string (event->prop event-name)
                   maybe-listener (get no-bubble-collection event-name)]

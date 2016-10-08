@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element?]]
-            [respo.util.error :refer [raise]]
+            [respo.polyfill :refer [raise*]]
             [respo.util.list :refer [filter-first]]))
 
 (defn get-component-at
@@ -37,7 +37,7 @@
                          (:children markup))]
         (if (some? child-pair)
           (get-markup-at (get child-pair 1) (subvec coord 1))
-          (raise
+          (raise*
             (str
               "child not found:"
               coord

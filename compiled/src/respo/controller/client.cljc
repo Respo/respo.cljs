@@ -1,8 +1,7 @@
 
 (ns respo.controller.client
   (:require [respo.render.patcher :refer [apply-dom-changes]]
-            [cljs.reader :refer [read-string]]
-            [respo.util.time :refer [io-get-time]]
+            [respo.polyfill :refer [read-string*]]
             [respo.util.format :refer [event->string event->edn]]
             [respo.render.make-dom :refer [make-element]]
             [respo.util.information :refer [bubble-events
@@ -11,10 +10,10 @@
 (defonce dom-registry (atom {}))
 
 (defn read-coord [target]
-  (read-string (aget (.-dataset target) "coord")))
+  (read-string* (aget (.-dataset target) "coord")))
 
 (defn read-events [target]
-  (read-string (aget (.-dataset target) "event")))
+  (read-string* (aget (.-dataset target) "event")))
 
 (defn maybe-trigger [target event-name simple-event deliver-event]
   (let [coord (read-coord target) active-events (read-events target)]

@@ -1,7 +1,7 @@
 
 (ns respo.render.patcher
   (:require [clojure.string :as string]
-            [cljs.reader :refer [read-string]]
+            [respo.polyfill :refer [read-string*]]
             [respo.util.format :refer [dashed->camel event->prop]]
             [respo.render.make-dom :refer [make-element style->string]]
             [respo.util.information :refer [no-bubble-events]]))
@@ -50,7 +50,8 @@
 
 (defn add-event [target event-name no-bubble-collection]
   (let [event-prop (event->prop event-name)
-        existing-events (read-string (aget (.-dataset target) "event"))
+        existing-events (read-string*
+                          (aget (.-dataset target) "event"))
         new-events-list (pr-str (conj existing-events event-name))
         maybe-listener (get no-bubble-collection event-name)]
     (if (some? maybe-listener) (aset target event-prop maybe-listener))
@@ -58,7 +59,8 @@
 
 (defn rm-event [target event-name]
   (let [event-prop (event->prop event-name)
-        existing-events (read-string (aget (.-dataset target) "event"))
+        existing-events (read-string*
+                          (aget (.-dataset target) "event"))
         new-events-list (pr-str (disj existing-events event-name))]
     (if (is-no-bubble? event-name) (aset target event-prop nil))
     (aset (.-dataset target) "event" new-events-list)))
@@ -91,7 +93,7 @@
                   coord (get op 1)
                   op-data (get op 2)
                   target (find-target root coord)]
-              (comment .log js/console op-type target op-data)
+              (comment println op-type target op-data)
               (case
                 op-type
                 :replace-prop
@@ -118,4 +120,4 @@
                 (replace-element target op-data no-bubble-collection)
                 :append
                 (append-element target op-data no-bubble-collection)
-                (.error js/console "not implemented:" op-type)))))))))
+                (println "not implemented:" op-type)))))))))

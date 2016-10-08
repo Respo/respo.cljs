@@ -1,10 +1,9 @@
 
 (ns respo.render.expander
   (:require [clojure.string :as string]
-            [respo.util.time :refer [io-get-time]]
+            [respo.polyfill :refer [io-get-time*]]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element? =vector]]
-            [respo.util.error :refer [raise]]
             [respo.util.list :refer [filter-first]]))
 
 (declare render-component)
@@ -92,7 +91,7 @@
           (=vector (:args markup) (:args old-element))
           (identical? (:render markup) (:render old-element)))
       (do (comment println "not changed" coord) old-element)
-      (let [begin-time (io-get-time)
+      (let [begin-time (io-get-time*)
             args (:args markup)
             component (first markup)
             init-state (:init-state markup)
@@ -112,7 +111,7 @@
                    new-coord
                    new-coord
                    (:tree old-element))
-            cost (- (io-get-time) begin-time)]
+            cost (- (io-get-time*) begin-time)]
         (comment println "markup tree:" (pr-str markup-tree))
         (comment println "component state:" coord states)
         (comment println "no cache:" coord)

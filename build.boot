@@ -34,7 +34,7 @@
 (deftask dev []
   (set-env!
     :asset-paths #{"assets"}
-    :source-paths #{"cirru/src" "cirru/app"})
+    :source-paths #{"cirru/src" "cirru/app" "polyfill"})
   (comp
     (watch)
     (transform-cirru)
@@ -46,7 +46,7 @@
 (deftask build-advanced []
   (set-env!
     :asset-paths #{"assets"}
-    :source-paths #{"cirru/src" "cirru/app"})
+    :source-paths #{"cirru/src" "cirru/app" "polyfill"})
   (comp
     (transform-cirru)
     (cljs :optimizations :advanced :compiler-options {})
@@ -60,7 +60,7 @@
 ; some problems due to uglifying
 (deftask build []
   (set-env!
-    :source-paths #{"cirru/src"})
+    :source-paths #{"cirru/src" "polyfill"})
   (comp
     (transform-cirru)
     (pom)
@@ -76,7 +76,7 @@
 
 (deftask watch-test []
   (set-env!
-    :source-paths #{"cirru/src" "cirru/test"})
+    :source-paths #{"cirru/src" "cirru/test" "polyfill"})
   (comp
     (watch)
     (transform-cirru)
