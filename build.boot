@@ -1,17 +1,17 @@
 
 (set-env!
   :dependencies '[[org.clojure/clojure         "1.8.0"       :scope "provided"]
-                  [org.clojure/clojurescript   "1.9.89"      :scope "provided"]
+                  [org.clojure/clojurescript   "1.9.216"     :scope "provided"]
                   [adzerk/boot-cljs            "1.7.228-1"   :scope "test"]
-                  [adzerk/boot-reload          "0.4.11"      :scope "test"]
+                  [adzerk/boot-reload          "0.4.12"      :scope "test"]
                   [binaryage/devtools          "0.7.2"       :scope "test"]
-                  [cirru/boot-cirru-sepal      "0.1.11"      :scope "test"]
-                  [adzerk/boot-test            "1.1.1"       :scope "test"]
+                  [cirru/boot-stack-server     "0.1.13"      :scope "test"]
+                  [adzerk/boot-test            "1.1.2"       :scope "test"]
                   [mvc-works/hsl               "0.1.2"       :scope "test"]])
 
 (require '[adzerk.boot-cljs   :refer [cljs]]
          '[adzerk.boot-reload :refer [reload]]
-         '[cirru-sepal.core   :refer [transform-cirru]]
+         '[stack-server.core  :refer [start-stack-editor! transform-stack]]
          '[adzerk.boot-test   :refer :all])
 
 (def +version+ "0.3.24")
@@ -19,37 +19,39 @@
 (task-options!
   pom {:project     'respo/respo
        :version     +version+
-       :description "Responsive DOM library"
-       :url         "https://github.com/respo-mvc/respo"
-       :scm         {:url "https://github.com/respo-mvc/respo"}
+       :description "A front-end MVC library"
+       :url         "https://github.com/Respo/respo"
+       :scm         {:url "https://github.com/Respo/respo"}
        :license     {"MIT" "http://opensource.org/licenses/mit-license.php"}})
 
-(deftask compile-cirru []
-  (set-env!
-    :source-paths #{"cirru/"})
-  (comp
-    (transform-cirru)
-    (target :dir #{"compiled/"})))
-
-(deftask dev []
+(deftask dev! []
   (set-env!
     :asset-paths #{"assets"}
-    :source-paths #{"cirru/src" "cirru/app" "polyfill"})
+    :resource-paths #{"polyfill/"})
   (comp
-    (watch)
-    (transform-cirru)
+    (repl)
+    (start-stack-editor! :extname ".cljc")
+    (target :dir #{"src/"})
     (reload :on-jsload 'respo.main/on-jsload
             :cljs-asset-path ".")
-    (cljs)
+    (cljs :compiler-options {:language-in :ecmascript5})
     (target)))
+
+(deftask generate-code []
+  (set-env!
+    :resource-paths #{"polyfill/"})
+  (comp
+    (transform-stack :filename "stack-sepal.ir" :extname ".cljc")
+    (target :dir #{"src/"})))
 
 (deftask build-advanced []
   (set-env!
     :asset-paths #{"assets"}
-    :source-paths #{"cirru/src" "cirru/app" "polyfill"})
+    :source-paths #{"polyfill"})
   (comp
-    (transform-cirru)
-    (cljs :optimizations :advanced :compiler-options {})
+    (transform-stack :filename "stack-sepal.ir")
+    (cljs :optimizations :advanced
+          :compiler-options {:language-in :ecmascript5})
     (target)))
 
 (deftask rsync []
@@ -60,9 +62,9 @@
 ; some problems due to uglifying
 (deftask build []
   (set-env!
-    :source-paths #{"cirru/src" "polyfill"})
+    :source-paths #{"polyfill"})
   (comp
-    (transform-cirru)
+    (transform-stack :filename "stack-sepal.ir" :extname ".cljc")
     (pom)
     (jar)
     (install)
@@ -76,8 +78,7 @@
 
 (deftask watch-test []
   (set-env!
-    :source-paths #{"cirru/src" "cirru/test" "polyfill"})
+    :source-paths #{"src"})
   (comp
     (watch)
-    (transform-cirru)
     (test :namespaces '#{respo.html-test})))

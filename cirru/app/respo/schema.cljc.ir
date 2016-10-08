@@ -1,6 +1,0 @@
-
-[
-[ "ns" "respo.schema" ]
-[ "def" "store" [ "[]" ] ]
-[ "def" "task" [ "{}" [ ":id" "nil" ] [ ":text" "|" ] [ ":done?" "false" ] ] ]
-]
