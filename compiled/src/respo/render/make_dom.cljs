@@ -23,13 +23,9 @@
                          children
                          (map
                            (fn [entry]
-                             (let [item (last entry)]
-                               (if
-                                 (string? item)
-                                 (.createTextNode js/document item)
-                                 (make-element
-                                   item
-                                   no-bubble-collection))))))
+                             (make-element
+                               (last entry)
+                               no-bubble-collection))))
         event-keys (into #{} (keys (:event virtual-element)))]
     (aset
       (.-dataset element)
@@ -63,9 +59,6 @@
                 name-in-string)
               (if (some? maybe-listener)
                 (aset element name-in-string maybe-listener)))))))
-    (doall
-      (->>
-        child-elements
-        (map
-          (fn [child-element] (.appendChild element child-element)))))
+    (doseq [child-element child-elements]
+      (.appendChild element child-element))
     element))

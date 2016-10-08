@@ -49,11 +49,7 @@
                          nil)]
       (fn [& args] (assoc initial-comp :args (into [] args))))))
 
-(defn div [props & children]
-  (let [attrs (:attrs props)]
-    (if (contains? attrs :inner-text)
-      (println "using inner-text in div is dangerous!"))
-    (create-element :div props children)))
+(defn div [props & children] (create-element :div props children))
 
 (defn a [props & children] (create-element :a props children))
 
