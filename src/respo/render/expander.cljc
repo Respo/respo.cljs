@@ -133,7 +133,3 @@
 (defn render-app [markup states build-mutate old-element]
   (comment println "render loop, states:" (pr-str states))
   (render-markup markup states build-mutate [] [] old-element))
-
-(declare render-component)
-
-(declare render-element)

@@ -369,5 +369,3 @@
                    0
                    old-children
                    new-children)))))))
-
-(declare find-element-diffs)
