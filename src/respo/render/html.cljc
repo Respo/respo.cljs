@@ -1,17 +1,14 @@
 
 (ns respo.render.html
   (:require [clojure.string :as string]
-            [respo.util.format :refer [prop->attr
-                                       purify-element
-                                       mute-element]]
+            [respo.util.format :refer [prop->attr purify-element mute-element]]
             [respo.util.detect :refer [component? element?]]
             [respo.render.expander :refer [render-app]]
             [respo.controller.deliver :refer [mutate-factory]]))
 
 (def global-element (atom nil))
 
-(defn escape-html [text]
-  (-> text (string/replace (re-pattern "\"") "&quot;")))
+(defn escape-html [text] (-> text (string/replace (re-pattern "\"") "&quot;")))
 
 (defn style->string [styles]
   (string/join
@@ -21,26 +18,18 @@
       (map
         (fn [entry]
           (let [k (first entry) v (last entry)]
-            (str
-              (name k)
-              ":"
-              (if (string? v) (escape-html v) v)
-              ";")))))))
+            (str (name k) ":" (if (string? v) (escape-html v) v) ";")))))))
 
 (defn entry->string [entry]
   (let [k (first entry) v (last entry)]
-    (str
-      (prop->attr (name k))
-      "="
-      (pr-str (if (= k :style) (style->string v) v)))))
+    (str (prop->attr (name k)) "=" (pr-str (if (= k :style) (style->string v) v)))))
 
 (defn props->string [props]
   (->>
     props
     (filter
       (fn [entry]
-        (let [k (first entry)]
-          (not (re-matches (re-pattern "^:on-.+") (str k))))))
+        (let [k (first entry)] (not (re-matches (re-pattern "^:on-.+") (str k))))))
     (map entry->string)
     (string/join " ")))
 
@@ -48,16 +37,11 @@
   (let [tag-name (name (:name element))
         attrs (into {} (:attrs element))
         text-inside (or (:innerHTML attrs) (:inner-text attrs))
-        tailored-props (-> attrs
-                        (dissoc :innerHTML)
-                        (dissoc :inner-text))
+        tailored-props (-> attrs (dissoc :innerHTML) (dissoc :inner-text))
         props-in-string (props->string tailored-props)
         children (->>
                    (:children element)
-                   (map
-                     (fn [entry]
-                       (let [child (last entry)]
-                         (element->html child)))))]
+                   (map (fn [entry] (let [child (last entry)] (element->html child)))))]
     (str
       "<"
       tag-name
@@ -87,20 +71,13 @@
         tailored-props (-> attrs
                         (dissoc :innerHTML)
                         (dissoc :inner-text)
-                        (merge
-                          {:data-coord formatted-coord,
-                           :data-event formatted-event})
+                        (merge {:data-coord formatted-coord, :data-event formatted-event})
                         ((fn [props]
-                           (if (> (count styles) 0)
-                             (assoc props :style styles)
-                             props))))
+                           (if (> (count styles) 0) (assoc props :style styles) props))))
         props-in-string (props->string tailored-props)
         children (->>
                    (:children element)
-                   (map
-                     (fn [entry]
-                       (let [child (last entry)]
-                         (element->string child)))))]
+                   (map (fn [entry] (let [child (last entry)] (element->string child)))))]
     (str
       "<"
       tag-name

@@ -1,7 +1,6 @@
 
 (ns respo.util.format
-  (:require [clojure.string :as string]
-            [respo.util.detect :refer [component? element?]]))
+  (:require [clojure.string :as string] [respo.util.detect :refer [component? element?]]))
 
 (defn prop->attr [x] (case x "class-name" "class" x))
 
@@ -22,8 +21,7 @@
             piece-followed
             false))))))
 
-(defn purify-events [events]
-  (->> events (map (fn [entry] [(key entry) true])) (into {})))
+(defn purify-events [events] (->> events (map (fn [entry] [(key entry) true])) (into {})))
 
 (defn event->edn [event]
   (comment .log js/console "simplify event:" event)
@@ -41,8 +39,7 @@
         {:value (aget (.-target event) "value"), :type :change}
         "focus"
         {:type :focus}
-        {:msg (str "Unhandled event: " (.-type event)),
-         :type (.-type event)})
+        {:msg (str "Unhandled event: " (.-type event)), :type (.-type event)})
    (assoc :original-event event)))
 
 (defn mute-element [element]
@@ -53,11 +50,7 @@
      (update
        :children
        (fn [children]
-         (->>
-           children
-           (mapv
-             (fn [entry] [(first entry)
-                          (mute-element (last entry))]))))))))
+         (->> children (mapv (fn [entry] [(first entry) (mute-element (last entry))]))))))))
 
 (defn purify-element [markup]
   (if (nil? markup)
@@ -73,6 +66,4 @@
            (fn [children]
              (->>
                children
-               (mapv
-                 (fn [entry] [(first entry)
-                              (purify-element (last entry))]))))))))))
+               (mapv (fn [entry] [(first entry) (purify-element (last entry))]))))))))))

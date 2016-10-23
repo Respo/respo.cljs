@@ -3,11 +3,7 @@
   (:require [clojure.string :as string]))
 
 (defn updater [old-store op-type op-data op-id]
-  (comment
-    println
-    (pr-str old-store)
-    (pr-str op-type)
-    (pr-str op-data))
+  (comment println (pr-str old-store) (pr-str op-type) (pr-str op-data))
   (case
     op-type
     :add
@@ -20,18 +16,10 @@
     (let [task-id (:id op-data) text (:text op-data)]
       (->>
         old-store
-        (mapv
-          (fn [task]
-            (if (= (:id task) task-id)
-              (assoc task :text text)
-              task)))))
+        (mapv (fn [task] (if (= (:id task) task-id) (assoc task :text text) task)))))
     :toggle
     (let [task-id op-data]
       (->>
         old-store
-        (mapv
-          (fn [task]
-            (if (= (:id task) task-id)
-              (update task :done? not)
-              task)))))
+        (mapv (fn [task] (if (= (:id task) task-id) (update task :done? not) task)))))
     old-store))

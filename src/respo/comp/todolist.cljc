@@ -10,18 +10,14 @@
             [respo.comp.wrap :refer [comp-wrap]]
             [respo.polyfill :refer [text-width*]]))
 
-(defn clear-done [e dispatch!]
-  (println "dispatch clear-done")
-  (dispatch! :clear nil))
+(defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
 
 (defn update-state [old-state changes]
   (comment println "changes:" (pr-str old-state) (pr-str changes))
   (merge old-state changes))
 
 (defn handle-add [state mutate!]
-  (fn [e dispatch!]
-    (dispatch! :add (:draft state))
-    (mutate! {:draft ""})))
+  (fn [e dispatch!] (dispatch! :add (:draft state)) (mutate! {:draft ""})))
 
 (def style-root
  {:line-height "24px",
@@ -63,11 +59,9 @@
 
 (defn init-state [props] {:draft "", :locked? false})
 
-(defn on-text-change [mutate!]
-  (fn [e dispatch!] (mutate! {:draft (:value e)})))
+(defn on-text-change [mutate!] (fn [e dispatch!] (mutate! {:draft (:value e)})))
 
-(defn on-lock [locked? mutate!]
-  (fn [e dispatch!] (mutate! {:locked? (not locked?)})))
+(defn on-lock [locked? mutate!] (fn [e dispatch!] (mutate! {:locked? (not locked?)})))
 
 (defn render [tasks]
   (fn [state mutate!]
@@ -81,43 +75,27 @@
            (merge
              style-input
              {:width
-              (max
-                200
-                (+
-                  24
-                  (text-width*
-                    (:draft state)
-                    16
-                    "BlinkMacSystemFont")))}),
+              (max 200 (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
            :event {:focus on-focus, :input (on-text-change mutate!)},
            :attrs {:placeholder "Text", :value (:draft state)}})
         (span
-          {:style style-button,
-           :event {:click (handle-add state mutate!)}}
+          {:style style-button, :event {:click (handle-add state mutate!)}}
           (comp-text "Add" nil))
         (span
-          {:style style-button,
-           :event {:click clear-done},
-           :attrs {:inner-text "Clear"}}))
+          {:style style-button, :event {:click clear-done}, :attrs {:inner-text "Clear"}}))
       (div
         {:style style-list, :attrs {:class-name "task-list"}}
-        (->>
-          tasks
-          (reverse)
-          (map (fn [task] [(:id task) (task-component task)]))))
+        (->> tasks (reverse) (map (fn [task] [(:id task) (task-component task)]))))
       (if (> (count tasks) 0)
         (div
           {:style style-toolbar, :attrs {:spell-check true}}
           (div
-            {:style style-button,
-             :event (if (:locked? state) {} {:click clear-done})}
+            {:style style-button, :event (if (:locked? state) {} {:click clear-done})}
             (comp-text "Clear2"))
           (div
-            {:style style-button,
-             :event {:click (on-lock (:locked? state) mutate!)}}
+            {:style style-button, :event {:click (on-lock (:locked? state) mutate!)}}
             (comp-text (str "Lock?" (:locked? state)) nil))
           (comp-wrap)))
       (comment comp-debug tasks {}))))
 
-(def comp-todolist
- (create-comp :todolist init-state update-state render))
+(def comp-todolist (create-comp :todolist init-state update-state render))

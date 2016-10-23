@@ -14,21 +14,10 @@
 
 (declare render-markup)
 
-(defn render-markup [markup
-                     states
-                     build-mutate
-                     coord
-                     component-coord
-                     old-element]
+(defn render-markup [markup states build-mutate coord component-coord old-element]
   (if (component? markup)
     (render-component markup states build-mutate coord old-element)
-    (render-element
-      markup
-      states
-      build-mutate
-      coord
-      component-coord
-      old-element)))
+    (render-element markup states build-mutate coord component-coord old-element)))
 
 (defn render-component [markup states build-mutate coord old-element]
   (let [raw-states (get states (:name markup))]
@@ -63,23 +52,9 @@
         (comment println "markup tree:" (pr-str markup-tree))
         (comment println "component state:" coord states)
         (comment println "no cache:" coord)
-        (assoc
-          markup
-          :coord
-          coord
-          :tree
-          tree
-          :cost
-          cost
-          :raw-states
-          raw-states)))))
+        (assoc markup :coord coord :tree tree :cost cost :raw-states raw-states)))))
 
-(defn render-element [markup
-                      states
-                      build-mutate
-                      coord
-                      comp-coord
-                      old-element]
+(defn render-element [markup states build-mutate coord comp-coord old-element]
   (let [children (:children markup)
         child-elements (render-children
                          children
@@ -97,12 +72,7 @@
       (pr-str markup))
     (assoc markup :coord coord :children child-elements)))
 
-(defn render-children [children
-                       states
-                       build-mutate
-                       coord
-                       comp-coord
-                       old-children]
+(defn render-children [children states build-mutate coord comp-coord old-children]
   (comment println "render children:" children)
   (->>
     children
@@ -111,14 +81,9 @@
         (let [k (first child-entry)
               child-element (last child-entry)
               inner-states (or (get states k) {})
-              old-pair (filter-first
-                         (fn [pair] (identical? (first pair) k))
-                         old-children)
+              old-pair (filter-first (fn [pair] (identical? (first pair) k)) old-children)
               old-child (get old-pair 1)]
-          (comment
-            if
-            (nil? old-child)
-            (do (println "old child:" coord (some? old-child))))
+          (comment if (nil? old-child) (do (println "old child:" coord (some? old-child))))
           [k
            (if (some? child-element)
              (render-markup

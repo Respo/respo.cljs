@@ -20,8 +20,7 @@
   :border-radius "4px",
   :font-family "Verdana"})
 
-(defn handle-done [task-id]
-  (fn [e dispatch!] (dispatch! :toggle task-id)))
+(defn handle-done [task-id] (fn [e dispatch!] (dispatch! :toggle task-id)))
 
 (def style-input
  {:line-height "24px",
@@ -45,8 +44,7 @@
     (let [task-id (:id task) text (:value event)]
       (dispatch! :update {:id task-id, :text text}))))
 
-(defn handle-remove [task]
-  (fn [e dispatch!] (dispatch! :remove (:id task))))
+(defn handle-remove [task] (fn [e dispatch!] (dispatch! :remove (:id task))))
 
 (defn on-text-state [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
@@ -58,8 +56,7 @@
       {:style style-task}
       (comp-debug task {:left "160px"})
       (button
-        {:style (style-done (:done? task)),
-         :event {:click (handle-done (:id task))}})
+        {:style (style-done (:done? task)), :event {:click (handle-done (:id task))}})
       (comp-space 8 nil)
       (input
         {:style style-input,
@@ -77,11 +74,8 @@
         {:style style-button, :event {:click (handle-remove task)}}
         (comp-text "Remove"))
       (comp-space 8 nil)
-      (div
-        {:style style-time}
-        (comp-text (or (:time state) "none") nil)))))
+      (div {:style style-time} (comp-text (or (:time state) "none") nil)))))
 
 (def task-component (create-comp :task init-state update-state render))
 
-(defn on-click [props state]
-  (fn [event dispatch!] (println "clicked.")))
+(defn on-click [props state] (fn [event dispatch!] (println "clicked.")))

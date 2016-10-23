@@ -14,12 +14,8 @@
     (filterv (fn [pair] (some? (last pair))))))
 
 (defn create-element [tag-name props children]
-  (let [attrs (if (contains? props :attrs)
-                (into [] (sort-by first (:attrs props)))
-                [])
-        style-map (if (contains? props :style)
-                    (into [] (sort-by first (:style props)))
-                    [])
+  (let [attrs (if (contains? props :attrs) (into [] (sort-by first (:attrs props))) [])
+        style-map (if (contains? props :style) (into [] (sort-by first (:style props))) [])
         event (if (contains? props :event) (:event props) {})
         children-map (arrange-children children)]
     {:coord nil,
@@ -48,8 +44,7 @@
 (defn default-init [& args] {})
 
 (defn create-comp
-  ([comp-name render]
-    (create-comp comp-name default-init default-update render))
+  ([comp-name render] (create-comp comp-name default-init default-update render))
   ([comp-name init-state update-state render]
     (comment println "create component:" comp-name)
     (let [initial-comp {:args [],
@@ -66,8 +61,7 @@
 
 (defn style [props & children] (create-element :style props children))
 
-(defn section [props & children]
-  (create-element :section props children))
+(defn section [props & children] (create-element :section props children))
 
 (defn span [props & children] (create-element :span props children))
 
@@ -83,8 +77,7 @@
 
 (defn title [props & children] (create-element :title props children))
 
-(defn textarea [props & children]
-  (create-element :textarea props children))
+(defn textarea [props & children] (create-element :textarea props children))
 
 (defn link [props & children] (create-element :link props children))
 

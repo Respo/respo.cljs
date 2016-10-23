@@ -6,20 +6,17 @@
             [respo.render.make-dom :refer [make-element style->string]]
             [respo.util.information :refer [no-bubble-events]]))
 
-(defn is-no-bubble? [event-name]
-  (some? (some (fn [x] (= x event-name)) no-bubble-events)))
+(defn is-no-bubble? [event-name] (some? (some (fn [x] (= x event-name)) no-bubble-events)))
 
 (defn rm-event [target event-name]
   (let [event-prop (event->prop event-name)
-        existing-events (read-string*
-                          (aget (.-dataset target) "event"))
+        existing-events (read-string* (aget (.-dataset target) "event"))
         new-events-list (pr-str (disj existing-events event-name))]
     (if (is-no-bubble? event-name) (aset target event-prop nil))
     (aset (.-dataset target) "event" new-events-list)))
 
 (defn replace-style [target op]
-  (let [style-name (dashed->camel (name (key op)))
-        style-value (val op)]
+  (let [style-name (dashed->camel (name (key op))) style-value (val op)]
     (aset (.-style target) style-name style-value)))
 
 (defn replace-element [target op no-bubble-collection]
@@ -34,8 +31,7 @@
 
 (defn add-event [target event-name no-bubble-collection]
   (let [event-prop (event->prop event-name)
-        existing-events (read-string*
-                          (aget (.-dataset target) "event"))
+        existing-events (read-string* (aget (.-dataset target) "event"))
         new-events-list (pr-str (conj existing-events event-name))
         maybe-listener (get no-bubble-collection event-name)]
     (if (some? maybe-listener) (aset target event-prop maybe-listener))
@@ -54,18 +50,15 @@
 (defn replace-prop [target op]
   (let [prop-name (dashed->camel (name (key op))) prop-value (val op)]
     (if (= prop-name "value")
-      (if (not= prop-value (.-value target))
-        (aset target prop-name prop-value))
+      (if (not= prop-value (.-value target)) (aset target prop-name prop-value))
       (aset target prop-name prop-value))))
 
 (defn add-style [target op]
-  (let [style-name (dashed->camel (name (key op)))
-        style-value (val op)]
+  (let [style-name (dashed->camel (name (key op))) style-value (val op)]
     (aset (.-style target) style-name style-value)))
 
 (defn rm-style [target op]
-  (let [style-name (dashed->camel (name op))]
-    (aset (.-style target) style-name nil)))
+  (let [style-name (dashed->camel (name op))] (aset (.-style target) style-name nil)))
 
 (defn rm-element [target op] (.remove target))
 

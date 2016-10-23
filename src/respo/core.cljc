@@ -2,12 +2,10 @@
 (ns respo.core
   (:require [respo.alias :refer [create-comp div span]]
             [respo.render.expander :refer [render-app]]
-            [respo.controller.deliver :refer [build-deliver-event
-                                              mutate-factory]]
+            [respo.controller.deliver :refer [build-deliver-event mutate-factory]]
             [respo.render.differ :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element]]
-            [respo.controller.client :refer [initialize-instance
-                                             activate-instance
+            [respo.controller.client :refer [initialize-instance activate-instance
                                              patch-instance]]))
 
 (defonce global-element (atom nil))
@@ -23,10 +21,7 @@
         deliver-event (build-deliver-event global-element dispatch!)
         changes (find-element-diffs [] [] @global-element element)]
     (comment println @global-element)
-    (comment
-      println
-      "changes:"
-      (pr-str (mapv (partial take 2) changes)))
+    (comment println "changes:" (pr-str (mapv (partial take 2) changes)))
     (patch-instance changes target deliver-event)
     (reset! global-element element)
     (reset! cache-element element)))

@@ -17,12 +17,9 @@
             (recur markup (:tree markup) (subvec coord 1))
             nil)
           (let [child-pair (filter-first
-                             (fn [child-entry]
-                               (= (get child-entry 0) coord-head))
+                             (fn [child-entry] (= (get child-entry 0) coord-head))
                              (:children markup))]
-            (if (some? child-pair)
-              (recur acc (last child-pair) (subvec coord 1))
-              nil)))))))
+            (if (some? child-pair) (recur acc (last child-pair) (subvec coord 1)) nil)))))))
 
 (defn get-markup-at [markup coord]
   (comment println "markup:" (pr-str coord))
@@ -32,30 +29,20 @@
       (recur (:tree markup) (subvec coord 1))
       (let [coord-head (first coord)
             child-pair (filter-first
-                         (fn [child-entry]
-                           (= (get child-entry 0) coord-head))
+                         (fn [child-entry] (= (get child-entry 0) coord-head))
                          (:children markup))]
         (if (some? child-pair)
           (get-markup-at (get child-pair 1) (subvec coord 1))
-          (raise*
-            (str
-              "child not found:"
-              coord
-              (map first (:children markup)))))))))
+          (raise* (str "child not found:" coord (map first (:children markup)))))))))
 
 (defn find-event-target [element coord event-name]
   (let [target-element (get-markup-at element coord)
         element-exists? (some? target-element)]
     (comment println "target element:" (pr-str event-name))
-    (if (and
-          element-exists?
-          (contains? (:event target-element) event-name))
+    (if (and element-exists? (contains? (:event target-element) event-name))
       target-element
       (if (= coord [])
         nil
         (if element-exists?
-          (recur
-            element
-            (subvec coord 0 (- (count coord) 1))
-            event-name)
+          (recur element (subvec coord 0 (- (count coord) 1)) event-name)
           nil)))))
