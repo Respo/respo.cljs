@@ -22,11 +22,10 @@
 (defn render-component [markup states build-mutate coord old-element]
   (let [raw-states (get states (:name markup))]
     (comment println "raw states:" raw-states (get raw-states 'data))
-    (if (and
-          (some? old-element)
-          (identical? raw-states (:raw-states old-element))
-          (=vector (:args markup) (:args old-element))
-          (identical? (:render markup) (:render old-element)))
+    (if (and (some? old-element)
+             (identical? raw-states (:raw-states old-element))
+             (=vector (:args markup) (:args old-element))
+             (identical? (:render markup) (:render old-element)))
       (do (comment println "not changed" coord) old-element)
       (let [begin-time (io-get-time*)
             args (:args markup)
@@ -42,12 +41,12 @@
             mutate! (build-mutate new-coord)
             markup-tree (half-render state mutate!)
             tree (render-markup
-                   markup-tree
-                   inner-states
-                   build-mutate
-                   new-coord
-                   new-coord
-                   (:tree old-element))
+                  markup-tree
+                  inner-states
+                  build-mutate
+                  new-coord
+                  new-coord
+                  (:tree old-element))
             cost (- (io-get-time*) begin-time)]
         (comment println "markup tree:" (pr-str markup-tree))
         (comment println "component state:" coord states)
@@ -57,43 +56,42 @@
 (defn render-element [markup states build-mutate coord comp-coord old-element]
   (let [children (:children markup)
         child-elements (render-children
-                         children
-                         states
-                         build-mutate
-                         coord
-                         comp-coord
-                         (:children old-element))]
+                        children
+                        states
+                        build-mutate
+                        coord
+                        comp-coord
+                        (:children old-element))]
     (comment
-      .log
-      js/console
-      "children should have order:"
-      (pr-str children)
-      (pr-str child-elements)
-      (pr-str markup))
+     .log
+     js/console
+     "children should have order:"
+     (pr-str children)
+     (pr-str child-elements)
+     (pr-str markup))
     (assoc markup :coord coord :children child-elements)))
 
 (defn render-children [children states build-mutate coord comp-coord old-children]
   (comment println "render children:" children)
-  (->>
-    children
-    (mapv
-      (fn [child-entry]
-        (let [k (first child-entry)
-              child-element (last child-entry)
-              inner-states (or (get states k) {})
-              old-pair (filter-first (fn [pair] (identical? (first pair) k)) old-children)
-              old-child (get old-pair 1)]
-          (comment if (nil? old-child) (do (println "old child:" coord (some? old-child))))
-          [k
-           (if (some? child-element)
-             (render-markup
-               child-element
-               inner-states
-               build-mutate
-               (conj coord k)
-               comp-coord
-               old-child)
-             nil)])))))
+  (->> children
+       (mapv
+        (fn [child-entry]
+          (let [k (first child-entry)
+                child-element (last child-entry)
+                inner-states (or (get states k) {})
+                old-pair (filter-first (fn [pair] (identical? (first pair) k)) old-children)
+                old-child (get old-pair 1)]
+            (comment if (nil? old-child) (do (println "old child:" coord (some? old-child))))
+            [k
+             (if (some? child-element)
+               (render-markup
+                child-element
+                inner-states
+                build-mutate
+                (conj coord k)
+                comp-coord
+                old-child)
+               nil)])))))
 
 (defn render-app [markup states build-mutate old-element]
   (comment println "render loop, states:" (pr-str states))

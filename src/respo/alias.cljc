@@ -1,17 +1,14 @@
 
-(ns respo.alias
-  (:require [respo.util.detect :refer [component? element?]]))
+(ns respo.alias (:require [respo.util.detect :refer [component? element?]]))
 
 (defn arrange-children [children]
-  (->>
-    (if (and
-          (= 1 (count children))
-          (not (component? (first children)))
-          (not (element? (first children))))
-      (first children)
-      (map-indexed vector children))
-    (into [])
-    (filterv (fn [pair] (some? (last pair))))))
+  (->> (if (and (= 1 (count children))
+                (not (component? (first children)))
+                (not (element? (first children))))
+         (first children)
+         (map-indexed vector children))
+       (into [])
+       (filterv (fn [pair] (some? (last pair))))))
 
 (defn create-element [tag-name props children]
   (let [attrs (if (contains? props :attrs) (into [] (sort-by first (:attrs props))) [])
@@ -46,16 +43,16 @@
 (defn create-comp
   ([comp-name render] (create-comp comp-name default-init default-update render))
   ([comp-name init-state update-state render]
-    (comment println "create component:" comp-name)
-    (let [initial-comp {:args [],
-                        :coord nil,
-                        :tree nil,
-                        :name comp-name,
-                        :init-state init-state,
-                        :render render,
-                        :cost nil,
-                        :update-state update-state}]
-      (fn [& args] (assoc initial-comp :args (into [] args))))))
+   (comment println "create component:" comp-name)
+   (let [initial-comp {:args [],
+                       :coord nil,
+                       :tree nil,
+                       :name comp-name,
+                       :init-state init-state,
+                       :render render,
+                       :cost nil,
+                       :update-state update-state}]
+     (fn [& args] (assoc initial-comp :args (into [] args))))))
 
 (defn hr [props & children] (create-element :hr props children))
 

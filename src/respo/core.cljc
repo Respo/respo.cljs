@@ -5,8 +5,9 @@
             [respo.controller.deliver :refer [build-deliver-event mutate-factory]]
             [respo.render.differ :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element]]
-            [respo.controller.client :refer [initialize-instance activate-instance
-                                             patch-instance]]))
+            [respo.controller.client
+             :refer
+             [initialize-instance activate-instance patch-instance]]))
 
 (defonce global-element (atom nil))
 

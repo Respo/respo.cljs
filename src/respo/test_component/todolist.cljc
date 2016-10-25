@@ -7,8 +7,6 @@
 
 (defn render [tasks]
   (fn [state mutate]
-    (div
-      {:style style-todolist}
-      (->> tasks (map (fn [task] [(:id task) (comp-task task)]))))))
+    (div {:style style-todolist} (->> tasks (map (fn [task] [(:id task) (comp-task task)]))))))
 
 (def comp-todolist (create-comp :todolist render))

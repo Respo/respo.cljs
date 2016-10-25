@@ -1,6 +1,5 @@
 
-(ns respo.util.comparator
-  (:require [respo.polyfill :refer [raise*]]))
+(ns respo.util.comparator (:require [respo.polyfill :refer [raise*]]))
 
 (defn type-as-int [x]
   (cond
@@ -10,5 +9,5 @@
     :else (raise* "use number, keyword or string in coord!")))
 
 (defn compare-more [x y]
-  (let [type-x (type-as-int x) type-y (type-as-int y)]
+  (let [type-x (type-as-int x), type-y (type-as-int y)]
     (if (= type-x type-y) (compare x y) (compare type-x type-y))))

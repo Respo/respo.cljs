@@ -1,6 +1,5 @@
 
-(ns respo.comp.zero
-  (:require [respo.alias :refer [create-comp div span]]))
+(ns respo.comp.zero (:require [respo.alias :refer [create-comp div span]]))
 
 (defn render [] (fn [state mutate] (div {} (span {:attrs {:inner-text "0"}}))))
 
