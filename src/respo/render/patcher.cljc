@@ -60,12 +60,10 @@
 (defn rm-element [target op] (.remove target))
 
 (defn find-target [root coord]
-  (if (= coord [])
+  (if (empty? coord)
     root
-    (let [index (first coord)
-          follows (subvec coord 1)
-          child (aget (.-children root) index)]
-      (recur child follows))))
+    (let [index (first coord), child (aget (.-children root) index)]
+      (recur child (rest coord)))))
 
 (defn add-element [target op no-bubble-collection]
   (let [new-element (make-element op no-bubble-collection)

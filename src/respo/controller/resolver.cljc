@@ -9,28 +9,28 @@
 (defn get-component-at
   ([markup coord] (get-component-at nil markup coord))
   ([acc markup coord]
-   (if (= (count coord) 0)
+   (if (empty? coord)
      acc
      (let [coord-head (first coord)]
        (if (component? markup)
-         (if (= (:name markup) coord-head) (recur markup (:tree markup) (subvec coord 1)) nil)
+         (if (= (:name markup) coord-head) (recur markup (:tree markup) (rest coord)) nil)
          (let [child-pair (filter-first
                            (fn [child-entry] (= (get child-entry 0) coord-head))
                            (:children markup))]
-           (if (some? child-pair) (recur acc (last child-pair) (subvec coord 1)) nil)))))))
+           (if (some? child-pair) (recur acc (last child-pair) (rest coord)) nil)))))))
 
 (defn get-markup-at [markup coord]
   (comment println "markup:" (pr-str coord))
-  (if (= coord [])
+  (if (empty? coord)
     markup
     (if (component? markup)
-      (recur (:tree markup) (subvec coord 1))
+      (recur (:tree markup) (rest coord))
       (let [coord-head (first coord)
             child-pair (filter-first
                         (fn [child-entry] (= (get child-entry 0) coord-head))
                         (:children markup))]
         (if (some? child-pair)
-          (get-markup-at (get child-pair 1) (subvec coord 1))
+          (get-markup-at (get child-pair 1) (rest coord))
           (raise* (str "child not found:" coord (map first (:children markup)))))))))
 
 (defn find-event-target [element coord event-name]

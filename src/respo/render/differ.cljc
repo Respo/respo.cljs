@@ -16,16 +16,16 @@
       (cond
         (and was-empty? now-empty?) acc
         (and was-empty? (not now-empty?))
-          (let [entry (get new-style 0), follows (subvec new-style 1)]
+          (let [entry (first new-style), follows (rest new-style)]
             (recur (conj acc [:add-style coord entry]) coord old-style follows))
         (and (not was-empty?) now-empty?)
-          (let [entry (get old-style 0), follows (subvec old-style 1)]
+          (let [entry (first old-style), follows (rest old-style)]
             (recur (conj acc [:rm-style coord (key entry)]) coord follows new-style))
         :else
-          (let [old-entry (get old-style 0)
-                new-entry (get new-style 0)
-                old-follows (subvec old-style 1)
-                new-follows (subvec new-style 1)]
+          (let [old-entry (first old-style)
+                new-entry (first new-style)
+                old-follows (rest old-style)
+                new-follows (rest new-style)]
             (case (compare (key old-entry) (key new-entry))
               -1
                 (recur
@@ -58,23 +58,23 @@
       (and was-empty? now-empty?) acc
       (and was-empty? (not now-empty?))
         (recur
-         (conj acc [:add-prop coord (get new-props 0)])
+         (conj acc [:add-prop coord (first new-props)])
          coord
          old-props
-         (subvec new-props 1))
+         (rest new-props))
       (and (not was-empty?) now-empty?)
         (recur
-         (conj acc [:rm-prop coord (key (get old-props 0))])
+         (conj acc [:rm-prop coord (key (first old-props))])
          coord
-         (subvec old-props 1)
+         (rest old-props)
          new-props)
       :else
-        (let [old-entry (get old-props 0)
-              new-entry (get new-props 0)
-              [old-k old-v] (get old-props 0)
-              [new-k new-v] (get new-props 0)
-              old-follows (subvec old-props 1)
-              new-follows (subvec new-props 1)]
+        (let [old-entry (first old-props)
+              new-entry (first new-props)
+              [old-k old-v] (first old-props)
+              [new-k new-v] (first new-props)
+              old-follows (rest old-props)
+              new-follows (rest new-props)]
           (comment .log js/console old-k new-k old-v new-v)
           (case (compare old-k new-k)
             -1 (recur (conj acc [:rm-prop coord old-k]) coord old-follows new-props)
@@ -93,19 +93,19 @@
       (and was-empty? (not now-empty?))
         (let [element (last (first new-children))
               next-acc (conj acc [:append n-coord (purify-element element)])]
-          (recur next-acc n-coord (inc index) [] (subvec new-children 1)))
+          (recur next-acc n-coord (inc index) [] (rest new-children)))
       (and (not was-empty?) now-empty?)
         (let [next-acc (conj acc [:rm (conj n-coord index)])]
-          (recur next-acc n-coord index (subvec old-children 1) []))
+          (recur next-acc n-coord index (rest old-children) []))
       :else
-        (let [old-keys (mapv first old-children)
-              new-keys (mapv first new-children)
+        (let [old-keys (map first old-children)
+              new-keys (map first new-children)
               x1 (first old-keys)
               y1 (first new-keys)
-              x1-remains? (some (partial = x1) new-keys)
-              y1-existed? (some (partial = y1) old-keys)
-              old-follows (subvec old-children 1)
-              new-follows (subvec new-children 1)]
+              x1-remains? (some (fn [x] (= x x1)) new-keys)
+              y1-existed? (some (fn [x] (= x y1)) old-keys)
+              old-follows (rest old-children)
+              new-follows (rest new-children)]
           (comment println "compare:" x1 new-keys x1-remains? y1 y1-existed? old-keys)
           (cond
             (= x1 y1)
@@ -129,8 +129,8 @@
             :else
               (let [xi (.indexOf new-keys x1)
                     yi (.indexOf old-keys y1)
-                    first-old-entry (get old-children 0)
-                    first-new-entry (get new-children 0)]
+                    first-old-entry (first old-children)
+                    first-new-entry (first new-children)]
                 (comment println "index:" xi yi)
                 (if (<= xi yi)
                   (let [new-element (last (first new-children))

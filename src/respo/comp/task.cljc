@@ -29,13 +29,8 @@
    :padding "0px 8px",
    :outline "none"})
 
-(defn style-done [done?]
-  {:vertical-align "middle",
-   :background-color (if done? (hsl 200 20 80) (hsl 200 80 70)),
-   :width "32px",
-   :outline "none",
-   :border "none",
-   :height "32px"})
+(def style-done
+  {:vertical-align "middle", :width "32px", :outline "none", :border "none", :height "32px"})
 
 (defn init-state [props] "")
 
@@ -55,7 +50,11 @@
     (div
      {:style style-task}
      (comp-debug task {:left "160px"})
-     (button {:style (style-done (:done? task)), :event {:click (handle-done (:id task))}})
+     (button
+      {:style (merge
+               style-done
+               {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
+       :event {:click (handle-done (:id task))}})
      (comp-space 8 nil)
      (input
       {:style style-input,

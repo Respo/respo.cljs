@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [respo.polyfill :refer [io-get-time*]]
             [respo.util.format :refer [purify-element]]
-            [respo.util.detect :refer [component? element? =vector]]
+            [respo.util.detect :refer [component? element? =seq]]
             [respo.util.list :refer [filter-first]]))
 
 (declare render-children)
@@ -24,7 +24,7 @@
     (comment println "raw states:" raw-states (get raw-states 'data))
     (if (and (some? old-element)
              (identical? raw-states (:raw-states old-element))
-             (=vector (:args markup) (:args old-element))
+             (=seq (:args markup) (:args old-element))
              (identical? (:render markup) (:render old-element)))
       (do (comment println "not changed" coord) old-element)
       (let [begin-time (io-get-time*)
@@ -74,7 +74,7 @@
 (defn render-children [children states build-mutate coord comp-coord old-children]
   (comment println "render children:" children)
   (->> children
-       (mapv
+       (map
         (fn [child-entry]
           (let [k (first child-entry)
                 child-element (last child-entry)

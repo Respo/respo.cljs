@@ -7,18 +7,17 @@
                 (not (element? (first children))))
          (first children)
          (map-indexed vector children))
-       (into [])
-       (filterv (fn [pair] (some? (last pair))))))
+       (filter (fn [pair] (some? (last pair))))))
 
 (defn create-element [tag-name props children]
-  (let [attrs (if (contains? props :attrs) (into [] (sort-by first (:attrs props))) [])
-        style-map (if (contains? props :style) (into [] (sort-by first (:style props))) [])
+  (let [attrs (if (contains? props :attrs) (sort-by first (:attrs props)) (list))
+        styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (if (contains? props :event) (:event props) {})
-        children-map (arrange-children children)]
+        children (arrange-children children)]
     {:coord nil,
-     :children children-map,
+     :children children,
      :name tag-name,
-     :style style-map,
+     :style styles,
      :event event,
      :attrs attrs}))
 
@@ -52,7 +51,7 @@
                        :render render,
                        :cost nil,
                        :update-state update-state}]
-     (fn [& args] (assoc initial-comp :args (into [] args))))))
+     (fn [& args] (assoc initial-comp :args args)))))
 
 (defn hr [props & children] (create-element :hr props children))
 
