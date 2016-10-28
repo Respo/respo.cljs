@@ -10,32 +10,37 @@
 (declare find-children-diffs)
 
 (defn find-style-diffs [acc coord old-style new-style]
-  (if (identical? old-style new-style)
-    acc
-    (cond
-      (and (identical? 0 (count old-style)) (identical? 0 (count new-style))) acc
-      (and (identical? 0 (count old-style)) (> (count new-style) 0))
-        (let [entry (get new-style 0), follows (subvec new-style 1)]
-          (recur (conj acc [:add-style coord entry]) coord old-style follows))
-      (and (> (count old-style) 0) (identical? 0 (count new-style)))
-        (let [entry (get old-style 0), follows (subvec old-style 1)]
-          (recur (conj acc [:rm-style coord (key entry)]) coord follows new-style))
-      :else
-        (let [old-entry (get old-style 0)
-              new-entry (get new-style 0)
-              old-follows (subvec old-style 1)
-              new-follows (subvec new-style 1)]
-          (case (compare (key old-entry) (key new-entry))
-            -1
-              (recur (conj acc [:rm-style coord (key old-entry)]) coord old-follows new-style)
-            1 (recur (conj acc [:add-style coord new-entry]) coord old-style new-follows)
-            (recur
-             (if (identical? (val old-entry) (val new-entry))
-               acc
-               (conj acc [:replace-style coord new-entry]))
-             coord
-             old-follows
-             new-follows))))))
+  (let [was-empty? (empty? old-style), now-empty? (empty? new-style)]
+    (if (identical? old-style new-style)
+      acc
+      (cond
+        (and was-empty? now-empty?) acc
+        (and was-empty? (not now-empty?))
+          (let [entry (get new-style 0), follows (subvec new-style 1)]
+            (recur (conj acc [:add-style coord entry]) coord old-style follows))
+        (and (not was-empty?) now-empty?)
+          (let [entry (get old-style 0), follows (subvec old-style 1)]
+            (recur (conj acc [:rm-style coord (key entry)]) coord follows new-style))
+        :else
+          (let [old-entry (get old-style 0)
+                new-entry (get new-style 0)
+                old-follows (subvec old-style 1)
+                new-follows (subvec new-style 1)]
+            (case (compare (key old-entry) (key new-entry))
+              -1
+                (recur
+                 (conj acc [:rm-style coord (key old-entry)])
+                 coord
+                 old-follows
+                 new-style)
+              1 (recur (conj acc [:add-style coord new-entry]) coord old-style new-follows)
+              (recur
+               (if (identical? (val old-entry) (val new-entry))
+                 acc
+                 (conj acc [:replace-style coord new-entry]))
+               coord
+               old-follows
+               new-follows)))))))
 
 (defn find-props-diffs [acc coord old-props new-props]
   (comment
@@ -48,47 +53,48 @@
    new-props
    (count old-props)
    (count new-props))
-  (cond
-    (and (= 0 (count old-props)) (= 0 (count new-props))) acc
-    (and (= 0 (count old-props)) (> (count new-props) 0))
-      (recur
-       (conj acc [:add-prop coord (get new-props 0)])
-       coord
-       old-props
-       (subvec new-props 1))
-    (and (> (count old-props) 0) (= 0 (count new-props)))
-      (recur
-       (conj acc [:rm-prop coord (key (get old-props 0))])
-       coord
-       (subvec old-props 1)
-       new-props)
-    :else
-      (let [old-entry (get old-props 0)
-            new-entry (get new-props 0)
-            [old-k old-v] (get old-props 0)
-            [new-k new-v] (get new-props 0)
-            old-follows (subvec old-props 1)
-            new-follows (subvec new-props 1)]
-        (comment .log js/console old-k new-k old-v new-v)
-        (case (compare old-k new-k)
-          -1 (recur (conj acc [:rm-prop coord old-k]) coord old-follows new-props)
-          1 (recur (conj acc [:add-prop coord new-entry]) coord old-props new-follows)
-          (recur
-           (if (= old-v new-v) acc (conj acc [:replace-prop coord new-entry]))
-           coord
-           old-follows
-           new-follows)))))
+  (let [was-empty? (empty? old-props), now-empty? (empty? new-props)]
+    (cond
+      (and was-empty? now-empty?) acc
+      (and was-empty? (not now-empty?))
+        (recur
+         (conj acc [:add-prop coord (get new-props 0)])
+         coord
+         old-props
+         (subvec new-props 1))
+      (and (not was-empty?) now-empty?)
+        (recur
+         (conj acc [:rm-prop coord (key (get old-props 0))])
+         coord
+         (subvec old-props 1)
+         new-props)
+      :else
+        (let [old-entry (get old-props 0)
+              new-entry (get new-props 0)
+              [old-k old-v] (get old-props 0)
+              [new-k new-v] (get new-props 0)
+              old-follows (subvec old-props 1)
+              new-follows (subvec new-props 1)]
+          (comment .log js/console old-k new-k old-v new-v)
+          (case (compare old-k new-k)
+            -1 (recur (conj acc [:rm-prop coord old-k]) coord old-follows new-props)
+            1 (recur (conj acc [:add-prop coord new-entry]) coord old-props new-follows)
+            (recur
+             (if (= old-v new-v) acc (conj acc [:replace-prop coord new-entry]))
+             coord
+             old-follows
+             new-follows))))))
 
 (defn find-children-diffs [acc n-coord index old-children new-children]
   (comment .log js/console "diff children:" acc n-coord index old-children new-children)
-  (let [old-size (count old-children), new-size (count new-children)]
+  (let [was-empty? (empty? old-children), now-empty? (empty? new-children)]
     (cond
-      (= old-size new-size 0) acc
-      (and (zero? old-size) (pos? new-size))
+      (and was-empty? now-empty?) acc
+      (and was-empty? (not now-empty?))
         (let [element (last (first new-children))
               next-acc (conj acc [:append n-coord (purify-element element)])]
           (recur next-acc n-coord (inc index) [] (subvec new-children 1)))
-      (and (pos? old-size) (zero? new-size))
+      (and (not was-empty?) now-empty?)
         (let [next-acc (conj acc [:rm (conj n-coord index)])]
           (recur next-acc n-coord index (subvec old-children 1) []))
       :else
