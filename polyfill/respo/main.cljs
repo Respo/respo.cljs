@@ -16,8 +16,14 @@
 
 (defonce global-states (atom {}))
 
+(defonce id-ref (atom 0))
+
+(defn id! []
+  (swap! id-ref inc)
+  @id-ref)
+
 (defn dispatch! [op op-data]
-  (let [op-id (.valueOf (js/Date.))
+  (let [op-id (id!)
         new-store (updater @global-store op op-data op-id)]
     (reset! global-store new-store)))
 
@@ -25,13 +31,11 @@
   (let [target (.querySelector js/document "#app")]
     (comment println "store:" @global-store)
     (comment println "states:" @global-states)
-    (js/requestAnimationFrame
-      (fn []
-        (render!
-          (comp-container @global-store)
-          target
-          dispatch!
-          global-states)))))
+    (render!
+      (comp-container @global-store)
+      target
+      dispatch!
+      global-states)))
 
 (defn -main []
   (enable-console-print!)

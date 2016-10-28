@@ -13,3 +13,6 @@
 
 (defn log* [arg]
   (println arg))
+
+(defn set-timeout* [f]
+  (println "not supported"))

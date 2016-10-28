@@ -8,7 +8,7 @@
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.text :refer [comp-text]]
             [respo.comp.wrap :refer [comp-wrap]]
-            [respo.polyfill :refer [text-width*]]))
+            [respo.polyfill :refer [text-width* io-get-time* set-timeout*]]))
 
 (defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
 
@@ -48,6 +48,16 @@
 
 (def style-panel {:display "flex"})
 
+(defn on-test [e dispatch!]
+  (println "trigger test!")
+  (dispatch! :clear nil)
+  (let [started (io-get-time*)]
+    (loop [x 200] (dispatch! :add "empty") (if (> x 0) (recur (dec x))))
+    (loop [x 20] (dispatch! :hit-first (rand)) (if (> x 0) (recur (dec x))))
+    (dispatch! :clear nil)
+    (loop [x 10] (dispatch! :add "only 10 items") (if (> x 0) (recur (dec x))))
+    (println "time cost:" (- (io-get-time*) started))))
+
 (def style-input
   {:line-height "24px",
    :min-width "300px",
@@ -81,7 +91,10 @@
       (span
        {:style style-button, :event {:click (handle-add state mutate!)}}
        (comp-text "Add" nil))
-      (span {:style style-button, :event {:click clear-done}, :attrs {:inner-text "Clear"}}))
+      (span {:style style-button, :event {:click clear-done}, :attrs {:inner-text "Clear"}})
+      (div
+       {}
+       (div {:style style-button, :event {:click on-test}} (comp-text "heavy tasks" nil))))
      (div
       {:style style-list, :attrs {:class-name "task-list"}}
       (->> tasks (reverse) (map (fn [task] [(:id task) (task-component task)]))))

@@ -11,6 +11,7 @@
       (let [task-id (:id op-data), text (:text op-data)]
         (->> old-store
              (mapv (fn [task] (if (= (:id task) task-id) (assoc task :text text) task)))))
+    :hit-first (-> old-store (update 0 (fn [task] (assoc task :text op-data))))
     :toggle
       (let [task-id op-data]
         (->> old-store

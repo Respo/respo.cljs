@@ -25,3 +25,6 @@
 
 (defn log* [arg]
   (.log js/console arg))
+
+(defn set-timeout* [f]
+  (js/setTimeout f 0))
