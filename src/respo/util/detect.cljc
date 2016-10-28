@@ -1,9 +1,9 @@
 
 (ns respo.util.detect )
 
-(defn element? [x] (contains? x :event))
+(defn element? [x] (and (map? x) (contains? x :event)))
 
-(defn component? [x] (contains? x :tree))
+(defn component? [x] (and (map? x) (contains? x :tree)))
 
 (defn =seq [a b]
   (let [a-empty? (empty? a), b-empty? (empty? b)]
