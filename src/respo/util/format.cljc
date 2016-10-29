@@ -43,7 +43,7 @@
         (update
          :children
          (fn [children]
-           (->> children (mapv (fn [entry] [(first entry) (mute-element (last entry))]))))))))
+           (->> children (map (fn [entry] [(first entry) (mute-element (last entry))]))))))))
 
 (defn purify-element [markup]
   (if (nil? markup)
@@ -57,4 +57,4 @@
            (update
             :children
             (fn [children]
-              (->> children (mapv (fn [entry] [(first entry) (purify-element (last entry))]))))))))))
+              (->> children (map (fn [entry] [(first entry) (purify-element (last entry))]))))))))))
