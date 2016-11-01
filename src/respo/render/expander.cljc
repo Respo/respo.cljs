@@ -73,25 +73,28 @@
 
 (defn render-children [children states build-mutate coord comp-coord old-children]
   (comment println "render children:" children)
-  (->> children
-       (map
-        (fn [child-entry]
-          (let [k (first child-entry)
-                child-element (last child-entry)
-                inner-states (or (get states k) {})
-                old-pair (filter-first (fn [pair] (identical? (first pair) k)) old-children)
-                old-child (get old-pair 1)]
-            (comment if (nil? old-child) (do (println "old child:" coord (some? old-child))))
-            [k
-             (if (some? child-element)
-               (render-markup
-                child-element
-                inner-states
-                build-mutate
-                (conj coord k)
-                comp-coord
-                old-child)
-               nil)])))))
+  (let [mapped-cache (into {} old-children)]
+    (->> children
+         (map
+          (fn [child-entry]
+            (let [k (first child-entry)
+                  child-element (last child-entry)
+                  inner-states (or (get states k) {})
+                  old-child (get mapped-cache k)]
+              (comment
+               if
+               (nil? old-child)
+               (do (println "old child:" coord (some? old-child))))
+              [k
+               (if (some? child-element)
+                 (render-markup
+                  child-element
+                  inner-states
+                  build-mutate
+                  (conj coord k)
+                  comp-coord
+                  old-child)
+                 nil)]))))))
 
 (defn render-app [markup states build-mutate old-element]
   (comment println "render loop, states:" (pr-str states))

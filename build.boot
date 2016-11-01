@@ -14,7 +14,7 @@
          '[stack-server.core  :refer [start-stack-editor! transform-stack]]
          '[adzerk.boot-test   :refer :all])
 
-(def +version+ "0.3.27")
+(def +version+ "0.3.28")
 
 (task-options!
   pom {:project     'respo/respo
@@ -36,6 +36,12 @@
             :cljs-asset-path ".")
     (cljs :compiler-options {:language-in :ecmascript5})
     (target)))
+
+(deftask editor! []
+  (comp
+    (repl)
+    (start-stack-editor! :extname ".cljc")
+    (target :dir #{"src/"})))
 
 (deftask generate-code []
   (set-env!
