@@ -7,16 +7,16 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]))
 
-(def style-task {:display "flex"})
+(def style-task {:display :flex})
 
 (defn update-state [state text] text)
 
 (def style-button
   {:color (hsl 40 80 100),
    :background-color (hsl 200 80 50),
-   :cursor "pointer",
+   :cursor :pointer,
    :padding "0 6px",
-   :display "inline-block",
+   :display :inline-block,
    :border-radius "4px",
    :font-family "Verdana"})
 
@@ -27,10 +27,10 @@
    :min-width "200px",
    :font-size "16px",
    :padding "0px 8px",
-   :outline "none"})
+   :outline :none})
 
 (def style-done
-  {:vertical-align "middle", :width "32px", :outline "none", :border "none", :height "32px"})
+  {:vertical-align :middle, :width 32, :outline :none, :border :none, :height 32})
 
 (defn init-state [props] "")
 

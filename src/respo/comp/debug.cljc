@@ -5,13 +5,13 @@
 (def default-style
   {:line-height 1.6,
    :box-shadow (str "0 0 1px " (hsl 0 0 0 0.8)),
-   :color "white",
+   :color :white,
    :font-size "10px",
    :background-color (hsl 0 0 0),
    :opacity 0.4,
    :padding "2px 4px",
-   :position "absolute",
-   :pointer-events "none",
+   :position :absolute,
+   :pointer-events :none,
    :font-family "Menlo"})
 
 (defn render [data more-style]

@@ -3,8 +3,8 @@
 
 (defn style-space [w h]
   (if (some? w)
-    {:width w, :display "inline-block", :height "1px"}
-    {:width "1px", :display "inline-block", :height h}))
+    {:width w, :display :inline-block, :height "1px"}
+    {:width "1px", :display :inline-block, :height h}))
 
 (defn render [w h] (fn [state mutate] (div {:style (style-space w h)})))
 

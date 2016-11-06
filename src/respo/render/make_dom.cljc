@@ -1,14 +1,16 @@
 
 (ns respo.render.make-dom
   (:require [clojure.string :as string]
-            [respo.util.format :refer [dashed->camel event->prop]]
+            [respo.util.format :refer [dashed->camel event->prop ensure-string]]
             [respo.polyfill :refer [document-create-element*]]))
 
 (defn style->string [styles]
   (string/join
    ""
    (->> styles
-        (map (fn [entry] (let [k (first entry), v (last entry)] (str (name k) ":" v ";")))))))
+        (map
+         (fn [entry]
+           (let [k (first entry), v (ensure-string (last entry))] (str (name k) ":" v ";")))))))
 
 (defn make-element [virtual-element no-bubble-collection]
   (let [tag-name (name (:name virtual-element))

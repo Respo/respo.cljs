@@ -21,32 +21,32 @@
 
 (def style-root
   {:line-height "24px",
-   :color "black",
-   :font-size "16px",
+   :color :black,
+   :font-size 16,
    :background-color (hsl 120 20 93),
-   :padding "10px",
+   :padding 10,
    :font-family "\"微软雅黑\", Verdana"})
 
 (def style-button
   {:color (hsl 0 0 100),
    :margin-left "8px",
    :background-color (hsl 0 80 70),
-   :cursor "pointer",
+   :cursor :pointer,
    :padding "0 6px 0 6px",
-   :display "inline-block",
+   :display :inline-block,
    :border-radius "4px",
    :font-family "\"微软雅黑\", Verdana"})
 
-(def style-list {:color "black", :background-color (hsl 120 20 96)})
+(def style-list {:color :black, :background-color (hsl 120 20 96)})
 
 (def style-toolbar
-  {:white-space "nowrap",
+  {:white-space :nowrap,
    :padding "4px 0",
-   :justify-content "start",
-   :display "flex",
-   :flex-direction "row"})
+   :justify-content :start,
+   :display :flex,
+   :flex-direction :row})
 
-(def style-panel {:display "flex"})
+(def style-panel {:display :flex})
 
 (defn on-test [e dispatch!]
   (println "trigger test!")
@@ -63,7 +63,7 @@
    :min-width "300px",
    :font-size "16px",
    :padding "0px 8px",
-   :outline "none"})
+   :outline :none})
 
 (defn on-focus [e dispatch!] (println "Just focused~"))
 

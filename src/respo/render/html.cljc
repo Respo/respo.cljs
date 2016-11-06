@@ -1,7 +1,9 @@
 
 (ns respo.render.html
   (:require [clojure.string :as string]
-            [respo.util.format :refer [prop->attr purify-element mute-element]]
+            [respo.util.format
+             :refer
+             [prop->attr purify-element mute-element ensure-string]]
             [respo.util.detect :refer [component? element?]]
             [respo.render.expander :refer [render-app]]
             [respo.controller.deliver :refer [mutate-factory]]))
@@ -17,7 +19,7 @@
         (map
          (fn [entry]
            (let [k (first entry), v (last entry)]
-             (str (name k) ":" (if (string? v) (escape-html v) v) ";")))))))
+             (str (name k) ":" (if (string? v) (escape-html v) (ensure-string v)) ";")))))))
 
 (defn entry->string [entry]
   (let [k (first entry), v (last entry)]

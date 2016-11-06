@@ -1,11 +1,11 @@
 
 (set-env!
   :dependencies '[[org.clojure/clojure         "1.8.0"       :scope "provided"]
-                  [org.clojure/clojurescript   "1.9.216"     :scope "provided"]
+                  [org.clojure/clojurescript   "1.9.293"     :scope "provided"]
                   [adzerk/boot-cljs            "1.7.228-1"   :scope "test"]
                   [adzerk/boot-reload          "0.4.12"      :scope "test"]
                   [binaryage/devtools          "0.8.2"       :scope "test"]
-                  [cirru/boot-stack-server     "0.1.19"      :scope "test"]
+                  [cirru/boot-stack-server     "0.1.21"      :scope "test"]
                   [adzerk/boot-test            "1.1.2"       :scope "test"]
                   [mvc-works/hsl               "0.1.2"       :scope "test"]])
 
@@ -14,7 +14,7 @@
          '[stack-server.core  :refer [start-stack-editor! transform-stack]]
          '[adzerk.boot-test   :refer :all])
 
-(def +version+ "0.3.28")
+(def +version+ "0.3.29")
 
 (task-options!
   pom {:project     'respo/respo

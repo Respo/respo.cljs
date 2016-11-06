@@ -6,6 +6,8 @@
 
 (defn event->prop [x] (str "on" (name x)))
 
+(defn ensure-string [x] (cond (string? x) x (keyword? x) (name x) :else (str x)))
+
 (defn event->string [x] (subs (name x) 3))
 
 (defn dashed->camel

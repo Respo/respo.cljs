@@ -2,7 +2,7 @@
 (ns respo.render.patcher
   (:require [clojure.string :as string]
             [respo.polyfill :refer [read-string*]]
-            [respo.util.format :refer [dashed->camel event->prop]]
+            [respo.util.format :refer [dashed->camel event->prop ensure-string]]
             [respo.render.make-dom :refer [make-element style->string]]
             [respo.util.information :refer [no-bubble-events]]))
 
@@ -16,7 +16,7 @@
     (aset (.-dataset target) "event" new-events-list)))
 
 (defn replace-style [target op]
-  (let [style-name (dashed->camel (name (key op))), style-value (val op)]
+  (let [style-name (dashed->camel (name (key op))), style-value (ensure-string (val op))]
     (aset (.-style target) style-name style-value)))
 
 (defn replace-element [target op no-bubble-collection]
@@ -51,7 +51,7 @@
       (aset target prop-name prop-value))))
 
 (defn add-style [target op]
-  (let [style-name (dashed->camel (name (key op))), style-value (val op)]
+  (let [style-name (dashed->camel (name (key op))), style-value (ensure-string (val op))]
     (aset (.-style target) style-name style-value)))
 
 (defn rm-style [target op]
