@@ -14,7 +14,7 @@
          '[stack-server.core  :refer [start-stack-editor! transform-stack]]
          '[adzerk.boot-test   :refer :all])
 
-(def +version+ "0.3.29")
+(def +version+ "0.3.30")
 
 (task-options!
   pom {:project     'respo/respo

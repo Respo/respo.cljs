@@ -43,7 +43,6 @@
 
 (defn falsify-stage! [target element dispatch!]
   (reset! global-element element)
-  (reset! cache-element element)
   (let [deliver-event (build-deliver-event global-element dispatch!)]
     (initialize-instance target deliver-event)))
 
