@@ -4,7 +4,7 @@
             [respo.render.expander :refer [render-app]]
             [respo.controller.deliver :refer [build-deliver-event mutate-factory]]
             [respo.render.differ :refer [find-element-diffs]]
-            [respo.util.format :refer [purify-element]]
+            [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client
              :refer
              [initialize-instance activate-instance patch-instance]]))
@@ -42,7 +42,8 @@
     (mount-app markup target dispatch states-ref)))
 
 (defn falsify-stage! [target element dispatch!]
-  (reset! global-element element)
+  (reset! global-element (mute-element element))
+  (reset! cache-element element)
   (let [deliver-event (build-deliver-event global-element dispatch!)]
     (initialize-instance target deliver-event)))
 
