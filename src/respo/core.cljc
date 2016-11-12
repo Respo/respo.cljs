@@ -8,7 +8,8 @@
             [respo.controller.client
              :refer
              [initialize-instance activate-instance patch-instance]]
-            [respo.polyfill :refer [log*]]))
+            [respo.polyfill :refer [log*]]
+            [respo.util.gc :refer [find-removed apply-remove]]))
 
 (defonce global-element (atom nil))
 
@@ -49,3 +50,10 @@
     (initialize-instance target deliver-event)))
 
 (defn clear-cache! [] (reset! cache-element nil))
+
+(defn gc-states! [states-ref]
+  (let [removed-paths (find-removed @states-ref @global-element [])
+        new-states (apply-remove @states-ref removed-paths)]
+    (comment println @states-ref)
+    (comment println removed-paths)
+    (reset! states-ref new-states)))

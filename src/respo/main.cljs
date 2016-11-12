@@ -1,6 +1,6 @@
 
 (ns respo.main
-  (:require [respo.core :refer [render! clear-cache!]]
+  (:require [respo.core :refer [render! clear-cache! gc-states!]]
             [respo.schema :as schema]
             [respo.updater.core :refer [updater]]
             [respo.comp.container :refer [comp-container]]
@@ -32,7 +32,7 @@
     (comment println "store:" @global-store)
     (comment println "states:" @global-states)
     (render!
-      (comp-container @global-store)
+      (comp-container @global-store @global-states)
       target
       dispatch!
       global-states)))
@@ -41,6 +41,7 @@
   (enable-console-print!)
   (devtools/install!)
   (render-app!)
+  (add-watch global-store :gc (fn [] (gc-states! global-states)))
   (add-watch global-store :rerender render-app!)
   (add-watch global-states :rerender render-app!))
 
