@@ -19,7 +19,7 @@ This project is inspired by:
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.3.31"]
+[respo "0.3.32"]
 ```
 
 ```clojure

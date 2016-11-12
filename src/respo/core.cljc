@@ -52,8 +52,6 @@
 (defn clear-cache! [] (reset! cache-element nil))
 
 (defn gc-states! [states-ref]
-  (let [removed-paths (find-removed @states-ref @global-element [])
-        new-states (apply-remove @states-ref removed-paths)]
-    (comment println @states-ref)
-    (comment println removed-paths)
-    (reset! states-ref new-states)))
+  (let [removed-paths (find-removed @states-ref @global-element [])]
+    (if (not (empty? removed-paths))
+      (reset! states-ref (apply-remove @states-ref removed-paths)))))
