@@ -31,6 +31,8 @@
 
 (defn p [props & children] (create-element :p props children))
 
+(defn option [props & children] (create-element :option props children))
+
 (defn footer [props & children] (create-element :footer props children))
 
 (defn h2 [props & children] (create-element :h2 props children))
@@ -62,6 +64,8 @@
 (defn span [props & children] (create-element :span props children))
 
 (defn script [props & children] (create-element :script props children))
+
+(defn select [props & children] (create-element :select props children))
 
 (defn a [props & children] (create-element :a props children))
 

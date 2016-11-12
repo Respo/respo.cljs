@@ -7,7 +7,8 @@
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client
              :refer
-             [initialize-instance activate-instance patch-instance]]))
+             [initialize-instance activate-instance patch-instance]]
+            [respo.polyfill :refer [log*]]))
 
 (defonce global-element (atom nil))
 
@@ -17,7 +18,16 @@
   (let [build-mutate (mutate-factory global-element states-ref)]
     (render-app markup @states-ref build-mutate @cache-element)))
 
-(defn rerender-app [markup target dispatch! states-ref]
+(defn mount-app! [markup target dispatch! states-ref]
+  (let [element (render-element markup states-ref)
+        deliver-event (build-deliver-event global-element dispatch!)]
+    (comment println "mount app")
+    (initialize-instance target deliver-event)
+    (activate-instance (purify-element element) target deliver-event)
+    (reset! global-element element)
+    (reset! cache-element element)))
+
+(defn rerender-app! [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event global-element dispatch!)
         changes (find-element-diffs [] [] @global-element element)]
@@ -27,19 +37,10 @@
     (reset! global-element element)
     (reset! cache-element element)))
 
-(defn mount-app [markup target dispatch! states-ref]
-  (let [element (render-element markup states-ref)
-        deliver-event (build-deliver-event global-element dispatch!)]
-    (comment println "mount app")
-    (initialize-instance target deliver-event)
-    (activate-instance (purify-element element) target deliver-event)
-    (reset! global-element element)
-    (reset! cache-element element)))
-
 (defn render! [markup target dispatch states-ref]
   (if (some? @global-element)
-    (rerender-app markup target dispatch states-ref)
-    (mount-app markup target dispatch states-ref)))
+    (rerender-app! markup target dispatch states-ref)
+    (mount-app! markup target dispatch states-ref)))
 
 (defn falsify-stage! [target element dispatch!]
   (reset! global-element (mute-element element))
