@@ -98,8 +98,8 @@
         (let [next-acc (conj acc [:rm (conj n-coord index)])]
           (recur next-acc n-coord index (rest old-children) []))
       :else
-        (let [old-keys (map first old-children)
-              new-keys (map first new-children)
+        (let [old-keys (map first (take 32 old-children))
+              new-keys (map first (take 32 new-children))
               x1 (first old-keys)
               y1 (first new-keys)
               x1-remains? (some (fn [x] (= x x1)) new-keys)

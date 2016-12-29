@@ -8,7 +8,7 @@
             [respo.comp.text :refer [comp-text]]
             [respo.style.widget :as widget]))
 
-(def style-task {:padding "4px 0", :display :flex})
+(def style-task {:padding "4px 0px", :display :flex})
 
 (defn update-state [state text] text)
 
