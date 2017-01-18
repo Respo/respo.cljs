@@ -12,7 +12,7 @@
 (defn raise* [x] (throw (js/Error. x)))
 
 (defonce ctx
- (if (exists? js/document)
+ (if (and (exists? js/document) (exists? js/window))
    (.getContext (.createElement js/document "canvas") "2d")
    nil))
 
