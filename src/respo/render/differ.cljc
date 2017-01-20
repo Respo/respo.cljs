@@ -168,7 +168,8 @@
                          removed-events (difference old-events new-events)
                          changes (concat
                                   (map
-                                   (fn [event-name] [:add-event n-coord event-name])
+                                   (fn [event-name]
+                                     [:add-event n-coord [event-name (:coord new-tree)]])
                                    added-events)
                                   (map
                                    (fn [event-name] [:rm-event n-coord event-name])

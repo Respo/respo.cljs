@@ -22,8 +22,9 @@
 (defn append-element [target op no-bubble-collection]
   (let [new-element (make-element op no-bubble-collection)] (.appendChild target new-element)))
 
-(defn add-event [target event-name no-bubble-collection coord]
-  (let [event-prop (event->prop event-name)
+(defn add-event [target op-data no-bubble-collection]
+  (let [[event-name coord] op-data
+        event-prop (event->prop event-name)
         maybe-listener (get no-bubble-collection event-name)]
     (if (some? maybe-listener)
       (aset
@@ -83,7 +84,7 @@
                  :add-style (add-style target op-data)
                  :replace-style (replace-style target op-data)
                  :rm-style (rm-style target op-data)
-                 :add-event (add-event target op-data no-bubble-collection coord)
+                 :add-event (add-event target op-data no-bubble-collection)
                  :rm-event (rm-event target op-data)
                  :add (add-element target op-data no-bubble-collection)
                  :rm (rm-element target op-data)
