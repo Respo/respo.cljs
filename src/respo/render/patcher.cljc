@@ -6,14 +6,8 @@
             [respo.render.make-dom :refer [make-element style->string]]
             [respo.util.information :refer [no-bubble-events]]))
 
-(defn is-no-bubble? [event-name] (some? (some (fn [x] (= x event-name)) no-bubble-events)))
-
 (defn rm-event [target event-name]
-  (let [event-prop (event->prop event-name)
-        existing-events (read-string* (aget (.-dataset target) "event"))
-        new-events-list (pr-str (disj existing-events event-name))]
-    (if (is-no-bubble? event-name) (aset target event-prop nil))
-    (aset (.-dataset target) "event" new-events-list)))
+  (let [event-prop (event->prop event-name)] (aset target event-prop nil)))
 
 (defn replace-style [target op]
   (let [style-name (dashed->camel (name (key op))), style-value (ensure-string (val op))]
@@ -28,13 +22,14 @@
 (defn append-element [target op no-bubble-collection]
   (let [new-element (make-element op no-bubble-collection)] (.appendChild target new-element)))
 
-(defn add-event [target event-name no-bubble-collection]
+(defn add-event [target event-name no-bubble-collection coord]
   (let [event-prop (event->prop event-name)
-        existing-events (read-string* (aget (.-dataset target) "event"))
-        new-events-list (pr-str (conj existing-events event-name))
         maybe-listener (get no-bubble-collection event-name)]
-    (if (some? maybe-listener) (aset target event-prop maybe-listener))
-    (aset (.-dataset target) "event" new-events-list)))
+    (if (some? maybe-listener)
+      (aset
+       target
+       event-prop
+       (fn [event] (maybe-listener event coord) (.stopPropagation event))))))
 
 (defn rm-prop [target op] (aset target (dashed->camel (name op)) nil))
 
@@ -88,7 +83,7 @@
                  :add-style (add-style target op-data)
                  :replace-style (replace-style target op-data)
                  :rm-style (rm-style target op-data)
-                 :add-event (add-event target op-data no-bubble-collection)
+                 :add-event (add-event target op-data no-bubble-collection coord)
                  :rm-event (rm-event target op-data)
                  :add (add-element target op-data no-bubble-collection)
                  :rm (rm-element target op-data)
