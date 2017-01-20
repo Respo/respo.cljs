@@ -2,7 +2,7 @@
 (ns respo.comp.todolist
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
-            [respo.comp.task :refer [task-component]]
+            [respo.comp.task :refer [comp-task]]
             [respo.alias :refer [div span input create-comp]]
             [respo.comp.zero :refer [component-zero]]
             [respo.comp.debug :refer [comp-debug]]
@@ -93,7 +93,7 @@
            (comp-text "heavy tasks" nil))))
         (div
          {:style style-list, :attrs {:class-name "task-list"}}
-         (->> tasks (reverse) (map (fn [task] [(:id task) (task-component task)]))))
+         (->> tasks (reverse) (map (fn [task] [(:id task) (comp-task task)]))))
         (if (> (count tasks) 0)
           (div
            {:style style-toolbar, :attrs {:spell-check true}}

@@ -12,6 +12,8 @@
 
 (defn update-state [state text] text)
 
+(defn on-click [props state] (fn [event dispatch!] (println "clicked.")))
+
 (defn handle-done [task-id] (fn [e dispatch!] (dispatch! :toggle task-id)))
 
 (def style-done
@@ -28,7 +30,7 @@
 
 (defn on-text-state [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
-(def task-component
+(def comp-task
   (create-comp
    :task
    init-state
@@ -59,5 +61,3 @@
          (comp-text "Remove"))
         (comp-space 8 nil)
         (div {} (comp-text state nil)))))))
-
-(defn on-click [props state] (fn [event dispatch!] (println "clicked.")))
