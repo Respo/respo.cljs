@@ -6,6 +6,5 @@
     {:width w, :display :inline-block, :height "1px"}
     {:width "1px", :display :inline-block, :height h}))
 
-(defn render [w h] (fn [state mutate] (div {:style (style-space w h)})))
-
-(def comp-space (create-comp :space render))
+(def comp-space
+  (create-comp :space (fn [w h] (fn [state mutate] (div {:style (style-space w h)})))))

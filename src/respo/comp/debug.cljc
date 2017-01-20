@@ -14,10 +14,11 @@
    :pointer-events :none,
    :font-family "Menlo"})
 
-(defn render [data more-style]
-  (fn [state mutate!]
-    (div
-     {:style (merge default-style more-style)}
-     (span {:attrs {:inner-text (pr-str data)}}))))
-
-(def comp-debug (create-comp :debug render))
+(def comp-debug
+  (create-comp
+   :debug
+   (fn [data more-style]
+     (fn [state mutate!]
+       (div
+        {:style (merge default-style more-style)}
+        (span {:attrs {:inner-text (pr-str data)}}))))))

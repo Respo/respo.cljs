@@ -6,8 +6,12 @@
 
 (def style-states {:padding 8})
 
-(defn render [store states]
-  (fn [state mutate!]
-    (div {} (comp-todolist store) (div {:style style-states} (comp-text (pr-str states) nil)))))
-
-(def comp-container (create-comp :container render))
+(def comp-container
+  (create-comp
+   :container
+   (fn [store states]
+     (fn [state mutate!]
+       (div
+        {}
+        (comp-todolist store)
+        (div {:style style-states} (comp-text (pr-str states) nil)))))))

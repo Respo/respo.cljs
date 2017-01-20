@@ -28,29 +28,36 @@
 
 (defn on-text-state [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
-(defn render [task]
-  (fn [state mutate!]
-    (div
-     {:style style-task}
-     (comp-debug task {:right 8})
-     (button
-      {:style (merge
-               style-done
-               {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
-       :event {:click (handle-done (:id task))}})
-     (comp-space 8 nil)
-     (input
-      {:style widget/input,
-       :event {:input (on-text-change task)},
-       :attrs {:value (:text task)}})
-     (comp-space 8 nil)
-     (input
-      {:style widget/input, :event {:input (on-text-state mutate!)}, :attrs {:value state}})
-     (comp-space 8 nil)
-     (div {:style widget/button, :event {:click (handle-remove task)}} (comp-text "Remove"))
-     (comp-space 8 nil)
-     (div {} (comp-text state nil)))))
-
-(def task-component (create-comp :task init-state update-state render))
+(def task-component
+  (create-comp
+   :task
+   init-state
+   update-state
+   (fn [task]
+     (fn [state mutate!]
+       (div
+        {:style style-task}
+        (comp-debug task {:right 8})
+        (button
+         {:style (merge
+                  style-done
+                  {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
+          :event {:click (handle-done (:id task))}})
+        (comp-space 8 nil)
+        (input
+         {:style widget/input,
+          :event {:input (on-text-change task)},
+          :attrs {:value (:text task)}})
+        (comp-space 8 nil)
+        (input
+         {:style widget/input,
+          :event {:input (on-text-state mutate!)},
+          :attrs {:value state}})
+        (comp-space 8 nil)
+        (div
+         {:style widget/button, :event {:click (handle-remove task)}}
+         (comp-text "Remove"))
+        (comp-space 8 nil)
+        (div {} (comp-text state nil)))))))
 
 (defn on-click [props state] (fn [event dispatch!] (println "clicked.")))

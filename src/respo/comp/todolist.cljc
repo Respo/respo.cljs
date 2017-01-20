@@ -58,47 +58,52 @@
 
 (defn on-lock [locked? mutate!] (fn [e dispatch!] (mutate! {:locked? (not locked?)})))
 
-(defn render [tasks]
-  (fn [state mutate!]
-    (div
-     {:style style-root}
-     (comment comp-debug state {:left "80px"})
-     (div
-      {:style style-panel}
-      (input
-       {:style (merge
-                widget/input
-                {:width (max
-                         200
-                         (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
-        :event {:focus on-focus, :input (on-text-change mutate!)},
-        :attrs {:placeholder "Text", :value (:draft state)}})
-      (comp-space 8 nil)
-      (span
-       {:style widget/button, :event {:click (handle-add state mutate!)}}
-       (comp-text "Add" nil))
-      (comp-space 8 nil)
-      (span
-       {:style widget/button, :event {:click clear-done}, :attrs {:inner-text "Clear"}})
-      (comp-space 8 nil)
-      (div
-       {}
-       (div {:style widget/button, :event {:click on-test}} (comp-text "heavy tasks" nil))))
-     (div
-      {:style style-list, :attrs {:class-name "task-list"}}
-      (->> tasks (reverse) (map (fn [task] [(:id task) (task-component task)]))))
-     (if (> (count tasks) 0)
+(def comp-todolist
+  (create-comp
+   :todolist
+   init-state
+   update-state
+   (fn [tasks]
+     (fn [state mutate!]
        (div
-        {:style style-toolbar, :attrs {:spell-check true}}
+        {:style style-root}
+        (comment comp-debug state {:left "80px"})
         (div
-         {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
-         (comp-text "Clear2"))
-        (comp-space 8 nil)
+         {:style style-panel}
+         (input
+          {:style (merge
+                   widget/input
+                   {:width (max
+                            200
+                            (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
+           :event {:focus on-focus, :input (on-text-change mutate!)},
+           :attrs {:placeholder "Text", :value (:draft state)}})
+         (comp-space 8 nil)
+         (span
+          {:style widget/button, :event {:click (handle-add state mutate!)}}
+          (comp-text "Add" nil))
+         (comp-space 8 nil)
+         (span
+          {:style widget/button, :event {:click clear-done}, :attrs {:inner-text "Clear"}})
+         (comp-space 8 nil)
+         (div
+          {}
+          (div
+           {:style widget/button, :event {:click on-test}}
+           (comp-text "heavy tasks" nil))))
         (div
-         {:style widget/button, :event {:click (on-lock (:locked? state) mutate!)}}
-         (comp-text (str "Lock?" (:locked? state)) nil))
-        (comp-space 8 nil)
-        (comp-wrap)))
-     (comment comp-debug tasks {}))))
-
-(def comp-todolist (create-comp :todolist init-state update-state render))
+         {:style style-list, :attrs {:class-name "task-list"}}
+         (->> tasks (reverse) (map (fn [task] [(:id task) (task-component task)]))))
+        (if (> (count tasks) 0)
+          (div
+           {:style style-toolbar, :attrs {:spell-check true}}
+           (div
+            {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
+            (comp-text "Clear2"))
+           (comp-space 8 nil)
+           (div
+            {:style widget/button, :event {:click (on-lock (:locked? state) mutate!)}}
+            (comp-text (str "Lock?" (:locked? state)) nil))
+           (comp-space 8 nil)
+           (comp-wrap)))
+        (comment comp-debug tasks {}))))))
