@@ -70,8 +70,6 @@
         tailored-props (-> attrs
                            (dissoc :innerHTML)
                            (dissoc :inner-text)
-                           (merge
-                            {:data-coord formatted-coord, :data-event formatted-event})
                            ((fn [props]
                               (if (> (count styles) 0) (assoc props :style styles) props))))
         props-in-string (props->string tailored-props)
