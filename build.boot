@@ -57,7 +57,6 @@
     (cljs :optimizations :advanced
           :compiler-options {:language-in :ecmascript5
                              :pseudo-names true
-                             :static-fns true
                              :parallel-build true
                              :optimize-constants true
                              :source-map true})

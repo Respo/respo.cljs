@@ -31,10 +31,12 @@
 (defn rerender-app! [markup target dispatch! states-ref]
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event global-element dispatch!)
-        changes (find-element-diffs [] [] @global-element element)]
+        changes-ref (atom [])
+        collect! (fn [x] (swap! changes-ref conj x))]
     (comment println @global-element)
-    (comment println "changes:" (pr-str (mapv (partial take 2) changes)))
-    (patch-instance changes target deliver-event)
+    (comment println "Changes:" (pr-str (mapv (partial take 2) @changes-ref)))
+    (find-element-diffs collect! [] @global-element element)
+    (patch-instance @changes-ref target deliver-event)
     (reset! global-element element)
     (reset! cache-element element)))
 
