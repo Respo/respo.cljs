@@ -1,7 +1,7 @@
 
 (ns respo.render.patcher
   (:require [clojure.string :as string]
-            [respo.polyfill :refer [read-string*]]
+            [polyfill.core :refer [read-string*]]
             [respo.util.format :refer [dashed->camel event->prop ensure-string]]
             [respo.render.make-dom :refer [make-element style->string]]
             [respo.util.information :refer [no-bubble-events]]))

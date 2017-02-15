@@ -8,7 +8,7 @@
             [respo.controller.client
              :refer
              [initialize-instance activate-instance patch-instance]]
-            [respo.polyfill :refer [log*]]
+            [polyfill.core :refer [log*]]
             [respo.util.gc :refer [find-removed apply-remove]]))
 
 (defonce global-element (atom nil))

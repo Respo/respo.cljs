@@ -1,6 +1,6 @@
 
 (ns respo.html-test
-  (:require [clojure.test :refer :all]
+  (:require [cljs.test :refer-macros [deftest is testing run-tests]]
             [respo.alias :refer [html
                                  head
                                  title
@@ -17,6 +17,11 @@
  (atom [{:id 101, :text "101"} {:id 102, :text "102"}]))
 
 (defn use-text [x] {:attrs {:innerHTML x}})
+
+(def fs (js/require "fs"))
+
+(defn slurp [file-path]
+  (.readFileSync fs file-path "utf8"))
 
 (deftest
   html-test
@@ -38,3 +43,5 @@
     (testing
       "test generated HTML"
       (is (= (slurp "examples/simple.html") (make-html tree-demo))))))
+
+(run-tests)

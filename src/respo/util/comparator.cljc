@@ -1,5 +1,5 @@
 
-(ns respo.util.comparator (:require [respo.polyfill :refer [raise*]]))
+(ns respo.util.comparator (:require [polyfill.core :refer [raise*]]))
 
 (defn type-as-int [x]
   (cond

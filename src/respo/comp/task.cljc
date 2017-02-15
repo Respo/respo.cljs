@@ -8,7 +8,7 @@
             [respo.comp.text :refer [comp-text]]
             [respo.style.widget :as widget]))
 
-(def style-task {:padding "4px 0px", :display :flex})
+(def style-task {:display :flex, :padding "4px 0px"})
 
 (defn update-state [state text] text)
 
@@ -17,7 +17,7 @@
 (defn handle-done [task-id] (fn [e dispatch!] (dispatch! :toggle task-id)))
 
 (def style-done
-  {:vertical-align :middle, :width 32, :outline :none, :border :none, :height 32})
+  {:width 32, :height 32, :outline :none, :border :none, :vertical-align :middle})
 
 (defn init-state [props] "")
 

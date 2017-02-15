@@ -1,6 +1,6 @@
 
 (ns respo.tree-test
-  (:require [clojure.string :as string]
+  (:require [cljs.test :refer-macros [deftest is run-tests]]
             [respo.render.differ :refer [find-element-diffs
                                          find-props-diffs]]))
 

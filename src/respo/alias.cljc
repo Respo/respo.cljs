@@ -14,12 +14,12 @@
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (if (contains? props :event) (:event props) {})
         children (arrange-children children)]
-    {:coord nil,
-     :children children,
-     :name tag-name,
+    {:name tag-name,
+     :coord nil,
+     :attrs attrs,
      :style styles,
      :event event,
-     :attrs attrs}))
+     :children children}))
 
 (defn canvas [props & children] (create-element :canvas props children))
 
@@ -45,14 +45,14 @@
   ([comp-name render] (create-comp comp-name default-init default-update render))
   ([comp-name init-state update-state render]
    (comment println "create component:" comp-name)
-   (let [initial-comp {:args [],
+   (let [initial-comp {:name comp-name,
                        :coord nil,
-                       :tree nil,
-                       :name comp-name,
+                       :args [],
                        :init-state init-state,
+                       :update-state update-state,
                        :render render,
-                       :cost nil,
-                       :update-state update-state}]
+                       :tree nil,
+                       :cost nil}]
      (fn [& args] (assoc initial-comp :args args)))))
 
 (defn hr [props & children] (create-element :hr props children))

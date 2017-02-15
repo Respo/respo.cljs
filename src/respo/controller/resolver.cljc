@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element?]]
-            [respo.polyfill :refer [raise*]]
+            [polyfill.core :refer [raise*]]
             [respo.util.list :refer [filter-first]]))
 
 (defn get-component-at

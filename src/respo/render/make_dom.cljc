@@ -2,7 +2,7 @@
 (ns respo.render.make-dom
   (:require [clojure.string :as string]
             [respo.util.format :refer [dashed->camel event->prop ensure-string]]
-            [respo.polyfill :refer [document-create-element*]]))
+            [polyfill.core :refer [document-create-element*]]))
 
 (defn style->string [styles]
   (string/join

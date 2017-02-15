@@ -1,16 +1,16 @@
 
 (ns respo.render.expander
   (:require [clojure.string :as string]
-            [respo.polyfill :refer [io-get-time*]]
+            [polyfill.core :refer [io-get-time*]]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element? =seq]]
             [respo.util.list :refer [filter-first]]))
 
+(declare render-component)
+
 (declare render-children)
 
 (declare render-element)
-
-(declare render-component)
 
 (declare render-markup)
 
@@ -18,40 +18,6 @@
   (if (component? markup)
     (render-component markup states build-mutate coord old-element)
     (render-element markup states build-mutate coord component-coord old-element)))
-
-(defn render-component [markup states build-mutate coord old-element]
-  (let [raw-states (get states (:name markup))]
-    (comment println "raw states:" raw-states (get raw-states 'data))
-    (if (and (some? old-element)
-             (identical? raw-states (:raw-states old-element))
-             (=seq (:args markup) (:args old-element))
-             (identical? (:render markup) (:render old-element)))
-      (do (comment println "not changed" coord) old-element)
-      (let [begin-time (io-get-time*)
-            args (:args markup)
-            component (first markup)
-            init-state (:init-state markup)
-            new-coord (conj coord (:name markup))
-            inner-states (or raw-states {})
-            state (if (contains? inner-states 'data)
-                    (get inner-states 'data)
-                    (apply init-state args))
-            render (:render markup)
-            half-render (apply render args)
-            mutate! (build-mutate new-coord)
-            markup-tree (half-render state mutate!)
-            tree (render-markup
-                  markup-tree
-                  inner-states
-                  build-mutate
-                  new-coord
-                  new-coord
-                  (:tree old-element))
-            cost (- (io-get-time*) begin-time)]
-        (comment println "markup tree:" (pr-str markup-tree))
-        (comment println "component state:" coord states)
-        (comment println "no cache:" coord)
-        (assoc markup :coord coord :tree tree :cost cost :raw-states raw-states)))))
 
 (defn render-element [markup states build-mutate coord comp-coord old-element]
   (let [children (:children markup)
@@ -95,6 +61,40 @@
                   comp-coord
                   old-child)
                  nil)]))))))
+
+(defn render-component [markup states build-mutate coord old-element]
+  (let [raw-states (get states (:name markup))]
+    (comment println "raw states:" raw-states (get raw-states 'data))
+    (if (and (some? old-element)
+             (identical? raw-states (:raw-states old-element))
+             (=seq (:args markup) (:args old-element))
+             (identical? (:render markup) (:render old-element)))
+      (do (comment println "not changed" coord) old-element)
+      (let [begin-time (io-get-time*)
+            args (:args markup)
+            component (first markup)
+            init-state (:init-state markup)
+            new-coord (conj coord (:name markup))
+            inner-states (or raw-states {})
+            state (if (contains? inner-states 'data)
+                    (get inner-states 'data)
+                    (apply init-state args))
+            render (:render markup)
+            half-render (apply render args)
+            mutate! (build-mutate new-coord)
+            markup-tree (half-render state mutate!)
+            tree (render-markup
+                  markup-tree
+                  inner-states
+                  build-mutate
+                  new-coord
+                  new-coord
+                  (:tree old-element))
+            cost (- (io-get-time*) begin-time)]
+        (comment println "markup tree:" (pr-str markup-tree))
+        (comment println "component state:" coord states)
+        (comment println "no cache:" coord)
+        (assoc markup :coord coord :tree tree :cost cost :raw-states raw-states)))))
 
 (defn render-app [markup states build-mutate old-element]
   (comment println "render loop, states:" (pr-str states))

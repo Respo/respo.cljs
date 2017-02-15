@@ -9,7 +9,7 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
             [respo.comp.wrap :refer [comp-wrap]]
-            [respo.polyfill :refer [text-width* io-get-time* set-timeout*]]
+            [polyfill.core :refer [text-width* io-get-time* set-timeout*]]
             [respo.style.widget :as widget]))
 
 (defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
@@ -22,21 +22,21 @@
   (fn [e dispatch!] (dispatch! :add (:draft state)) (mutate! {:draft ""})))
 
 (def style-root
-  {:line-height "24px",
-   :color :black,
-   :font-size 16,
+  {:color :black,
    :background-color (hsl 120 20 98),
+   :line-height "24px",
+   :font-size 16,
    :padding 10,
    :font-family "\"微软雅黑\", Verdana"})
 
 (def style-list {:color :black, :background-color (hsl 120 20 98)})
 
 (def style-toolbar
-  {:white-space :nowrap,
-   :padding "4px 0",
+  {:display :flex,
+   :flex-direction :row,
    :justify-content :start,
-   :display :flex,
-   :flex-direction :row})
+   :padding "4px 0",
+   :white-space :nowrap})
 
 (def style-panel {:display :flex, :margin-bottom 4})
 
@@ -76,7 +76,7 @@
                    {:width (max
                             200
                             (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
-           :event {:focus on-focus, :input (on-text-change mutate!)},
+           :event {:input (on-text-change mutate!), :focus on-focus},
            :attrs {:placeholder "Text", :value (:draft state)}})
          (comp-space 8 nil)
          (span

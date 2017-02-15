@@ -4,7 +4,7 @@
 (defn updater [old-store op-type op-data op-id]
   (comment println (pr-str old-store) (pr-str op-type) (pr-str op-data))
   (case op-type
-    :add (conj old-store {:done? false, :id op-id, :text op-data})
+    :add (conj old-store {:text op-data, :id op-id, :done? false})
     :remove (->> old-store (filterv (fn [task] (not (= (:id task) op-data)))))
     :clear []
     :update

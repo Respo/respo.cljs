@@ -10,8 +10,8 @@ pom.xml.asc
 .hgignore
 .hg/
 
-/figwheel_server.log
 /node_modules/
 /.nrepl-history
 
-/src/*.*
+.lumo_cache
+tasks/class-path.sh

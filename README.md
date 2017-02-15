@@ -61,29 +61,10 @@ Now you have to define `init-state` and `update-state` in every component.
 
 Workflow https://github.com/mvc-works/stack-workflow
 
-```bash
-boot dev!
-# open target/dev.html
-```
-
-Edit code with Stack Editor http://repo.cirru.org/stack-editor
-
-To test static HTML rendering:
+Test:
 
 ```bash
-boot watch-test
-```
-
-Clojure code can be compiled from `stack-sepal.ir` to `src/` by:
-
-```bash
-boot generate-code
-```
-
-To compile the whole project:
-
-```bash
-boot build-advanced
+lumo -Kc $boot_deps:src/ -i test/html_test.cljs
 ```
 
 ### License

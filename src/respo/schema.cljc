@@ -1,6 +1,6 @@
 
 (ns respo.schema )
 
-(def task {:done? false, :id nil, :text ""})
+(def task {:id nil, :text "", :done? false})
 
 (def store [])
