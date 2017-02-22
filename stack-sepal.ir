@@ -847,8 +847,7 @@
                                   "respo.util.format"
                                   ":refer"
                                   ["[]" "dashed->camel" "event->prop" "ensure-string"]]
-                                 ["[]" "respo.render.make-dom" ":refer" ["[]" "make-element" "style->string"]]
-                                 ["[]" "respo.util.information" ":refer" ["[]" "no-bubble-events"]]]],
+                                 ["[]" "respo.render.make-dom" ":refer" ["[]" "make-element" "style->string"]]]],
                            :defs {"rm-event" ["defn"
                                               "rm-event"
                                               ["target" "event-name"]
@@ -864,34 +863,31 @@
                                                     ["aset" [".-style" "target"] "style-name" "style-value"]]],
                                   "replace-element" ["defn"
                                                      "replace-element"
-                                                     ["target" "op" "no-bubble-collection"]
+                                                     ["target" "op" "listener-builder"]
                                                      ["let"
-                                                      [["new-element" ["make-element" "op" "no-bubble-collection"]]
+                                                      [["new-element" ["make-element" "op" "listener-builder"]]
                                                        ["parent-element" [".-parentElement" "target"]]]
                                                       [".insertBefore" "parent-element" "new-element" "target"]
                                                       [".remove" "target"]]],
                                   "append-element" ["defn"
                                                     "append-element"
-                                                    ["target" "op" "no-bubble-collection"]
+                                                    ["target" "op" "listener-builder"]
                                                     ["let"
-                                                     [["new-element" ["make-element" "op" "no-bubble-collection"]]]
+                                                     [["new-element" ["make-element" "op" "listener-builder"]]]
                                                      [".appendChild" "target" "new-element"]]],
                                   "add-event" ["defn"
                                                "add-event"
-                                               ["target" "op-data" "no-bubble-collection"]
+                                               ["target" "op-data" "listener-builder"]
                                                ["let"
                                                 [[["[]" "event-name" "coord"] "op-data"]
-                                                 ["event-prop" ["event->prop" "event-name"]]
-                                                 ["maybe-listener" ["get" "no-bubble-collection" "event-name"]]]
-                                                ["if"
-                                                 ["some?" "maybe-listener"]
-                                                 ["aset"
-                                                  "target"
-                                                  "event-prop"
-                                                  ["fn"
-                                                   ["event"]
-                                                   ["maybe-listener" "event" "coord"]
-                                                   [".stopPropagation" "event"]]]]]],
+                                                 ["event-prop" ["event->prop" "event-name"]]]
+                                                ["aset"
+                                                 "target"
+                                                 "event-prop"
+                                                 ["fn"
+                                                  ["event"]
+                                                  [["listener-builder" "event-name"] "event" "coord"]
+                                                  [".stopPropagation" "event"]]]]],
                                   "rm-prop" ["defn"
                                              "rm-prop"
                                              ["target" "op"]
@@ -920,7 +916,7 @@
                                                     ["aset" "target" "prop-name" "prop-value"]]]],
                                   "apply-dom-changes" ["defn"
                                                        "apply-dom-changes"
-                                                       ["changes" "mount-point" "no-bubble-collection"]
+                                                       ["changes" "mount-point" "listener-builder"]
                                                        ["let"
                                                         [["root" [".-firstChild" "mount-point"]]]
                                                         ["doall"
@@ -944,21 +940,15 @@
                                                               [":replace-style" ["replace-style" "target" "op-data"]]
                                                               [":rm-style" ["rm-style" "target" "op-data"]]
                                                               [":add-event"
-                                                               ["add-event" "target" "op-data" "no-bubble-collection"]]
+                                                               ["add-event" "target" "op-data" "listener-builder"]]
                                                               [":rm-event" ["rm-event" "target" "op-data"]]
                                                               [":add"
-                                                               ["add-element" "target" "op-data" "no-bubble-collection"]]
+                                                               ["add-element" "target" "op-data" "listener-builder"]]
                                                               [":rm" ["rm-element" "target" "op-data"]]
                                                               [":replace"
-                                                               ["replace-element"
-                                                                "target"
-                                                                "op-data"
-                                                                "no-bubble-collection"]]
+                                                               ["replace-element" "target" "op-data" "listener-builder"]]
                                                               [":append"
-                                                               ["append-element"
-                                                                "target"
-                                                                "op-data"
-                                                                "no-bubble-collection"]]
+                                                               ["append-element" "target" "op-data" "listener-builder"]]
                                                               ["println" "|not implemented:" "op-type"]]]]]]]]],
                                   "add-style" ["defn"
                                                "add-style"
@@ -986,9 +976,9 @@
                                                    ["recur" "child" ["rest" "coord"]]]]],
                                   "add-element" ["defn"
                                                  "add-element"
-                                                 ["target" "op" "no-bubble-collection"]
+                                                 ["target" "op" "listener-builder"]
                                                  ["let"
-                                                  [["new-element" ["make-element" "op" "no-bubble-collection"]]
+                                                  [["new-element" ["make-element" "op" "listener-builder"]]
                                                    ["parent-element" [".-parentElement" "target"]]]
                                                   [".insertBefore" "parent-element" "new-element" "target"]]]},
                            :procs []},
@@ -1003,7 +993,7 @@
                                   ["[]" "polyfill.core" ":refer" ["[]" "document-create-element*"]]]],
                             :defs {"make-element" ["defn"
                                                    "make-element"
-                                                   ["virtual-element" "no-bubble-collection"]
+                                                   ["virtual-element" "listener-builder"]
                                                    ["let"
                                                     [["tag-name" ["name" [":name" "virtual-element"]]]
                                                      ["attrs" [":attrs" "virtual-element"]]
@@ -1016,7 +1006,7 @@
                                                        ["map"
                                                         ["fn"
                                                          ["entry"]
-                                                         ["make-element" ["last" "entry"] "no-bubble-collection"]]]]]]
+                                                         ["make-element" ["last" "entry"] "listener-builder"]]]]]]
                                                     ["doall"
                                                      ["->>"
                                                       "attrs"
@@ -1038,23 +1028,17 @@
                                                         ["--" "println" "|Looking into event:" "entry"]
                                                         ["let"
                                                          [["event-name" ["key" "entry"]]
-                                                          ["name-in-string" ["event->prop" "event-name"]]
-                                                          ["maybe-listener" ["get" "no-bubble-collection" "event-name"]]]
-                                                         ["--"
-                                                          "println"
-                                                          "|listener:"
-                                                          "event-name"
-                                                          "maybe-listener"
-                                                          "name-in-string"]
-                                                         ["if"
-                                                          ["some?" "maybe-listener"]
-                                                          ["aset"
-                                                           "element"
-                                                           "name-in-string"
-                                                           ["fn"
-                                                            ["event"]
-                                                            ["maybe-listener" "event" [":coord" "virtual-element"]]
-                                                            [".stopPropagation" "event"]]]]]]]]]
+                                                          ["name-in-string" ["event->prop" "event-name"]]]
+                                                         ["--" "println" "|listener:" "event-name" "name-in-string"]
+                                                         ["aset"
+                                                          "element"
+                                                          "name-in-string"
+                                                          ["fn"
+                                                           ["event"]
+                                                           [["listener-builder" "event-name"]
+                                                            "event"
+                                                            [":coord" "virtual-element"]]
+                                                           [".stopPropagation" "event"]]]]]]]]
                                                     ["doseq"
                                                      ["[]" "child-element" "child-elements"]
                                                      [".appendChild" "element" "child-element"]]
@@ -1854,31 +1838,13 @@
                                            "false"]]]]],
                                "component?" ["defn" "component?" ["x"] ["and" ["map?" "x"] ["contains?" "x" ":tree"]]]},
                         :procs []},
-         "util.information" {:ns ["ns" "respo.util.information" [":require" ["[]" "clojure.string" ":as" "string"]]],
-                             :defs {"bubble-events" ["def" "bubble-events" ["[]"]],
-                                    "no-bubble-events" ["def"
-                                                        "no-bubble-events"
-                                                        ["concat"
-                                                         ["[]" ":focus" ":blur" ":scroll"]
-                                                         ["[]"
-                                                          ":click"
-                                                          ":dblclick"
-                                                          ":change"
-                                                          ":input"
-                                                          ":keydown"
-                                                          ":keyup"
-                                                          ":wheel"
-                                                          ":mousedown"
-                                                          ":touchstart"]]]},
-                             :procs []},
          "controller.client" {:ns ["ns"
                                    "respo.controller.client"
                                    [":require"
                                     ["[]" "respo.render.patcher" ":refer" ["[]" "apply-dom-changes"]]
                                     ["[]" "polyfill.core" ":refer" ["[]" "read-string*"]]
                                     ["[]" "respo.util.format" ":refer" ["[]" "event->string" "event->edn"]]
-                                    ["[]" "respo.render.make-dom" ":refer" ["[]" "make-element"]]
-                                    ["[]" "respo.util.information" ":refer" ["[]" "no-bubble-events"]]]],
+                                    ["[]" "respo.render.make-dom" ":refer" ["[]" "make-element"]]]],
                               :defs {"build-listener" ["defn"
                                                        "build-listener"
                                                        ["event-name" "deliver-event"]
@@ -1895,41 +1861,23 @@
                                                        "patch-instance"
                                                        ["changes" "mount-point" "deliver-event"]
                                                        ["let"
-                                                        [["no-bubble-collection"
-                                                          ["->>"
-                                                           "no-bubble-events"
-                                                           ["map"
-                                                            ["fn"
-                                                             ["event-name"]
-                                                             ["[]"
-                                                              "event-name"
-                                                              ["build-listener" "event-name" "deliver-event"]]]]
-                                                           ["into" ["{}"]]]]]
-                                                        ["apply-dom-changes"
-                                                         "changes"
-                                                         "mount-point"
-                                                         "no-bubble-collection"]]],
-                                     "initialize-instance" ["defn"
-                                                            "initialize-instance"
-                                                            ["mount-point" "deliver-event"]],
+                                                        [["listener-builder"
+                                                          ["fn"
+                                                           ["event-name"]
+                                                           ["build-listener" "event-name" "deliver-event"]]]]
+                                                        ["apply-dom-changes" "changes" "mount-point" "listener-builder"]]],
                                      "activate-instance" ["defn"
                                                           "activate-instance"
                                                           ["entire-dom" "mount-point" "deliver-event"]
                                                           ["let"
-                                                           [["no-bubble-collection"
-                                                             ["->>"
-                                                              "no-bubble-events"
-                                                              ["map"
-                                                               ["fn"
-                                                                ["event-name"]
-                                                                ["[]"
-                                                                 "event-name"
-                                                                 ["build-listener" "event-name" "deliver-event"]]]]
-                                                              ["into" ["{}"]]]]]
+                                                           [["listener-builder"
+                                                             ["fn"
+                                                              ["event-name"]
+                                                              ["build-listener" "event-name" "deliver-event"]]]]
                                                            ["set!" [".-innerHTML" "mount-point"] "|"]
                                                            [".appendChild"
                                                             "mount-point"
-                                                            ["make-element" "entire-dom" "no-bubble-collection"]]]]},
+                                                            ["make-element" "entire-dom" "listener-builder"]]]]},
                               :procs []},
          "test-component.task" {:ns ["ns"
                                      "respo.test-component.task"
@@ -1957,10 +1905,7 @@
                        ["[]" "respo.controller.deliver" ":refer" ["[]" "build-deliver-event" "mutate-factory"]]
                        ["[]" "respo.render.differ" ":refer" ["[]" "find-element-diffs"]]
                        ["[]" "respo.util.format" ":refer" ["[]" "purify-element" "mute-element"]]
-                       ["[]"
-                        "respo.controller.client"
-                        ":refer"
-                        ["[]" "initialize-instance" "activate-instance" "patch-instance"]]
+                       ["[]" "respo.controller.client" ":refer" ["[]" "activate-instance" "patch-instance"]]
                        ["[]" "polyfill.core" ":refer" ["[]" "log*"]]
                        ["[]" "respo.util.gc" ":refer" ["[]" "find-removed" "apply-remove"]]]],
                  :defs {"global-element" ["defonce" "global-element" ["atom" "nil"]],
@@ -1984,7 +1929,6 @@
                                        [["element" ["render-element" "markup" "states-ref"]]
                                         ["deliver-event" ["build-deliver-event" "global-element" "dispatch!"]]]
                                        ["--" "println" "|mount app"]
-                                       ["initialize-instance" "target" "deliver-event"]
                                        ["activate-instance" ["purify-element" "element"] "target" "deliver-event"]
                                        ["reset!" "global-element" "element"]
                                        ["reset!" "cache-element" "element"]]],
@@ -1992,10 +1936,7 @@
                                           "falsify-stage!"
                                           ["target" "element" "dispatch!"]
                                           ["reset!" "global-element" ["mute-element" "element"]]
-                                          ["reset!" "cache-element" "element"]
-                                          ["let"
-                                           [["deliver-event" ["build-deliver-event" "global-element" "dispatch!"]]]
-                                           ["initialize-instance" "target" "deliver-event"]]],
+                                          ["reset!" "cache-element" "element"]],
                         "cache-element" ["defonce" "cache-element" ["atom" "nil"]],
                         "rerender-app!" ["defn"
                                          "rerender-app!"

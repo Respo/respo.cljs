@@ -12,15 +12,14 @@
          (fn [entry]
            (let [k (first entry), v (ensure-string (last entry))] (str (name k) ":" v ";")))))))
 
-(defn make-element [virtual-element no-bubble-collection]
+(defn make-element [virtual-element listener-builder]
   (let [tag-name (name (:name virtual-element))
         attrs (:attrs virtual-element)
         style (:style virtual-element)
         children (:children virtual-element)
         element (document-create-element* tag-name)
         child-elements (->> children
-                            (map
-                             (fn [entry] (make-element (last entry) no-bubble-collection))))]
+                            (map (fn [entry] (make-element (last entry) listener-builder))))]
     (doall
      (->> attrs
           (map
@@ -34,16 +33,13 @@
           (map
            (fn [entry]
              (comment println "Looking into event:" entry)
-             (let [event-name (key entry)
-                   name-in-string (event->prop event-name)
-                   maybe-listener (get no-bubble-collection event-name)]
-               (comment println "listener:" event-name maybe-listener name-in-string)
-               (if (some? maybe-listener)
-                 (aset
-                  element
-                  name-in-string
-                  (fn [event]
-                    (maybe-listener event (:coord virtual-element))
-                    (.stopPropagation event)))))))))
+             (let [event-name (key entry), name-in-string (event->prop event-name)]
+               (comment println "listener:" event-name name-in-string)
+               (aset
+                element
+                name-in-string
+                (fn [event]
+                  ((listener-builder event-name) event (:coord virtual-element))
+                  (.stopPropagation event))))))))
     (doseq [child-element child-elements] (.appendChild element child-element))
     element))

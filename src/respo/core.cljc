@@ -5,9 +5,7 @@
             [respo.controller.deliver :refer [build-deliver-event mutate-factory]]
             [respo.render.differ :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]
-            [respo.controller.client
-             :refer
-             [initialize-instance activate-instance patch-instance]]
+            [respo.controller.client :refer [activate-instance patch-instance]]
             [polyfill.core :refer [log*]]
             [respo.util.gc :refer [find-removed apply-remove]]))
 
@@ -23,7 +21,6 @@
   (let [element (render-element markup states-ref)
         deliver-event (build-deliver-event global-element dispatch!)]
     (comment println "mount app")
-    (initialize-instance target deliver-event)
     (activate-instance (purify-element element) target deliver-event)
     (reset! global-element element)
     (reset! cache-element element)))
@@ -47,9 +44,7 @@
 
 (defn falsify-stage! [target element dispatch!]
   (reset! global-element (mute-element element))
-  (reset! cache-element element)
-  (let [deliver-event (build-deliver-event global-element dispatch!)]
-    (initialize-instance target deliver-event)))
+  (reset! cache-element element))
 
 (defn clear-cache! [] (reset! cache-element nil))
 
