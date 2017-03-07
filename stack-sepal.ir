@@ -682,7 +682,6 @@
                          "respo.util.gc"
                          [":require"
                           ["[]" "respo.util.detect" ":refer" ["[]" "component?"]]
-                          ["[]" "clojure.set" ":refer" ["[]" "union"]]
                           ["[]" "respo.controller.resolver" ":refer" ["[]" "get-component-at"]]]],
                     :defs {"find-removed" ["defn"
                                            "find-removed"

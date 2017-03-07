@@ -1,7 +1,6 @@
 
 (ns respo.util.gc
   (:require [respo.util.detect :refer [component?]]
-            [clojure.set :refer [union]]
             [respo.controller.resolver :refer [get-component-at]]))
 
 (defn find-removed [state-tree element base]
