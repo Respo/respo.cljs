@@ -19,21 +19,20 @@ This project is inspired by:
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.3.40"]
+[respo "0.3.41"]
 ```
 
 ```clojure
 (require '[respo.core :refer [render!]])
 
-(defonce store-ref (atom 0))
-(defonce states-ref (atom {}))
+(defonce ref-store (atom 0))
 
 (defn dispatch! [op op-data]
-  (reset! store-ref (updater @store-ref op op-data)))
+  (reset! ref-store (updater @ref-store op op-data)))
 
 (defn render-app! []
   (let [target (.querySelector js/document "#app")]
-    (render! (comp-container @store-ref) target dispatch! states-ref)))
+    (render! (comp-container @ref-store) target dispatch!)))
 
 (render-app!)
 ```
@@ -49,13 +48,10 @@ This project is inspired by:
     {:width w, :display "inline-block", :height "1px"}
     {:width "1px", :display "inline-block", :height h}))
 
-(defn render [w h] (fn [state mutate!] (div {:style (style-space w h)})))
+(defn render [w h] (fn [cursor] (div {:style (style-space w h)})))
 
 (def comp-space (create-comp :space render))
 ```
-
-`mutate!` is previously `set-state` but changed a lot.
-Now you have to define `init-state` and `update-state` in every component.
 
 ### Develop
 
