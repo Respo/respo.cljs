@@ -14,14 +14,19 @@
 
 (declare render-markup)
 
-(defn render-markup [markup coord component-coord old-element]
+(defn render-markup [markup coord component-coord cursor old-element]
   (if (component? markup)
-    (render-component markup coord old-element)
-    (render-element markup coord component-coord old-element)))
+    (render-component markup coord cursor old-element)
+    (render-element markup coord component-coord cursor old-element)))
 
-(defn render-element [markup coord comp-coord old-element]
+(defn render-element [markup coord comp-coord cursor old-element]
   (let [children (:children markup)
-        child-elements (render-children children coord comp-coord (:children old-element))]
+        child-elements (render-children
+                        children
+                        coord
+                        comp-coord
+                        cursor
+                        (:children old-element))]
     (comment
      .log
      js/console
@@ -31,7 +36,7 @@
      (pr-str markup))
     (assoc markup :coord coord :children child-elements)))
 
-(defn render-children [children coord comp-coord old-children]
+(defn render-children [children coord comp-coord cursor old-children]
   (comment println "render children:" children)
   (let [mapped-cache (into {} old-children)]
     (->> children
@@ -46,10 +51,10 @@
                (do (println "old child:" coord (some? old-child))))
               [k
                (if (some? child-element)
-                 (render-markup child-element (conj coord k) comp-coord old-child)
+                 (render-markup child-element (conj coord k) comp-coord cursor old-child)
                  nil)]))))))
 
-(defn render-component [markup coord old-element]
+(defn render-component [markup coord cursor old-element]
   (if (and (some? old-element)
            (=seq (:args markup) (:args old-element))
            (identical? (:render markup) (:render old-element)))
@@ -58,13 +63,20 @@
           args (:args markup)
           component (first markup)
           new-coord (conj coord (:name markup))
+          new-cursor (let [cursor-name (:cursor markup)]
+                       (if (some? cursor-name) (conj cursor cursor-name) cursor))
           render (:render markup)
           half-render (apply render args)
-          markup-tree (half-render nil nil)
-          tree (render-markup markup-tree new-coord new-coord (:tree old-element))
+          markup-tree (half-render new-cursor)
+          tree (render-markup
+                markup-tree
+                new-coord
+                new-coord
+                new-cursor
+                (:tree old-element))
           cost (- (io-get-time*) begin-time)]
       (comment println "markup tree:" (pr-str markup-tree))
       (comment println "no cache:" coord)
       (assoc markup :coord coord :tree tree :cost cost))))
 
-(defn render-app [markup old-element] (render-markup markup [] [] old-element))
+(defn render-app [markup old-element] (render-markup markup [] [] [] old-element))

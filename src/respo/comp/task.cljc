@@ -24,34 +24,35 @@
 
 (defn handle-remove [task] (fn [e dispatch!] (dispatch! :remove (:id task))))
 
-(defn on-text-state [mutate!] (fn [e dispatch!] (mutate! (:value e))))
+(defn on-text-state [cursor] (fn [e dispatch!] (dispatch! :states [cursor (:value e)])))
 
 (def comp-task
   (create-comp
    :task
-   (fn [task]
-     (fn [state mutate!]
-       (div
-        {:style style-task}
-        (comp-debug task {:right 8})
-        (button
-         {:style (merge
-                  style-done
-                  {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
-          :event {:click (handle-done (:id task))}})
-        (comp-space 8 nil)
-        (input
-         {:style widget/input,
-          :event {:input (on-text-change task)},
-          :attrs {:value (:text task)}})
-        (comp-space 8 nil)
-        (input
-         {:style widget/input,
-          :event {:input (on-text-state mutate!)},
-          :attrs {:value state}})
-        (comp-space 8 nil)
-        (div
-         {:style widget/button, :event {:click (handle-remove task)}}
-         (comp-text "Remove"))
-        (comp-space 8 nil)
-        (div {} (comp-text state nil)))))))
+   (fn [states task]
+     (fn [cursor]
+       (let [state (or (:data states) "")]
+         (div
+          {:style style-task}
+          (comp-debug task {:right 8})
+          (button
+           {:style (merge
+                    style-done
+                    {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
+            :event {:click (handle-done (:id task))}})
+          (comp-space 8 nil)
+          (input
+           {:style widget/input,
+            :event {:input (on-text-change task)},
+            :attrs {:value (:text task)}})
+          (comp-space 8 nil)
+          (input
+           {:style widget/input,
+            :event {:input (on-text-state cursor)},
+            :attrs {:value state}})
+          (comp-space 8 nil)
+          (div
+           {:style widget/button, :event {:click (handle-remove task)}}
+           (comp-text "Remove"))
+          (comp-space 8 nil)
+          (div {} (comp-text state nil))))))))

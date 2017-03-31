@@ -14,8 +14,10 @@
 
 (defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
 
-(defn handle-add [state mutate!]
-  (fn [e dispatch!] (dispatch! :add (:draft state)) (mutate! {:draft ""})))
+(defn handle-add [cursor state]
+  (fn [e dispatch!]
+    (dispatch! :add (:draft state))
+    (dispatch! :states [cursor (assoc state :draft "")])))
 
 (def style-root
   {:color :black,
@@ -48,56 +50,64 @@
 
 (defn on-focus [e dispatch!] (println "Just focused~"))
 
-(defn on-text-change [mutate!] (fn [e dispatch!] (mutate! {:draft (:value e)})))
+(def initial-state {:draft "", :loacked? false})
 
-(defn on-lock [locked? mutate!] (fn [e dispatch!] (mutate! {:locked? (not locked?)})))
+(defn on-text-change [cursor state]
+  (fn [e dispatch!] (dispatch! :states [cursor (assoc state :draft (:value e))])))
+
+(defn on-lock [cursor state]
+  (fn [e dispatch!] (dispatch! :states [cursor (update state :locked? not)])))
 
 (def comp-todolist
   (create-comp
    :todolist
-   (fn [tasks]
-     (fn [state mutate!]
-       (div
-        {:style style-root}
-        (comment comp-debug state {:left "80px"})
-        (div
-         {:style style-panel}
-         (input
-          {:style (merge
-                   widget/input
-                   {:width (max
-                            200
-                            (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
-           :event {:input (on-text-change mutate!), :focus on-focus},
-           :attrs {:placeholder "Text", :value (:draft state)}})
-         (comp-space 8 nil)
-         (span
-          {:style widget/button, :event {:click (handle-add state mutate!)}}
-          (comp-text "Add" nil))
-         (comp-space 8 nil)
-         (span
-          {:style widget/button, :event {:click clear-done}, :attrs {:inner-text "Clear"}})
-         (comp-space 8 nil)
+   (fn [states tasks]
+     (fn [cursor]
+       (let [state (or (:data states) initial-state)]
          (div
-          {}
+          {:style style-root}
+          (comp-debug state {:left "80px"})
           (div
-           {:style widget/button, :event {:click on-test}}
-           (comp-text "heavy tasks" nil))))
-        (div
-         {:style style-list, :attrs {:class-name "task-list"}}
-         (->> tasks
-              (reverse)
-              (map (fn [task] [(:id task) (with-cursor (:id task) (comp-task task))]))))
-        (if (> (count tasks) 0)
-          (div
-           {:style style-toolbar, :attrs {:spell-check true}}
-           (div
-            {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
-            (comp-text "Clear2"))
+           {:style style-panel}
+           (input
+            {:style (merge
+                     widget/input
+                     {:width (max
+                              200
+                              (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
+             :event {:input (on-text-change cursor state), :focus on-focus},
+             :attrs {:placeholder "Text", :value (:draft state)}})
+           (comp-space 8 nil)
+           (span
+            {:style widget/button, :event {:click (handle-add cursor state)}}
+            (comp-text "Add" nil))
+           (comp-space 8 nil)
+           (span
+            {:style widget/button, :event {:click clear-done}, :attrs {:inner-text "Clear"}})
            (comp-space 8 nil)
            (div
-            {:style widget/button, :event {:click (on-lock (:locked? state) mutate!)}}
-            (comp-text (str "Lock?" (:locked? state)) nil))
-           (comp-space 8 nil)
-           (comp-wrap)))
-        (comment comp-debug tasks {}))))))
+            {}
+            (div
+             {:style widget/button, :event {:click on-test}}
+             (comp-text "heavy tasks" nil))))
+          (div
+           {:style style-list, :attrs {:class-name "task-list"}}
+           (->> tasks
+                (reverse)
+                (map
+                 (fn [task]
+                   (let [task-id (:id task)]
+                     [task-id (with-cursor task-id (comp-task (get states task-id) task))])))))
+          (if (> (count tasks) 0)
+            (div
+             {:style style-toolbar, :attrs {:spell-check true}}
+             (div
+              {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
+              (comp-text "Clear2"))
+             (comp-space 8 nil)
+             (div
+              {:style widget/button, :event {:click (on-lock cursor state)}}
+              (comp-text (str "Lock?" (:locked? state)) nil))
+             (comp-space 8 nil)
+             (comp-wrap)))
+          (comment comp-debug tasks {})))))))

@@ -9,9 +9,10 @@
 (def comp-container
   (create-comp
    :container
-   (fn [store states]
-     (fn [state mutate!]
-       (div
-        {}
-        (with-cursor :todolist (comp-todolist (:tasks store)))
-        (div {:style style-states} (comp-text (pr-str states) nil)))))))
+   (fn [store]
+     (fn [cursor]
+       (let [state (:states store)]
+         (div
+          {}
+          (with-cursor :todolist (comp-todolist (:todolist state) (:tasks store)))
+          (div {:style style-states} (comp-text (pr-str (:states store)) nil))))))))

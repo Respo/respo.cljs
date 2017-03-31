@@ -339,7 +339,7 @@
                                              ["fn"
                                               ["data" "more-style"]
                                               ["fn"
-                                               ["state" "mutate!"]
+                                               ["cursor"]
                                                ["div"
                                                 ["{}" ":style" ["merge" "default-style" "more-style"]]
                                                 ["span" ["{}" ":attrs" ["{}" ":inner-text" ["pr-str" "data"]]]]]]]]],
@@ -367,7 +367,7 @@
                                   ["[]" "respo.util.list" ":refer" ["[]" "filter-first"]]]],
                             :defs {"render-component" ["defn"
                                                        "render-component"
-                                                       ["markup" "coord" "old-element"]
+                                                       ["markup" "coord" "cursor" "old-element"]
                                                        ["if"
                                                         ["and"
                                                          ["some?" "old-element"]
@@ -380,13 +380,13 @@
                                                           ["component" ["first" "markup"]]
                                                           ["new-coord" ["conj" "coord" [":name" "markup"]]]
                                                           ["render" [":render" "markup"]]
-                                                          ["half-render" ["apply" "render" "args"]]
-                                                          ["markup-tree" ["half-render" "nil" "nil"]]
+                                                          ["markup-tree" ["apply" "render" "args"]]
                                                           ["tree"
                                                            ["render-markup"
                                                             "markup-tree"
                                                             "new-coord"
                                                             "new-coord"
+                                                            "cursor"
                                                             [":tree" "old-element"]]]
                                                           ["cost" ["-" ["io-get-time*"] "begin-time"]]]
                                                          ["--" "println" "|markup tree:" ["pr-str" "markup-tree"]]
@@ -402,10 +402,10 @@
                                    "render-app" ["defn"
                                                  "render-app"
                                                  ["markup" "old-element"]
-                                                 ["render-markup" "markup" ["[]"] ["[]"] "old-element"]],
+                                                 ["render-markup" "markup" ["[]"] ["[]"] ["[]"] "old-element"]],
                                    "render-children" ["defn"
                                                       "render-children"
-                                                      ["children" "coord" "comp-coord" "old-children"]
+                                                      ["children" "coord" "comp-coord" "cursor" "old-children"]
                                                       ["--" "println" "|render children:" "children"]
                                                       ["let"
                                                        [["mapped-cache" ["into" ["{}"] "old-children"]]]
@@ -431,11 +431,12 @@
                                                               "child-element"
                                                               ["conj" "coord" "k"]
                                                               "comp-coord"
+                                                              "cursor"
                                                               "old-child"]
                                                              "nil"]]]]]]]],
                                    "render-element" ["defn"
                                                      "render-element"
-                                                     ["markup" "coord" "comp-coord" "old-element"]
+                                                     ["markup" "coord" "comp-coord" "cursor" "old-element"]
                                                      ["let"
                                                       [["children" [":children" "markup"]]
                                                        ["child-elements"
@@ -443,6 +444,7 @@
                                                          "children"
                                                          "coord"
                                                          "comp-coord"
+                                                         "cursor"
                                                          [":children" "old-element"]]]]
                                                       ["--"
                                                        ".log"
@@ -454,11 +456,16 @@
                                                       ["assoc" "markup" ":coord" "coord" ":children" "child-elements"]]],
                                    "render-markup" ["defn"
                                                     "render-markup"
-                                                    ["markup" "coord" "component-coord" "old-element"]
+                                                    ["markup" "coord" "component-coord" "cursor" "old-element"]
                                                     ["if"
                                                      ["component?" "markup"]
-                                                     ["render-component" "markup" "coord" "old-element"]
-                                                     ["render-element" "markup" "coord" "component-coord" "old-element"]]]},
+                                                     ["render-component" "markup" "coord" "cursor" "old-element"]
+                                                     ["render-element"
+                                                      "markup"
+                                                      "coord"
+                                                      "component-coord"
+                                                      "cursor"
+                                                      "old-element"]]]},
                             :procs []},
          "render.html" {:ns ["ns"
                              "respo.render.html"
@@ -680,9 +687,7 @@
                                           "comp-wrap"
                                           ["create-comp"
                                            ":wrap"
-                                           ["fn"
-                                            []
-                                            ["fn" ["state" "mutate!"] ["comp-text" "|pure component component" "nil"]]]]]},
+                                           ["fn" [] ["fn" ["cursor"] ["comp-text" "|pure component component" "nil"]]]]]},
                       :procs []},
          "comp.task" {:ns ["ns"
                            "respo.comp.task"
@@ -716,47 +721,49 @@
                                           ["create-comp"
                                            ":task"
                                            ["fn"
-                                            ["task"]
+                                            ["states" "task"]
                                             ["fn"
-                                             ["state" "mutate!"]
-                                             ["div"
-                                              ["{}" [":style" "style-task"]]
-                                              ["comp-debug" "task" ["{}" [":right" "8"]]]
-                                              ["button"
-                                               ["{}"
-                                                [":style"
-                                                 ["merge"
-                                                  "style-done"
-                                                  ["{}"
-                                                   [":background-color"
-                                                    ["if"
-                                                     [":done?" "task"]
-                                                     ["hsl" "200" "20" "80"]
-                                                     ["hsl" "200" "80" "70"]]]]]]
-                                                [":event" ["{}" [":click" ["handle-done" [":id" "task"]]]]]]]
-                                              ["comp-space" "8" "nil"]
-                                              ["input"
-                                               ["{}"
-                                                ":style"
-                                                "widget/input"
-                                                ":event"
-                                                ["{}" ":input" ["on-text-change" "task"]]
-                                                ":attrs"
-                                                ["{}" ":value" [":text" "task"]]]]
-                                              ["comp-space" "8" "nil"]
-                                              ["input"
-                                               ["{}"
-                                                [":style" "widget/input"]
-                                                [":event" ["{}" [":input" ["on-text-state" "mutate!"]]]]
-                                                [":attrs" ["{}" [":value" "state"]]]]]
-                                              ["comp-space" "8" "nil"]
+                                             ["cursor"]
+                                             ["let"
+                                              [["state" ["or" [":data" "states"] "|"]]]
                                               ["div"
-                                               ["{}"
-                                                [":style" "widget/button"]
-                                                [":event" ["{}" ":click" ["handle-remove" "task"]]]]
-                                               ["comp-text" "|Remove"]]
-                                              ["comp-space" "8" "nil"]
-                                              ["div" ["{}"] ["comp-text" "state" "nil"]]]]]]],
+                                               ["{}" [":style" "style-task"]]
+                                               ["comp-debug" "task" ["{}" [":right" "8"]]]
+                                               ["button"
+                                                ["{}"
+                                                 [":style"
+                                                  ["merge"
+                                                   "style-done"
+                                                   ["{}"
+                                                    [":background-color"
+                                                     ["if"
+                                                      [":done?" "task"]
+                                                      ["hsl" "200" "20" "80"]
+                                                      ["hsl" "200" "80" "70"]]]]]]
+                                                 [":event" ["{}" [":click" ["handle-done" [":id" "task"]]]]]]]
+                                               ["comp-space" "8" "nil"]
+                                               ["input"
+                                                ["{}"
+                                                 ":style"
+                                                 "widget/input"
+                                                 ":event"
+                                                 ["{}" ":input" ["on-text-change" "task"]]
+                                                 ":attrs"
+                                                 ["{}" ":value" [":text" "task"]]]]
+                                               ["comp-space" "8" "nil"]
+                                               ["input"
+                                                ["{}"
+                                                 [":style" "widget/input"]
+                                                 [":event" ["{}" [":input" ["on-text-state" "cursor"]]]]
+                                                 [":attrs" ["{}" [":value" "state"]]]]]
+                                               ["comp-space" "8" "nil"]
+                                               ["div"
+                                                ["{}"
+                                                 [":style" "widget/button"]
+                                                 [":event" ["{}" ":click" ["handle-remove" "task"]]]]
+                                                ["comp-text" "|Remove"]]
+                                               ["comp-space" "8" "nil"]
+                                               ["div" ["{}"] ["comp-text" "state" "nil"]]]]]]]],
                              "on-text-change" ["defn"
                                                "on-text-change"
                                                ["task"]
@@ -771,8 +778,10 @@
                                               ["fn" ["e" "dispatch!"] ["dispatch!" ":remove" [":id" "task"]]]],
                              "on-text-state" ["defn"
                                               "on-text-state"
-                                              ["mutate!"]
-                                              ["fn" ["e" "dispatch!"] ["mutate!" [":value" "e"]]]]},
+                                              ["cursor"]
+                                              ["fn"
+                                               ["e" "dispatch!"]
+                                               ["dispatch!" ":states" ["[]" "cursor" [":value" "e"]]]]]},
                       :procs []},
          "render.patcher" {:ns ["ns"
                                 "respo.render.patcher"
@@ -1100,15 +1109,19 @@
                                                     ["create-comp"
                                                      ":container"
                                                      ["fn"
-                                                      ["store" "states"]
+                                                      ["store"]
                                                       ["fn"
-                                                       ["state" "mutate!"]
-                                                       ["div"
-                                                        ["{}"]
-                                                        ["with-cursor" ":todolist" ["comp-todolist" [":tasks" "store"]]]
+                                                       ["cursor"]
+                                                       ["let"
+                                                        [["state" [":states" "store"]]]
                                                         ["div"
-                                                         ["{}" [":style" "style-states"]]
-                                                         ["comp-text" ["pr-str" "states"] "nil"]]]]]]]},
+                                                         ["{}"]
+                                                         ["with-cursor"
+                                                          ":todolist"
+                                                          ["comp-todolist" [":todolist" "state"] [":tasks" "store"]]]
+                                                         ["div"
+                                                          ["{}" [":style" "style-states"]]
+                                                          ["comp-text" ["pr-str" [":states" "store"]] "nil"]]]]]]]]},
                            :procs []},
          "comp.todolist" {:ns ["ns"
                                "respo.comp.todolist"
@@ -1131,11 +1144,11 @@
                                                ["dispatch!" ":clear" "nil"]],
                                  "handle-add" ["defn"
                                                "handle-add"
-                                               ["state" "mutate!"]
+                                               ["cursor" "state"]
                                                ["fn"
                                                 ["e" "dispatch!"]
                                                 ["dispatch!" ":add" [":draft" "state"]]
-                                                ["mutate!" ["{}" ":draft" "|"]]]],
+                                                ["dispatch!" ":states" ["[]" "cursor" ["assoc" "state" ":draft" "|"]]]]],
                                  "style-root" ["def"
                                                "style-root"
                                                ["{}"
@@ -1179,111 +1192,123 @@
                                               ["if" [">" "x" "0"] ["recur" ["dec" "x"]]]]
                                              ["println" "|time cost:" ["-" ["io-get-time*"] "started"]]]],
                                  "on-focus" ["defn" "on-focus" ["e" "dispatch!"] ["println" "|Just focused~"]],
+                                 "initial-state" ["def" "initial-state" ["{}" [":draft" "|"] [":loacked?" "false"]]],
                                  "on-text-change" ["defn"
                                                    "on-text-change"
-                                                   ["mutate!"]
-                                                   ["fn" ["e" "dispatch!"] ["mutate!" ["{}" ":draft" [":value" "e"]]]]],
+                                                   ["cursor" "state"]
+                                                   ["fn"
+                                                    ["e" "dispatch!"]
+                                                    ["dispatch!"
+                                                     ":states"
+                                                     ["[]" "cursor" ["assoc" "state" ":draft" [":value" "e"]]]]]],
                                  "on-lock" ["defn"
                                             "on-lock"
-                                            ["locked?" "mutate!"]
-                                            ["fn" ["e" "dispatch!"] ["mutate!" ["{}" [":locked?" ["not" "locked?"]]]]]],
+                                            ["cursor" "state"]
+                                            ["fn"
+                                             ["e" "dispatch!"]
+                                             ["dispatch!" ":states" ["[]" "cursor" ["update" "state" ":locked?" "not"]]]]],
                                  "comp-todolist" ["def"
                                                   "comp-todolist"
                                                   ["create-comp"
                                                    ":todolist"
                                                    ["fn"
-                                                    ["tasks"]
+                                                    ["states" "tasks"]
                                                     ["fn"
-                                                     ["state" "mutate!"]
-                                                     ["div"
-                                                      ["{}" ":style" "style-root"]
-                                                      ["--" "comp-debug" "state" ["{}" [":left" "|80px"]]]
+                                                     ["cursor"]
+                                                     ["let"
+                                                      [["state" ["or" [":data" "states"] "initial-state"]]]
                                                       ["div"
-                                                       ["{}" ":style" "style-panel"]
-                                                       ["input"
-                                                        ["{}"
-                                                         [":style"
-                                                          ["merge"
-                                                           "widget/input"
+                                                       ["{}" ":style" "style-root"]
+                                                       ["comp-debug" "state" ["{}" [":left" "|80px"]]]
+                                                       ["div"
+                                                        ["{}" ":style" "style-panel"]
+                                                        ["input"
+                                                         ["{}"
+                                                          [":style"
+                                                           ["merge"
+                                                            "widget/input"
+                                                            ["{}"
+                                                             [":width"
+                                                              ["max"
+                                                               "200"
+                                                               ["+"
+                                                                "24"
+                                                                ["text-width*"
+                                                                 [":draft" "state"]
+                                                                 "16"
+                                                                 "|BlinkMacSystemFont"]]]]]]]
+                                                          [":event"
                                                            ["{}"
-                                                            [":width"
-                                                             ["max"
-                                                              "200"
-                                                              ["+"
-                                                               "24"
-                                                               ["text-width*"
-                                                                [":draft" "state"]
-                                                                "16"
-                                                                "|BlinkMacSystemFont"]]]]]]]
-                                                         [":event"
+                                                            [":input" ["on-text-change" "cursor" "state"]]
+                                                            [":focus" "on-focus"]]]
+                                                          [":attrs"
+                                                           ["{}" ":placeholder" "|Text" ":value" [":draft" "state"]]]]]
+                                                        ["comp-space" "8" "nil"]
+                                                        ["span"
+                                                         ["{}"
+                                                          [":style" "widget/button"]
+                                                          [":event" ["{}" ":click" ["handle-add" "cursor" "state"]]]]
+                                                         ["comp-text" "|Add" "nil"]]
+                                                        ["comp-space" "8" "nil"]
+                                                        ["span"
+                                                         ["{}"
+                                                          ":style"
+                                                          "widget/button"
+                                                          ":event"
+                                                          ["{}" ":click" "clear-done"]
+                                                          ":attrs"
+                                                          ["{}" ":inner-text" "|Clear"]]]
+                                                        ["comp-space" "8" "nil"]
+                                                        ["div"
+                                                         ["{}"]
+                                                         ["div"
                                                           ["{}"
-                                                           [":input" ["on-text-change" "mutate!"]]
-                                                           [":focus" "on-focus"]]]
-                                                         [":attrs"
-                                                          ["{}" ":placeholder" "|Text" ":value" [":draft" "state"]]]]]
-                                                       ["comp-space" "8" "nil"]
-                                                       ["span"
-                                                        ["{}"
-                                                         [":style" "widget/button"]
-                                                         [":event" ["{}" ":click" ["handle-add" "state" "mutate!"]]]]
-                                                        ["comp-text" "|Add" "nil"]]
-                                                       ["comp-space" "8" "nil"]
-                                                       ["span"
+                                                           [":style" "widget/button"]
+                                                           [":event" ["{}" [":click" "on-test"]]]]
+                                                          ["comp-text" "|heavy tasks" "nil"]]]]
+                                                       ["div"
                                                         ["{}"
                                                          ":style"
-                                                         "widget/button"
-                                                         ":event"
-                                                         ["{}" ":click" "clear-done"]
+                                                         "style-list"
                                                          ":attrs"
-                                                         ["{}" ":inner-text" "|Clear"]]]
-                                                       ["comp-space" "8" "nil"]
-                                                       ["div"
-                                                        ["{}"]
+                                                         ["{}" ":class-name" "|task-list"]]
+                                                        ["->>"
+                                                         "tasks"
+                                                         ["reverse"]
+                                                         ["map"
+                                                          ["fn"
+                                                           ["task"]
+                                                           ["let"
+                                                            [["task-id" [":id" "task"]]]
+                                                            ["[]"
+                                                             "task-id"
+                                                             ["with-cursor"
+                                                              "task-id"
+                                                              ["comp-task" ["get" "states" "task-id"] "task"]]]]]]]]
+                                                       ["if"
+                                                        [">" ["count" "tasks"] "0"]
                                                         ["div"
                                                          ["{}"
-                                                          [":style" "widget/button"]
-                                                          [":event" ["{}" [":click" "on-test"]]]]
-                                                         ["comp-text" "|heavy tasks" "nil"]]]]
-                                                      ["div"
-                                                       ["{}"
-                                                        ":style"
-                                                        "style-list"
-                                                        ":attrs"
-                                                        ["{}" ":class-name" "|task-list"]]
-                                                       ["->>"
-                                                        "tasks"
-                                                        ["reverse"]
-                                                        ["map"
-                                                         ["fn"
-                                                          ["task"]
-                                                          ["[]"
-                                                           [":id" "task"]
-                                                           ["with-cursor" [":id" "task"] ["comp-task" "task"]]]]]]]
-                                                      ["if"
-                                                       [">" ["count" "tasks"] "0"]
-                                                       ["div"
-                                                        ["{}"
-                                                         [":style" "style-toolbar"]
-                                                         [":attrs" ["{}" ":spell-check" "true"]]]
-                                                        ["div"
-                                                         ["{}"
-                                                          [":style" "widget/button"]
-                                                          [":event"
-                                                           ["if"
-                                                            [":locked?" "state"]
-                                                            ["{}"]
-                                                            ["{}" ":click" "clear-done"]]]]
-                                                         ["comp-text" "|Clear2"]]
-                                                        ["comp-space" "8" "nil"]
-                                                        ["div"
-                                                         ["{}"
-                                                          [":style" "widget/button"]
-                                                          [":event"
-                                                           ["{}" ":click" ["on-lock" [":locked?" "state"] "mutate!"]]]]
-                                                         ["comp-text" ["str" "|Lock?" [":locked?" "state"]] "nil"]]
-                                                        ["comp-space" "8" "nil"]
-                                                        ["comp-wrap"]]]
-                                                      ["--" "comp-debug" "tasks" ["{}"]]]]]]]},
+                                                          [":style" "style-toolbar"]
+                                                          [":attrs" ["{}" ":spell-check" "true"]]]
+                                                         ["div"
+                                                          ["{}"
+                                                           [":style" "widget/button"]
+                                                           [":event"
+                                                            ["if"
+                                                             [":locked?" "state"]
+                                                             ["{}"]
+                                                             ["{}" ":click" "clear-done"]]]]
+                                                          ["comp-text" "|Clear2"]]
+                                                         ["comp-space" "8" "nil"]
+                                                         ["div"
+                                                          ["{}"
+                                                           [":style" "widget/button"]
+                                                           [":event" ["{}" ":click" ["on-lock" "cursor" "state"]]]]
+                                                          ["comp-text" ["str" "|Lock?" [":locked?" "state"]] "nil"]]
+                                                         ["comp-space" "8" "nil"]
+                                                         ["comp-wrap"]]]
+                                                       ["--" "comp-debug" "tasks" ["{}"]]]]]]]]},
                           :procs []},
          "controller.deliver" {:ns ["ns"
                                     "respo.controller.deliver"
@@ -1347,9 +1372,7 @@
                                              ":space"
                                              ["fn"
                                               ["w" "h"]
-                                              ["fn"
-                                               ["state" "mutate"]
-                                               ["div" ["{}" [":style" ["style-space" "w" "h"]]]]]]]],
+                                              ["fn" ["cursor"] ["div" ["{}" [":style" ["style-space" "w" "h"]]]]]]]],
                               "style-space" ["defn"
                                              "style-space"
                                              ["w" "h"]
@@ -1485,7 +1508,7 @@
                                                     "comp-page"
                                                     ["create-comp"
                                                      ":page"
-                                                     ["fn" ["store"] ["fn" ["state" "mutate"] ["div" ["{}"]]]]]]},
+                                                     ["fn" ["store"] ["fn" ["cursor"] ["div" ["{}"]]]]]]},
                                 :procs []},
          "updater.core" {:ns ["ns" "respo.updater.core" [":require" ["[]" "clojure.string" ":as" "string"]]],
                          :defs {"updater" ["defn"
@@ -1498,43 +1521,70 @@
                                             ["pr-str" "op-data"]]
                                            ["case"
                                             "op-type"
-                                            [":add"
-                                             ["conj"
-                                              "old-store"
-                                              ["{}" ":text" "op-data" ":id" "op-id" ":done?" "false"]]]
-                                            [":remove"
-                                             ["->>"
-                                              "old-store"
-                                              ["filterv" ["fn" ["task"] ["not" ["=" [":id" "task"] "op-data"]]]]]]
-                                            [":clear" ["[]"]]
-                                            [":update"
+                                            [":states"
                                              ["let"
-                                              [["task-id" [":id" "op-data"]] ["text" [":text" "op-data"]]]
-                                              ["->>"
+                                              [[["[]" "cursor" "new-state"] "op-data"]]
+                                              ["assoc-in"
                                                "old-store"
-                                               ["mapv"
-                                                ["fn"
-                                                 ["task"]
-                                                 ["if"
-                                                  ["=" [":id" "task"] "task-id"]
-                                                  ["assoc" "task" ":text" "text"]
-                                                  "task"]]]]]]
+                                               ["cons" ":states" ["conj" "cursor" ":data"]]
+                                               "new-state"]]]
+                                            [":add"
+                                             ["update"
+                                              "old-store"
+                                              ":tasks"
+                                              ["fn"
+                                               ["tasks"]
+                                               ["conj" "tasks" ["{}" ":text" "op-data" ":id" "op-id" ":done?" "false"]]]]]
+                                            [":remove"
+                                             ["update"
+                                              "old-store"
+                                              ":tasks"
+                                              ["fn"
+                                               ["tasks"]
+                                               ["->>"
+                                                "tasks"
+                                                ["filterv" ["fn" ["task"] ["not" ["=" [":id" "task"] "op-data"]]]]]]]]
+                                            [":clear" ["assoc" "old-store" ":tasks" ["[]"]]]
+                                            [":update"
+                                             ["update"
+                                              "old-store"
+                                              ":tasks"
+                                              ["fn"
+                                               ["tasks"]
+                                               ["let"
+                                                [["task-id" [":id" "op-data"]] ["text" [":text" "op-data"]]]
+                                                ["->>"
+                                                 "tasks"
+                                                 ["mapv"
+                                                  ["fn"
+                                                   ["task"]
+                                                   ["if"
+                                                    ["=" [":id" "task"] "task-id"]
+                                                    ["assoc" "task" ":text" "text"]
+                                                    "task"]]]]]]]]
                                             [":hit-first"
                                              ["->"
                                               "old-store"
-                                              ["update" "0" ["fn" ["task"] ["assoc" "task" ":text" "op-data"]]]]]
+                                              ["update-in"
+                                               ["[]" ":tasks" "0"]
+                                               ["fn" ["task"] ["assoc" "task" ":text" "op-data"]]]]]
                                             [":toggle"
-                                             ["let"
-                                              [["task-id" "op-data"]]
-                                              ["->>"
-                                               "old-store"
-                                               ["mapv"
-                                                ["fn"
-                                                 ["task"]
-                                                 ["if"
-                                                  ["=" [":id" "task"] "task-id"]
-                                                  ["update" "task" ":done?" "not"]
-                                                  "task"]]]]]]
+                                             ["update"
+                                              "old-store"
+                                              ":tasks"
+                                              ["fn"
+                                               ["tasks"]
+                                               ["let"
+                                                [["task-id" "op-data"]]
+                                                ["->>"
+                                                 "tasks"
+                                                 ["mapv"
+                                                  ["fn"
+                                                   ["task"]
+                                                   ["if"
+                                                    ["=" [":id" "task"] "task-id"]
+                                                    ["update" "task" ":done?" "not"]
+                                                    "task"]]]]]]]]
                                             "old-store"]]},
                          :procs []},
          "comp.text" {:ns ["ns"
@@ -1547,7 +1597,7 @@
                                            ["fn"
                                             ["content" "style"]
                                             ["fn"
-                                             ["state" "mutate!"]
+                                             ["cursor"]
                                              ["span"
                                               ["{}" [":attrs" ["{}" [":inner-text" "content"]]] [":style" "style"]]]]]]],
                              "comp-code" ["def"
@@ -1557,7 +1607,7 @@
                                            ["fn"
                                             ["content" "style"]
                                             ["fn"
-                                             ["state" "mutate!"]
+                                             ["cursor"]
                                              ["code"
                                               ["{}" [":attrs" ["{}" [":inner-text" "content"]]] [":style" "style"]]]]]]]},
                       :procs []},
@@ -1578,7 +1628,7 @@
                                                              ["fn"
                                                               ["tasks"]
                                                               ["fn"
-                                                               ["state" "mutate"]
+                                                               ["cursor"]
                                                                ["div"
                                                                 ["{}" [":style" "style-todolist"]]
                                                                 ["->>"
@@ -1779,7 +1829,7 @@
                                                      ["fn"
                                                       ["task"]
                                                       ["fn"
-                                                       ["state" "mutate"]
+                                                       ["cursor"]
                                                        ["div"
                                                         ["{}"]
                                                         ["span"

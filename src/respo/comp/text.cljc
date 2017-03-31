@@ -4,11 +4,9 @@
 (def comp-text
   (create-comp
    :text
-   (fn [content style]
-     (fn [state mutate!] (span {:attrs {:inner-text content}, :style style})))))
+   (fn [content style] (fn [cursor] (span {:attrs {:inner-text content}, :style style})))))
 
 (def comp-code
   (create-comp
    :code
-   (fn [content style]
-     (fn [state mutate!] (code {:attrs {:inner-text content}, :style style})))))
+   (fn [content style] (fn [cursor] (code {:attrs {:inner-text content}, :style style})))))

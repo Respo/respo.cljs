@@ -11,7 +11,7 @@
  (atom
    (or
      (let [raw (or (.getItem js/localStorage "respo") "[]")]
-       (read-string raw))
+       {:tasks (read-string raw) :states {}})
      schema/store)))
 
 (defonce id-ref (atom 0))
@@ -42,7 +42,7 @@
 (set! (.-onload js/window) -main)
 
 (defn save-store! []
-  (.setItem js/localStorage "respo" (pr-str @global-store)))
+  (.setItem js/localStorage "respo" (pr-str (:tasks @global-store))))
 
 (set! (.-onbeforeunload js/window) save-store!)
 

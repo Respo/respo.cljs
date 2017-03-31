@@ -9,7 +9,7 @@
   (create-comp
    :todolist
    (fn [tasks]
-     (fn [state mutate]
+     (fn [cursor]
        (div
         {:style style-todolist}
         (->> tasks (map (fn [task] [(:id task) (comp-task task)]))))))))

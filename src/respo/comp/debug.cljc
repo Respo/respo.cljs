@@ -18,7 +18,7 @@
   (create-comp
    :debug
    (fn [data more-style]
-     (fn [state mutate!]
+     (fn [cursor]
        (div
         {:style (merge default-style more-style)}
         (span {:attrs {:inner-text (pr-str data)}}))))))
