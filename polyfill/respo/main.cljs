@@ -1,6 +1,6 @@
 
 (ns respo.main
-  (:require [respo.core :refer [render! clear-cache! gc-states!]]
+  (:require [respo.core :refer [render! clear-cache!]]
             [respo.schema :as schema]
             [respo.updater.core :refer [updater]]
             [respo.comp.container :refer [comp-container]]
@@ -13,8 +13,6 @@
      (let [raw (or (.getItem js/localStorage "respo") "[]")]
        (read-string raw))
      schema/store)))
-
-(defonce global-states (atom {}))
 
 (defonce id-ref (atom 0))
 
@@ -30,20 +28,16 @@
 (defn render-app! []
   (let [target (.querySelector js/document "#app")]
     (comment println "store:" @global-store)
-    (comment println "states:" @global-states)
     (render!
-      (comp-container @global-store @global-states)
+      (comp-container @global-store)
       target
-      dispatch!
-      global-states)))
+      dispatch!)))
 
 (defn -main []
   (enable-console-print!)
   (devtools/install!)
   (render-app!)
-  (add-watch global-store :gc (fn [] (gc-states! global-states)))
-  (add-watch global-store :rerender render-app!)
-  (add-watch global-states :rerender render-app!))
+  (add-watch global-store :rerender render-app!))
 
 (set! (.-onload js/window) -main)
 

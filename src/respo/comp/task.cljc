@@ -10,16 +10,12 @@
 
 (def style-task {:display :flex, :padding "4px 0px"})
 
-(defn update-state [state text] text)
-
 (defn on-click [props state] (fn [event dispatch!] (println "clicked.")))
 
 (defn handle-done [task-id] (fn [e dispatch!] (dispatch! :toggle task-id)))
 
 (def style-done
   {:width 32, :height 32, :outline :none, :border :none, :vertical-align :middle})
-
-(defn init-state [props] "")
 
 (defn on-text-change [task]
   (fn [event dispatch!]
@@ -33,8 +29,6 @@
 (def comp-task
   (create-comp
    :task
-   init-state
-   update-state
    (fn [task]
      (fn [state mutate!]
        (div

@@ -1,6 +1,6 @@
 
 (ns respo.comp.container
-  (:require [respo.alias :refer [create-comp div]]
+  (:require [respo.alias :refer [create-comp with-cursor div]]
             [respo.comp.text :refer [comp-text]]
             [respo.comp.todolist :refer [comp-todolist]]))
 
@@ -13,5 +13,5 @@
      (fn [state mutate!]
        (div
         {}
-        (comp-todolist store)
+        (with-cursor :todolist (comp-todolist (:tasks store)))
         (div {:style style-states} (comp-text (pr-str states) nil)))))))

@@ -2,7 +2,7 @@
 (ns respo.core
   (:require [respo.alias :refer [create-comp div span]]
             [respo.render.expander :refer [render-app]]
-            [respo.controller.deliver :refer [build-deliver-event mutate-factory]]
+            [respo.controller.deliver :refer [build-deliver-event]]
             [respo.render.differ :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance patch-instance]]
@@ -13,20 +13,18 @@
 
 (defonce cache-element (atom nil))
 
-(defn render-element [markup states-ref]
-  (let [build-mutate (mutate-factory global-element states-ref)]
-    (render-app markup @states-ref build-mutate @cache-element)))
+(defn render-element [markup] (render-app markup @cache-element))
 
-(defn mount-app! [markup target dispatch! states-ref]
-  (let [element (render-element markup states-ref)
+(defn mount-app! [markup target dispatch!]
+  (let [element (render-element markup)
         deliver-event (build-deliver-event global-element dispatch!)]
     (comment println "mount app")
     (activate-instance (purify-element element) target deliver-event)
     (reset! global-element element)
     (reset! cache-element element)))
 
-(defn rerender-app! [markup target dispatch! states-ref]
-  (let [element (render-element markup states-ref)
+(defn rerender-app! [markup target dispatch!]
+  (let [element (render-element markup)
         deliver-event (build-deliver-event global-element dispatch!)
         changes-ref (atom [])
         collect! (fn [x] (swap! changes-ref conj x))]
@@ -37,10 +35,10 @@
     (reset! global-element element)
     (reset! cache-element element)))
 
-(defn render! [markup target dispatch states-ref]
+(defn render! [markup target dispatch]
   (if (some? @global-element)
-    (rerender-app! markup target dispatch states-ref)
-    (mount-app! markup target dispatch states-ref)))
+    (rerender-app! markup target dispatch)
+    (mount-app! markup target dispatch)))
 
 (defn falsify-stage! [target element dispatch!]
   (reset! global-element (mute-element element))

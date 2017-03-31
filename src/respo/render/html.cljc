@@ -5,8 +5,7 @@
              :refer
              [prop->attr purify-element mute-element ensure-string text->html]]
             [respo.util.detect :refer [component? element?]]
-            [respo.render.expander :refer [render-app]]
-            [respo.controller.deliver :refer [mutate-factory]]))
+            [respo.render.expander :refer [render-app]]))
 
 (def global-element (atom nil))
 
@@ -52,12 +51,8 @@
      tag-name
      ">")))
 
-(def global-states (atom {}))
-
-(def build-mutate (mutate-factory global-element global-states))
-
 (defn make-html [tree]
-  (let [element (render-app tree @global-states build-mutate nil)]
+  (let [element (render-app tree nil)]
     (element->html (purify-element (mute-element element)))))
 
 (defn element->string [element]
@@ -87,5 +82,5 @@
      ">")))
 
 (defn make-string [tree]
-  (let [element (render-app tree @global-states build-mutate nil)]
+  (let [element (render-app tree nil)]
     (element->string (purify-element (mute-element element)))))

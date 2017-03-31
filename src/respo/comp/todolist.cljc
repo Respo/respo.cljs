@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
             [respo.comp.task :refer [comp-task]]
-            [respo.alias :refer [div span input create-comp]]
+            [respo.alias :refer [div span input create-comp with-cursor]]
             [respo.comp.zero :refer [component-zero]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.space :refer [comp-space]]
@@ -13,10 +13,6 @@
             [respo.style.widget :as widget]))
 
 (defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
-
-(defn update-state [old-state changes]
-  (comment println "changes:" (pr-str old-state) (pr-str changes))
-  (merge old-state changes))
 
 (defn handle-add [state mutate!]
   (fn [e dispatch!] (dispatch! :add (:draft state)) (mutate! {:draft ""})))
@@ -52,8 +48,6 @@
 
 (defn on-focus [e dispatch!] (println "Just focused~"))
 
-(defn init-state [props] {:draft "", :locked? false})
-
 (defn on-text-change [mutate!] (fn [e dispatch!] (mutate! {:draft (:value e)})))
 
 (defn on-lock [locked? mutate!] (fn [e dispatch!] (mutate! {:locked? (not locked?)})))
@@ -61,8 +55,6 @@
 (def comp-todolist
   (create-comp
    :todolist
-   init-state
-   update-state
    (fn [tasks]
      (fn [state mutate!]
        (div
@@ -93,7 +85,9 @@
            (comp-text "heavy tasks" nil))))
         (div
          {:style style-list, :attrs {:class-name "task-list"}}
-         (->> tasks (reverse) (map (fn [task] [(:id task) (comp-task task)]))))
+         (->> tasks
+              (reverse)
+              (map (fn [task] [(:id task) (with-cursor (:id task) (comp-task task))]))))
         (if (> (count tasks) 0)
           (div
            {:style style-toolbar, :attrs {:spell-check true}}

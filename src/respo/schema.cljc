@@ -3,4 +3,4 @@
 
 (def task {:id nil, :text "", :done? false})
 
-(def store [])
+(def store {:tasks [], :states {}})

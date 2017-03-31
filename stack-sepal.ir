@@ -367,78 +367,45 @@
                                   ["[]" "respo.util.list" ":refer" ["[]" "filter-first"]]]],
                             :defs {"render-component" ["defn"
                                                        "render-component"
-                                                       ["markup" "states" "build-mutate" "coord" "old-element"]
-                                                       ["let"
-                                                        [["raw-states" ["get" "states" [":name" "markup"]]]]
-                                                        ["--"
-                                                         "println"
-                                                         "|raw states:"
-                                                         "raw-states"
-                                                         ["get" "raw-states" ["quote" "data"]]]
-                                                        ["if"
-                                                         ["and"
-                                                          ["some?" "old-element"]
-                                                          ["identical?" "raw-states" [":raw-states" "old-element"]]
-                                                          ["=seq" [":args" "markup"] [":args" "old-element"]]
-                                                          ["identical?" [":render" "markup"] [":render" "old-element"]]]
-                                                         ["do" ["--" "println" "|not changed" "coord"] "old-element"]
-                                                         ["let"
-                                                          [["begin-time" ["io-get-time*"]]
-                                                           ["args" [":args" "markup"]]
-                                                           ["component" ["first" "markup"]]
-                                                           ["init-state" [":init-state" "markup"]]
-                                                           ["new-coord" ["conj" "coord" [":name" "markup"]]]
-                                                           ["inner-states" ["or" "raw-states" ["{}"]]]
-                                                           ["state"
-                                                            ["if"
-                                                             ["contains?" "inner-states" ["quote" "data"]]
-                                                             ["get" "inner-states" ["quote" "data"]]
-                                                             ["apply" "init-state" "args"]]]
-                                                           ["render" [":render" "markup"]]
-                                                           ["half-render" ["apply" "render" "args"]]
-                                                           ["mutate!" ["build-mutate" "new-coord"]]
-                                                           ["markup-tree" ["half-render" "state" "mutate!"]]
-                                                           ["tree"
-                                                            ["render-markup"
-                                                             "markup-tree"
-                                                             "inner-states"
-                                                             "build-mutate"
-                                                             "new-coord"
-                                                             "new-coord"
-                                                             [":tree" "old-element"]]]
-                                                           ["cost" ["-" ["io-get-time*"] "begin-time"]]]
-                                                          ["--" "println" "|markup tree:" ["pr-str" "markup-tree"]]
-                                                          ["--" "println" "|component state:" "coord" "states"]
-                                                          ["--" "println" "|no cache:" "coord"]
-                                                          ["assoc"
-                                                           "markup"
-                                                           ":coord"
-                                                           "coord"
-                                                           ":tree"
-                                                           "tree"
-                                                           ":cost"
-                                                           "cost"
-                                                           ":raw-states"
-                                                           "raw-states"]]]]],
+                                                       ["markup" "coord" "old-element"]
+                                                       ["if"
+                                                        ["and"
+                                                         ["some?" "old-element"]
+                                                         ["=seq" [":args" "markup"] [":args" "old-element"]]
+                                                         ["identical?" [":render" "markup"] [":render" "old-element"]]]
+                                                        ["do" ["--" "println" "|not changed" "coord"] "old-element"]
+                                                        ["let"
+                                                         [["begin-time" ["io-get-time*"]]
+                                                          ["args" [":args" "markup"]]
+                                                          ["component" ["first" "markup"]]
+                                                          ["new-coord" ["conj" "coord" [":name" "markup"]]]
+                                                          ["render" [":render" "markup"]]
+                                                          ["half-render" ["apply" "render" "args"]]
+                                                          ["markup-tree" ["half-render" "nil" "nil"]]
+                                                          ["tree"
+                                                           ["render-markup"
+                                                            "markup-tree"
+                                                            "new-coord"
+                                                            "new-coord"
+                                                            [":tree" "old-element"]]]
+                                                          ["cost" ["-" ["io-get-time*"] "begin-time"]]]
+                                                         ["--" "println" "|markup tree:" ["pr-str" "markup-tree"]]
+                                                         ["--" "println" "|no cache:" "coord"]
+                                                         ["assoc"
+                                                          "markup"
+                                                          ":coord"
+                                                          "coord"
+                                                          ":tree"
+                                                          "tree"
+                                                          ":cost"
+                                                          "cost"]]]],
                                    "render-app" ["defn"
                                                  "render-app"
-                                                 ["markup" "states" "build-mutate" "old-element"]
-                                                 ["--" "println" "|render loop, states:" ["pr-str" "states"]]
-                                                 ["render-markup"
-                                                  "markup"
-                                                  "states"
-                                                  "build-mutate"
-                                                  ["[]"]
-                                                  ["[]"]
-                                                  "old-element"]],
+                                                 ["markup" "old-element"]
+                                                 ["render-markup" "markup" ["[]"] ["[]"] "old-element"]],
                                    "render-children" ["defn"
                                                       "render-children"
-                                                      ["children"
-                                                       "states"
-                                                       "build-mutate"
-                                                       "coord"
-                                                       "comp-coord"
-                                                       "old-children"]
+                                                      ["children" "coord" "comp-coord" "old-children"]
                                                       ["--" "println" "|render children:" "children"]
                                                       ["let"
                                                        [["mapped-cache" ["into" ["{}"] "old-children"]]]
@@ -450,7 +417,6 @@
                                                           ["let"
                                                            [["k" ["first" "child-entry"]]
                                                             ["child-element" ["last" "child-entry"]]
-                                                            ["inner-states" ["or" ["get" "states" "k"] ["{}"]]]
                                                             ["old-child" ["get" "mapped-cache" "k"]]]
                                                            ["--"
                                                             "if"
@@ -463,27 +429,18 @@
                                                              ["some?" "child-element"]
                                                              ["render-markup"
                                                               "child-element"
-                                                              "inner-states"
-                                                              "build-mutate"
                                                               ["conj" "coord" "k"]
                                                               "comp-coord"
                                                               "old-child"]
                                                              "nil"]]]]]]]],
                                    "render-element" ["defn"
                                                      "render-element"
-                                                     ["markup"
-                                                      "states"
-                                                      "build-mutate"
-                                                      "coord"
-                                                      "comp-coord"
-                                                      "old-element"]
+                                                     ["markup" "coord" "comp-coord" "old-element"]
                                                      ["let"
                                                       [["children" [":children" "markup"]]
                                                        ["child-elements"
                                                         ["render-children"
                                                          "children"
-                                                         "states"
-                                                         "build-mutate"
                                                          "coord"
                                                          "comp-coord"
                                                          [":children" "old-element"]]]]
@@ -497,27 +454,11 @@
                                                       ["assoc" "markup" ":coord" "coord" ":children" "child-elements"]]],
                                    "render-markup" ["defn"
                                                     "render-markup"
-                                                    ["markup"
-                                                     "states"
-                                                     "build-mutate"
-                                                     "coord"
-                                                     "component-coord"
-                                                     "old-element"]
+                                                    ["markup" "coord" "component-coord" "old-element"]
                                                     ["if"
                                                      ["component?" "markup"]
-                                                     ["render-component"
-                                                      "markup"
-                                                      "states"
-                                                      "build-mutate"
-                                                      "coord"
-                                                      "old-element"]
-                                                     ["render-element"
-                                                      "markup"
-                                                      "states"
-                                                      "build-mutate"
-                                                      "coord"
-                                                      "component-coord"
-                                                      "old-element"]]]},
+                                                     ["render-component" "markup" "coord" "old-element"]
+                                                     ["render-element" "markup" "coord" "component-coord" "old-element"]]]},
                             :procs []},
          "render.html" {:ns ["ns"
                              "respo.render.html"
@@ -528,8 +469,7 @@
                                ":refer"
                                ["[]" "prop->attr" "purify-element" "mute-element" "ensure-string" "text->html"]]
                               ["[]" "respo.util.detect" ":refer" ["[]" "component?" "element?"]]
-                              ["[]" "respo.render.expander" ":refer" ["[]" "render-app"]]
-                              ["[]" "respo.controller.deliver" ":refer" ["[]" "mutate-factory"]]]],
+                              ["[]" "respo.render.expander" ":refer" ["[]" "render-app"]]]],
                         :defs {"global-element" ["def" "global-element" ["atom" "nil"]],
                                "element->html" ["defn"
                                                 "element->html"
@@ -563,7 +503,7 @@
                                             "make-html"
                                             ["tree"]
                                             ["let"
-                                             [["element" ["render-app" "tree" "@global-states" "build-mutate" "nil"]]]
+                                             [["element" ["render-app" "tree" "nil"]]]
                                              ["element->html" ["purify-element" ["mute-element" "element"]]]]],
                                "style->string" ["defn"
                                                 "style->string"
@@ -582,7 +522,6 @@
                                                       "|:"
                                                       ["if" ["string?" "v"] ["escape-html" "v"] ["ensure-string" "v"]]
                                                       "|;"]]]]]]],
-                               "build-mutate" ["def" "build-mutate" ["mutate-factory" "global-element" "global-states"]],
                                "element->string" ["defn"
                                                   "element->string"
                                                   ["element"]
@@ -626,12 +565,11 @@
                                                     "|</"
                                                     "tag-name"
                                                     "|>"]]],
-                               "global-states" ["def" "global-states" ["atom" ["{}"]]],
                                "make-string" ["defn"
                                               "make-string"
                                               ["tree"]
                                               ["let"
-                                               [["element" ["render-app" "tree" "@global-states" "build-mutate" "nil"]]]
+                                               [["element" ["render-app" "tree" "nil"]]]
                                                ["element->string" ["purify-element" ["mute-element" "element"]]]]],
                                "props->string" ["defn"
                                                 "props->string"
@@ -757,7 +695,6 @@
                             ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                             ["[]" "respo.style.widget" ":as" "widget"]]],
                       :defs {"style-task" ["def" "style-task" ["{}" [":display" ":flex"] [":padding" "|4px 0px"]]],
-                             "update-state" ["defn" "update-state" ["state" "text"] "text"],
                              "on-click" ["defn"
                                          "on-click"
                                          ["props" "state"]
@@ -774,13 +711,10 @@
                                             [":outline" ":none"]
                                             [":border" ":none"]
                                             [":vertical-align" ":middle"]]],
-                             "init-state" ["defn" "init-state" ["props"] "|"],
                              "comp-task" ["def"
                                           "comp-task"
                                           ["create-comp"
                                            ":task"
-                                           "init-state"
-                                           "update-state"
                                            ["fn"
                                             ["task"]
                                             ["fn"
@@ -1152,12 +1086,12 @@
                       :procs []},
          "schema" {:ns ["ns" "respo.schema"],
                    :defs {"task" ["def" "task" ["{}" [":id" "nil"] [":text" "|"] [":done?" "false"]]],
-                          "store" ["def" "store" ["[]"]]},
+                          "store" ["def" "store" ["{}" [":tasks" ["[]"]] [":states" ["{}"]]]]},
                    :procs []},
          "comp.container" {:ns ["ns"
                                 "respo.comp.container"
                                 [":require"
-                                 ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div"]]
+                                 ["[]" "respo.alias" ":refer" ["[]" "create-comp" "with-cursor" "div"]]
                                  ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                                  ["[]" "respo.comp.todolist" ":refer" ["[]" "comp-todolist"]]]],
                            :defs {"style-states" ["def" "style-states" ["{}" [":padding" "8"]]],
@@ -1171,7 +1105,7 @@
                                                        ["state" "mutate!"]
                                                        ["div"
                                                         ["{}"]
-                                                        ["comp-todolist" "store"]
+                                                        ["with-cursor" ":todolist" ["comp-todolist" [":tasks" "store"]]]
                                                         ["div"
                                                          ["{}" [":style" "style-states"]]
                                                          ["comp-text" ["pr-str" "states"] "nil"]]]]]]]},
@@ -1182,7 +1116,7 @@
                                 ["[]" "clojure.string" ":as" "string"]
                                 ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                 ["[]" "respo.comp.task" ":refer" ["[]" "comp-task"]]
-                                ["[]" "respo.alias" ":refer" ["[]" "div" "span" "input" "create-comp"]]
+                                ["[]" "respo.alias" ":refer" ["[]" "div" "span" "input" "create-comp" "with-cursor"]]
                                 ["[]" "respo.comp.zero" ":refer" ["[]" "component-zero"]]
                                 ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                 ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
@@ -1195,15 +1129,6 @@
                                                ["e" "dispatch!"]
                                                ["println" "|dispatch clear-done"]
                                                ["dispatch!" ":clear" "nil"]],
-                                 "update-state" ["defn"
-                                                 "update-state"
-                                                 ["old-state" "changes"]
-                                                 ["--"
-                                                  "println"
-                                                  "|changes:"
-                                                  ["pr-str" "old-state"]
-                                                  ["pr-str" "changes"]]
-                                                 ["merge" "old-state" "changes"]],
                                  "handle-add" ["defn"
                                                "handle-add"
                                                ["state" "mutate!"]
@@ -1254,7 +1179,6 @@
                                               ["if" [">" "x" "0"] ["recur" ["dec" "x"]]]]
                                              ["println" "|time cost:" ["-" ["io-get-time*"] "started"]]]],
                                  "on-focus" ["defn" "on-focus" ["e" "dispatch!"] ["println" "|Just focused~"]],
-                                 "init-state" ["defn" "init-state" ["props"] ["{}" [":draft" "|"] [":locked?" "false"]]],
                                  "on-text-change" ["defn"
                                                    "on-text-change"
                                                    ["mutate!"]
@@ -1267,8 +1191,6 @@
                                                   "comp-todolist"
                                                   ["create-comp"
                                                    ":todolist"
-                                                   "init-state"
-                                                   "update-state"
                                                    ["fn"
                                                     ["tasks"]
                                                     ["fn"
@@ -1332,7 +1254,11 @@
                                                         "tasks"
                                                         ["reverse"]
                                                         ["map"
-                                                         ["fn" ["task"] ["[]" [":id" "task"] ["comp-task" "task"]]]]]]
+                                                         ["fn"
+                                                          ["task"]
+                                                          ["[]"
+                                                           [":id" "task"]
+                                                           ["with-cursor" [":id" "task"] ["comp-task" "task"]]]]]]]
                                                       ["if"
                                                        [">" ["count" "tasks"] "0"]
                                                        ["div"
@@ -1367,8 +1293,7 @@
                                       ":refer"
                                       ["[]" "find-event-target" "get-markup-at" "get-component-at"]]
                                      ["[]" "respo.util.detect" ":refer" ["[]" "component?" "element?"]]]],
-                               :defs {"global-mutate-methods" ["defonce" "global-mutate-methods" ["atom" ["{}"]]],
-                                      "all-component-coords" ["defn"
+                               :defs {"all-component-coords" ["defn"
                                                               "all-component-coords"
                                                               ["markup"]
                                                               ["if"
@@ -1411,52 +1336,7 @@
                                                                  "println"
                                                                  "|found no listener:"
                                                                  "coord"
-                                                                 "event-name"]]]]],
-                                      "mutate-factory" ["defn"
-                                                        "mutate-factory"
-                                                        ["global-element" "global-states"]
-                                                        ["fn"
-                                                         ["coord"]
-                                                         ["if"
-                                                          ["contains?" "@global-mutate-methods" "coord"]
-                                                          ["get" "@global-mutate-methods" "coord"]
-                                                          ["let"
-                                                           [["method"
-                                                             ["fn"
-                                                              ["&" "state-args"]
-                                                              ["let"
-                                                               [["component"
-                                                                 ["get-markup-at"
-                                                                  "@global-element"
-                                                                  ["subvec" "coord" "0" ["-" ["count" "coord"] "1"]]]]
-                                                                ["init-state" [":init-state" "component"]]
-                                                                ["update-state" [":update-state" "component"]]
-                                                                ["state-path" ["conj" "coord" ["quote" "data"]]]
-                                                                ["old-state"
-                                                                 ["let"
-                                                                  [["inner-states" ["get-in" "@global-states" "coord"]]]
-                                                                  ["if"
-                                                                   ["contains?" "inner-states" ["quote" "data"]]
-                                                                   ["get" "inner-states" ["quote" "data"]]
-                                                                   ["apply" "init-state" [":args" "component"]]]]]
-                                                                ["new-state"
-                                                                 ["apply"
-                                                                  "update-state"
-                                                                  ["cons" "old-state" "state-args"]]]]
-                                                               ["--"
-                                                                "println"
-                                                                "|compare states:"
-                                                                ["pr-str" "@global-states"]
-                                                                "state-path"
-                                                                ["pr-str" "old-state"]
-                                                                ["pr-str" "new-state"]]
-                                                               ["swap!"
-                                                                "global-states"
-                                                                "assoc-in"
-                                                                ["conj" "coord" ["quote" "data"]]
-                                                                "new-state"]]]]]
-                                                           ["swap!" "global-mutate-methods" "assoc" "coord" "method"]
-                                                           "method"]]]]},
+                                                                 "event-name"]]]]]},
                                :procs []},
          "comp.space" {:ns ["ns"
                             "respo.comp.space"
@@ -1765,22 +1645,19 @@
                          "h2" ["defn" "h2" ["props" "&" "children"] ["create-element" ":h2" "props" "children"]],
                          "create-comp" ["defn"
                                         "create-comp"
-                                        [["comp-name" "render"]
-                                         ["create-comp" "comp-name" "default-init" "default-update" "render"]]
-                                        [["comp-name" "init-state" "update-state" "render"]
-                                         ["--" "println" "|create component:" "comp-name"]
-                                         ["let"
-                                          [["initial-comp"
-                                            ["{}"
-                                             [":name" "comp-name"]
-                                             [":coord" "nil"]
-                                             [":args" ["[]"]]
-                                             [":init-state" "init-state"]
-                                             [":update-state" "update-state"]
-                                             [":render" "render"]
-                                             [":tree" "nil"]
-                                             [":cost" "nil"]]]]
-                                          ["fn" ["&" "args"] ["assoc" "initial-comp" ":args" "args"]]]]],
+                                        ["comp-name" "render"]
+                                        ["--" "println" "|create component:" "comp-name"]
+                                        ["let"
+                                         [["initial-comp"
+                                           ["{}"
+                                            [":name" "comp-name"]
+                                            [":coord" "nil"]
+                                            [":args" ["[]"]]
+                                            [":render" "render"]
+                                            [":tree" "nil"]
+                                            [":cost" "nil"]
+                                            [":cursor" "nil"]]]]
+                                         ["fn" ["&" "args"] ["assoc" "initial-comp" ":args" "args"]]]],
                          "hr" ["defn" "hr" ["props" "&" "children"] ["create-element" ":hr" "props" "children"]],
                          "style" ["defn"
                                   "style"
@@ -1806,7 +1683,6 @@
                                   ["props" "&" "children"]
                                   ["create-element" ":input" "props" "children"]],
                          "head" ["defn" "head" ["props" "&" "children"] ["create-element" ":head" "props" "children"]],
-                         "default-update" ["def" "default-update" "merge"],
                          "title" ["defn"
                                   "title"
                                   ["props" "&" "children"]
@@ -1818,10 +1694,10 @@
                          "link" ["defn" "link" ["props" "&" "children"] ["create-element" ":link" "props" "children"]],
                          "div" ["defn" "div" ["props" "&" "children"] ["create-element" ":div" "props" "children"]],
                          "pre" ["defn" "pre" ["props" "&" "children"] ["create-element" ":pre" "props" "children"]],
+                         "with-cursor" ["defn" "with-cursor" ["k" "component"] ["assoc" "component" ":cursor" "k"]],
                          "html" ["defn" "html" ["props" "&" "children"] ["create-element" ":html" "props" "children"]],
                          "h1" ["defn" "h1" ["props" "&" "children"] ["create-element" ":h1" "props" "children"]],
                          "code" ["defn" "code" ["props" "&" "children"] ["create-element" ":code" "props" "children"]],
-                         "default-init" ["defn" "default-init" ["&" "args"] "{}"],
                          "header" ["defn"
                                    "header"
                                    ["props" "&" "children"]
@@ -1914,7 +1790,7 @@
                       [":require"
                        ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div" "span"]]
                        ["[]" "respo.render.expander" ":refer" ["[]" "render-app"]]
-                       ["[]" "respo.controller.deliver" ":refer" ["[]" "build-deliver-event" "mutate-factory"]]
+                       ["[]" "respo.controller.deliver" ":refer" ["[]" "build-deliver-event"]]
                        ["[]" "respo.render.differ" ":refer" ["[]" "find-element-diffs"]]
                        ["[]" "respo.util.format" ":refer" ["[]" "purify-element" "mute-element"]]
                        ["[]" "respo.controller.client" ":refer" ["[]" "activate-instance" "patch-instance"]]
@@ -1923,22 +1799,17 @@
                  :defs {"global-element" ["defonce" "global-element" ["atom" "nil"]],
                         "render!" ["defn"
                                    "render!"
-                                   ["markup" "target" "dispatch" "states-ref"]
+                                   ["markup" "target" "dispatch"]
                                    ["if"
                                     ["some?" "@global-element"]
-                                    ["rerender-app!" "markup" "target" "dispatch" "states-ref"]
-                                    ["mount-app!" "markup" "target" "dispatch" "states-ref"]]],
-                        "render-element" ["defn"
-                                          "render-element"
-                                          ["markup" "states-ref"]
-                                          ["let"
-                                           [["build-mutate" ["mutate-factory" "global-element" "states-ref"]]]
-                                           ["render-app" "markup" "@states-ref" "build-mutate" "@cache-element"]]],
+                                    ["rerender-app!" "markup" "target" "dispatch"]
+                                    ["mount-app!" "markup" "target" "dispatch"]]],
+                        "render-element" ["defn" "render-element" ["markup"] ["render-app" "markup" "@cache-element"]],
                         "mount-app!" ["defn"
                                       "mount-app!"
-                                      ["markup" "target" "dispatch!" "states-ref"]
+                                      ["markup" "target" "dispatch!"]
                                       ["let"
-                                       [["element" ["render-element" "markup" "states-ref"]]
+                                       [["element" ["render-element" "markup"]]
                                         ["deliver-event" ["build-deliver-event" "global-element" "dispatch!"]]]
                                        ["--" "println" "|mount app"]
                                        ["activate-instance" ["purify-element" "element"] "target" "deliver-event"]
@@ -1952,9 +1823,9 @@
                         "cache-element" ["defonce" "cache-element" ["atom" "nil"]],
                         "rerender-app!" ["defn"
                                          "rerender-app!"
-                                         ["markup" "target" "dispatch!" "states-ref"]
+                                         ["markup" "target" "dispatch!"]
                                          ["let"
-                                          [["element" ["render-element" "markup" "states-ref"]]
+                                          [["element" ["render-element" "markup"]]
                                            ["deliver-event" ["build-deliver-event" "global-element" "dispatch!"]]
                                            ["changes-ref" ["atom" ["[]"]]]
                                            ["collect!" ["fn" ["x"] ["swap!" "changes-ref" "conj" "x"]]]]

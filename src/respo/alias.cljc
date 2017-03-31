@@ -37,23 +37,16 @@
 
 (defn h2 [props & children] (create-element :h2 props children))
 
-(def default-update merge)
-
-(defn default-init [& args] {})
-
-(defn create-comp
-  ([comp-name render] (create-comp comp-name default-init default-update render))
-  ([comp-name init-state update-state render]
-   (comment println "create component:" comp-name)
-   (let [initial-comp {:name comp-name,
-                       :coord nil,
-                       :args [],
-                       :init-state init-state,
-                       :update-state update-state,
-                       :render render,
-                       :tree nil,
-                       :cost nil}]
-     (fn [& args] (assoc initial-comp :args args)))))
+(defn create-comp [comp-name render]
+  (comment println "create component:" comp-name)
+  (let [initial-comp {:name comp-name,
+                      :coord nil,
+                      :args [],
+                      :render render,
+                      :tree nil,
+                      :cost nil,
+                      :cursor nil}]
+    (fn [& args] (assoc initial-comp :args args))))
 
 (defn hr [props & children] (create-element :hr props children))
 
@@ -84,6 +77,8 @@
 (defn div [props & children] (create-element :div props children))
 
 (defn pre [props & children] (create-element :pre props children))
+
+(defn with-cursor [k component] (assoc component :cursor k))
 
 (defn html [props & children] (create-element :html props children))
 
