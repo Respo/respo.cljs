@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [respo.util.format
              :refer
-             [prop->attr purify-element mute-element ensure-string]]
+             [prop->attr purify-element mute-element ensure-string text->html]]
             [respo.util.detect :refer [component? element?]]
             [respo.render.expander :refer [render-app]]
             [respo.controller.deliver :refer [mutate-factory]]))
@@ -36,7 +36,7 @@
 (defn element->html [element]
   (let [tag-name (name (:name element))
         attrs (into {} (:attrs element))
-        text-inside (or (:innerHTML attrs) (:inner-text attrs))
+        text-inside (or (:innerHTML attrs) (text->html (:inner-text attrs)))
         tailored-props (-> attrs (dissoc :innerHTML) (dissoc :inner-text))
         props-in-string (props->string tailored-props)
         children (->> (:children element)
@@ -64,7 +64,7 @@
   (let [tag-name (name (:name element))
         attrs (into {} (:attrs element))
         styles (or (:style element) {})
-        text-inside (or (:innerHTML attrs) (:inner-text attrs))
+        text-inside (or (:innerHTML attrs) (text->html (:inner-text attrs)))
         formatted-coord (pr-str (:coord element))
         formatted-event (pr-str (into #{} (keys (:event element))))
         tailored-props (-> attrs

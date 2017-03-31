@@ -6,9 +6,9 @@
                   [org.clojure/clojurescript   "1.9.473"     :scope "provided"]
                   [adzerk/boot-cljs            "1.7.228-1"   :scope "provided"]
                   [adzerk/boot-reload          "0.4.13"      :scope "provided"]
-                  [binaryage/devtools          "0.9.1"       :scope "provided"]
+                  [binaryage/devtools          "0.9.2"       :scope "provided"]
                   [cirru/boot-stack-server     "0.1.30"      :scope "provided"]
-                  [andare                      "0.3.0"       :scope "provided"]
+                  [andare                      "0.5.0"       :scope "provided"]
                   [cumulo/shallow-diff         "0.1.3"       :scope "provided"]
                   [mvc-works/hsl               "0.1.2"       :scope "provided"]
                   [mvc-works/polyfill          "0.1.1"]])
@@ -16,7 +16,7 @@
 (require '[adzerk.boot-cljs   :refer [cljs]]
          '[adzerk.boot-reload :refer [reload]])
 
-(def +version+ "0.3.39")
+(def +version+ "0.3.40")
 
 (task-options!
   pom {:project     'respo/respo

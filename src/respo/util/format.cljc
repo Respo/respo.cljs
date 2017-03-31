@@ -60,3 +60,10 @@
             :children
             (fn [children]
               (->> children (map (fn [entry] [(first entry) (purify-element (last entry))]))))))))))
+
+(defn text->html [x]
+  (if (some? x)
+    (-> (str x)
+        (string/replace (re-pattern ">") "&gt;")
+        (string/replace (re-pattern "<") "&lt;"))
+    nil))
