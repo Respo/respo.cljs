@@ -1,38 +1,34 @@
 
-(ns respo.updater.core (:require [clojure.string :as string]))
+(ns respo.updater.core
+  (:require [clojure.string :as string] [respo.cursor :refer [mutate]]))
 
-(defn updater [old-store op-type op-data op-id]
-  (comment println (pr-str old-store) (pr-str op-type) (pr-str op-data))
+(defn updater [store op-type op-data op-id]
+  (comment println (pr-str store) (pr-str op-type) (pr-str op-data))
   (case op-type
-    :states
-      (let [[cursor new-state] op-data]
-        (assoc-in old-store (cons :states (conj cursor :data)) new-state))
+    :states (update store :states (mutate op-data))
     :add
-      (update
-       old-store
-       :tasks
-       (fn [tasks] (conj tasks {:text op-data, :id op-id, :done? false})))
+      (update store :tasks (fn [tasks] (conj tasks {:text op-data, :id op-id, :done? false})))
     :remove
       (update
-       old-store
+       store
        :tasks
        (fn [tasks] (->> tasks (filterv (fn [task] (not (= (:id task) op-data)))))))
-    :clear (assoc old-store :tasks [])
+    :clear (assoc store :tasks [])
     :update
       (update
-       old-store
+       store
        :tasks
        (fn [tasks]
          (let [task-id (:id op-data), text (:text op-data)]
            (->> tasks
                 (mapv (fn [task] (if (= (:id task) task-id) (assoc task :text text) task)))))))
-    :hit-first (-> old-store (update-in [:tasks 0] (fn [task] (assoc task :text op-data))))
+    :hit-first (-> store (update-in [:tasks 0] (fn [task] (assoc task :text op-data))))
     :toggle
       (update
-       old-store
+       store
        :tasks
        (fn [tasks]
          (let [task-id op-data]
            (->> tasks
                 (mapv (fn [task] (if (= (:id task) task-id) (update task :done? not) task)))))))
-    old-store))
+    store))

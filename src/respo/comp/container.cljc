@@ -1,6 +1,7 @@
 
 (ns respo.comp.container
-  (:require [respo.alias :refer [create-comp with-cursor div]]
+  (:require [respo.alias :refer [create-comp div]]
+            [respo.cursor :refer [with-cursor]]
             [respo.comp.text :refer [comp-text]]
             [respo.comp.todolist :refer [comp-todolist]]))
 

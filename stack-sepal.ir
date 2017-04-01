@@ -1048,7 +1048,8 @@
          "comp.container" {:ns ["ns"
                                 "respo.comp.container"
                                 [":require"
-                                 ["[]" "respo.alias" ":refer" ["[]" "create-comp" "with-cursor" "div"]]
+                                 ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div"]]
+                                 ["[]" "respo.cursor" ":refer" ["[]" "with-cursor"]]
                                  ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                                  ["[]" "respo.comp.todolist" ":refer" ["[]" "comp-todolist"]]]],
                            :defs {"style-states" ["def" "style-states" ["{}" [":padding" "8"]]],
@@ -1077,7 +1078,8 @@
                                 ["[]" "clojure.string" ":as" "string"]
                                 ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                 ["[]" "respo.comp.task" ":refer" ["[]" "comp-task"]]
-                                ["[]" "respo.alias" ":refer" ["[]" "div" "span" "input" "create-comp" "with-cursor"]]
+                                ["[]" "respo.alias" ":refer" ["[]" "div" "span" "input" "create-comp"]]
+                                ["[]" "respo.cursor" ":refer" ["[]" "with-cursor"]]
                                 ["[]" "respo.comp.zero" ":refer" ["[]" "component-zero"]]
                                 ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                 ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
@@ -1445,6 +1447,17 @@
                                                ["string/replace" ["re-pattern" "|<"] "|&lt;"]]
                                               "nil"]]},
                         :procs []},
+         "cursor" {:ns ["ns" "respo.cursor"],
+                   :defs {"mutate" ["defn"
+                                    "mutate"
+                                    ["op-data"]
+                                    ["fn"
+                                     ["states"]
+                                     ["let"
+                                      [[["[]" "cursor" "next-state"] "op-data"]]
+                                      ["assoc-in" "states" ["conj" "cursor" ":data"] "next-state"]]]],
+                          "with-cursor" ["defn" "with-cursor" ["k" "component"] ["assoc" "component" ":cursor" "k"]]},
+                   :procs []},
          "test-component.page" {:ns ["ns"
                                      "respo.test-component.page"
                                      [":require"
@@ -1458,44 +1471,38 @@
                                                      ":page"
                                                      ["fn" ["store"] ["fn" ["cursor"] ["div" ["{}"]]]]]]},
                                 :procs []},
-         "updater.core" {:ns ["ns" "respo.updater.core" [":require" ["[]" "clojure.string" ":as" "string"]]],
+         "updater.core" {:ns ["ns"
+                              "respo.updater.core"
+                              [":require"
+                               ["[]" "clojure.string" ":as" "string"]
+                               ["[]" "respo.cursor" ":refer" ["[]" "mutate"]]]],
                          :defs {"updater" ["defn"
                                            "updater"
-                                           ["old-store" "op-type" "op-data" "op-id"]
-                                           ["--"
-                                            "println"
-                                            ["pr-str" "old-store"]
-                                            ["pr-str" "op-type"]
-                                            ["pr-str" "op-data"]]
+                                           ["store" "op-type" "op-data" "op-id"]
+                                           ["--" "println" ["pr-str" "store"] ["pr-str" "op-type"] ["pr-str" "op-data"]]
                                            ["case"
                                             "op-type"
-                                            [":states"
-                                             ["let"
-                                              [[["[]" "cursor" "new-state"] "op-data"]]
-                                              ["assoc-in"
-                                               "old-store"
-                                               ["cons" ":states" ["conj" "cursor" ":data"]]
-                                               "new-state"]]]
+                                            [":states" ["update" "store" ":states" ["mutate" "op-data"]]]
                                             [":add"
                                              ["update"
-                                              "old-store"
+                                              "store"
                                               ":tasks"
                                               ["fn"
                                                ["tasks"]
                                                ["conj" "tasks" ["{}" ":text" "op-data" ":id" "op-id" ":done?" "false"]]]]]
                                             [":remove"
                                              ["update"
-                                              "old-store"
+                                              "store"
                                               ":tasks"
                                               ["fn"
                                                ["tasks"]
                                                ["->>"
                                                 "tasks"
                                                 ["filterv" ["fn" ["task"] ["not" ["=" [":id" "task"] "op-data"]]]]]]]]
-                                            [":clear" ["assoc" "old-store" ":tasks" ["[]"]]]
+                                            [":clear" ["assoc" "store" ":tasks" ["[]"]]]
                                             [":update"
                                              ["update"
-                                              "old-store"
+                                              "store"
                                               ":tasks"
                                               ["fn"
                                                ["tasks"]
@@ -1512,13 +1519,13 @@
                                                     "task"]]]]]]]]
                                             [":hit-first"
                                              ["->"
-                                              "old-store"
+                                              "store"
                                               ["update-in"
                                                ["[]" ":tasks" "0"]
                                                ["fn" ["task"] ["assoc" "task" ":text" "op-data"]]]]]
                                             [":toggle"
                                              ["update"
-                                              "old-store"
+                                              "store"
                                               ":tasks"
                                               ["fn"
                                                ["tasks"]
@@ -1533,7 +1540,7 @@
                                                     ["=" [":id" "task"] "task-id"]
                                                     ["update" "task" ":done?" "not"]
                                                     "task"]]]]]]]]
-                                            "old-store"]]},
+                                            "store"]]},
                          :procs []},
          "comp.text" {:ns ["ns"
                            "respo.comp.text"
@@ -1692,7 +1699,6 @@
                          "link" ["defn" "link" ["props" "&" "children"] ["create-element" ":link" "props" "children"]],
                          "div" ["defn" "div" ["props" "&" "children"] ["create-element" ":div" "props" "children"]],
                          "pre" ["defn" "pre" ["props" "&" "children"] ["create-element" ":pre" "props" "children"]],
-                         "with-cursor" ["defn" "with-cursor" ["k" "component"] ["assoc" "component" ":cursor" "k"]],
                          "html" ["defn" "html" ["props" "&" "children"] ["create-element" ":html" "props" "children"]],
                          "h1" ["defn" "h1" ["props" "&" "children"] ["create-element" ":h1" "props" "children"]],
                          "code" ["defn" "code" ["props" "&" "children"] ["create-element" ":code" "props" "children"]],

@@ -78,8 +78,6 @@
 
 (defn pre [props & children] (create-element :pre props children))
 
-(defn with-cursor [k component] (assoc component :cursor k))
-
 (defn html [props & children] (create-element :html props children))
 
 (defn h1 [props & children] (create-element :h1 props children))
