@@ -6,8 +6,7 @@
             [respo.render.differ :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance patch-instance]]
-            [polyfill.core :refer [log*]]
-            [respo.util.gc :refer [find-removed apply-remove]]))
+            [polyfill.core :refer [log*]]))
 
 (defonce global-element (atom nil))
 
@@ -45,8 +44,3 @@
   (reset! cache-element element))
 
 (defn clear-cache! [] (reset! cache-element nil))
-
-(defn gc-states! [states-ref]
-  (let [removed-paths (find-removed @states-ref @global-element [])]
-    (if (not (empty? removed-paths))
-      (reset! states-ref (apply-remove @states-ref removed-paths)))))

@@ -626,58 +626,6 @@
                                                      ["compare" "x" "y"]
                                                      ["compare" "type-x" "type-y"]]]]},
                             :procs []},
-         "util.gc" {:ns ["ns"
-                         "respo.util.gc"
-                         [":require"
-                          ["[]" "respo.util.detect" ":refer" ["[]" "component?"]]
-                          ["[]" "respo.controller.resolver" ":refer" ["[]" "get-component-at"]]]],
-                    :defs {"find-removed" ["defn"
-                                           "find-removed"
-                                           ["state-tree" "element" "base"]
-                                           ["->>"
-                                            "state-tree"
-                                            ["map"
-                                             ["fn"
-                                              ["entry"]
-                                              ["let"
-                                               [[["[]" "coord-key" "sub-tree"] "entry"]]
-                                               ["if"
-                                                ["=" "coord-key" "'data"]
-                                                ["[]"]
-                                                ["let"
-                                                 [["this-path" ["conj" "base" "coord-key"]]
-                                                  ["maybe-component" ["get-component-at" "element" "this-path"]]]
-                                                 ["if"
-                                                  ["some?" "maybe-component"]
-                                                  ["find-removed" "sub-tree" "element" "this-path"]
-                                                  ["[]" "this-path"]]]]]]]
-                                            ["apply" "concat"]]],
-                           "remove-by-path" ["defn"
-                                             "remove-by-path"
-                                             ["tree" "path"]
-                                             ["if"
-                                              ["empty?" "path"]
-                                              "tree"
-                                              ["let"
-                                               [["init-path" ["butlast" "path"]] ["pos" ["last" "path"]]]
-                                               ["if"
-                                                ["empty?" "init-path"]
-                                                ["dissoc" "tree" "pos"]
-                                                ["update-in"
-                                                 "tree"
-                                                 "init-path"
-                                                 ["fn" ["cursor"] ["dissoc" "cursor" "pos"]]]]]]],
-                           "apply-remove" ["defn"
-                                           "apply-remove"
-                                           ["state-tree" "removed-paths"]
-                                           ["if"
-                                            ["empty?" "removed-paths"]
-                                            "state-tree"
-                                            ["let"
-                                             [["path" ["first" "removed-paths"]]
-                                              ["next-state" ["remove-by-path" "state-tree" "path"]]]
-                                             ["recur" "next-state" ["rest" "removed-paths"]]]]]},
-                    :procs []},
          "comp.wrap" {:ns ["ns"
                            "respo.comp.wrap"
                            [":require"
@@ -1844,8 +1792,7 @@
                        ["[]" "respo.render.differ" ":refer" ["[]" "find-element-diffs"]]
                        ["[]" "respo.util.format" ":refer" ["[]" "purify-element" "mute-element"]]
                        ["[]" "respo.controller.client" ":refer" ["[]" "activate-instance" "patch-instance"]]
-                       ["[]" "polyfill.core" ":refer" ["[]" "log*"]]
-                       ["[]" "respo.util.gc" ":refer" ["[]" "find-removed" "apply-remove"]]]],
+                       ["[]" "polyfill.core" ":refer" ["[]" "log*"]]]],
                  :defs {"global-element" ["defonce" "global-element" ["atom" "nil"]],
                         "render!" ["defn"
                                    "render!"
@@ -1888,15 +1835,7 @@
                                           ["patch-instance" "@changes-ref" "target" "deliver-event"]
                                           ["reset!" "global-element" "element"]
                                           ["reset!" "cache-element" "element"]]],
-                        "clear-cache!" ["defn" "clear-cache!" [] ["reset!" "cache-element" "nil"]],
-                        "gc-states!" ["defn"
-                                      "gc-states!"
-                                      ["states-ref"]
-                                      ["let"
-                                       [["removed-paths" ["find-removed" "@states-ref" "@global-element" ["[]"]]]]
-                                       ["if"
-                                        ["not" ["empty?" "removed-paths"]]
-                                        ["reset!" "states-ref" ["apply-remove" "@states-ref" "removed-paths"]]]]]},
+                        "clear-cache!" ["defn" "clear-cache!" [] ["reset!" "cache-element" "nil"]]},
                  :procs []},
          "style.widget" {:ns ["ns" "respo.style.widget" [":require" ["[]" "hsl.core" ":refer" ["[]" "hsl"]]]],
                          :defs {"input" ["def"
