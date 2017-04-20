@@ -2,25 +2,42 @@
 Respo
 ----
 
-A front-end MVC library in ClojureScript.
+> A virtual DOM library built with ClojureScript, inspired by React and Reagent.
 
-* Home http://respo.site
-* Quick Start https://github.com/mvc-works/respo/wiki/Quick-Start
+* Docs http://respo.site
 * Demo http://repo.respo.site/respo/
-
-This project is inspired by:
-
-* React
-* Reagent
-* Deku
+* Examples https://github.com/Respo/respo-examples
+* Minimal App https://github.com/Respo/minimal-respo
+* Quick Start https://github.com/mvc-works/respo/wiki/Quick-Start
 
 ### Usage
+
+Respo is based on ClojureScript ecosystem. Use Boot or Leiningen to install it.
 
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
 [respo "0.4.2"]
 ```
+
+Component definition:
+
+```clojure
+(ns respo.comp.space
+  (:require [respo.alias :refer [create-comp div]]
+            [respo.comp.text :refer [comp-text]]))
+
+(def comp-demo
+  (create-comp :demo
+    (fn [content]
+      (fn [cursor]
+        (div
+          {:style {:color :red}
+           :attrs {:class-name "demo-container"}}
+          (comp-text content nil))))))
+```
+
+App initialization:
 
 ```clojure
 (require '[respo.core :refer [render!]])
@@ -37,25 +54,9 @@ This project is inspired by:
 (render-app!)
 ```
 
-### Component Definition
-
-```clojure
-(ns respo.comp.space
-  (:require [respo.alias :refer [create-comp div]]))
-
-(defn style-space [w h]
-  (if (some? w)
-    {:width w, :display "inline-block", :height "1px"}
-    {:width "1px", :display "inline-block", :height h}))
-
-(defn render [w h] (fn [cursor] (div {:style (style-space w h)})))
-
-(def comp-space (create-comp :space render))
-```
-
 ### Develop
 
-Workflow https://github.com/mvc-works/stack-workflow
+Workflow(powered by Stack Editor) https://github.com/mvc-works/stack-workflow
 
 Test:
 
