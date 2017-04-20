@@ -5,7 +5,8 @@
             [respo.updater.core :refer [updater]]
             [respo.comp.container :refer [comp-container]]
             [cljs.reader :refer [read-string]]
-            [devtools.core :as devtools]))
+            ; [devtools.core :as devtools]
+            ))
 
 (defonce global-store
  (atom
@@ -35,7 +36,7 @@
 
 (defn -main []
   (enable-console-print!)
-  (devtools/install!)
+  ; (devtools/install!)
   (render-app!)
   (add-watch global-store :rerender render-app!))
 

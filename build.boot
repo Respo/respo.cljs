@@ -38,10 +38,11 @@
   (comp
     (cljs :optimizations :advanced
           :compiler-options {:language-in :ecmascript5
-                             :pseudo-names true
+                             ; :pseudo-names true
                              :parallel-build true
-                             :optimize-constants true
-                             :source-map true})
+                             ; :optimize-constants true
+                             ; :source-map true
+                             })
     (target :no-clean true)))
 
 ; some problems due to uglifying
