@@ -379,14 +379,22 @@
                                                           ["args" [":args" "markup"]]
                                                           ["component" ["first" "markup"]]
                                                           ["new-coord" ["conj" "coord" [":name" "markup"]]]
+                                                          ["new-cursor"
+                                                           ["let"
+                                                            [["cursor-name" [":cursor" "markup"]]]
+                                                            ["if"
+                                                             ["some?" "cursor-name"]
+                                                             ["conj" "cursor" "cursor-name"]
+                                                             "cursor"]]]
                                                           ["render" [":render" "markup"]]
-                                                          ["markup-tree" ["apply" "render" "args"]]
+                                                          ["half-render" ["apply" "render" "args"]]
+                                                          ["markup-tree" ["half-render" "new-cursor"]]
                                                           ["tree"
                                                            ["render-markup"
                                                             "markup-tree"
                                                             "new-coord"
                                                             "new-coord"
-                                                            "cursor"
+                                                            "new-cursor"
                                                             [":tree" "old-element"]]]
                                                           ["cost" ["-" ["io-get-time*"] "begin-time"]]]
                                                          ["--" "println" "|markup tree:" ["pr-str" "markup-tree"]]
