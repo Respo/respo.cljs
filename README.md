@@ -42,7 +42,7 @@ App initialization:
 ```clojure
 (require '[respo.core :refer [render!]])
 
-(defonce ref-store (atom 0))
+(defonce ref-store (atom {:point 0 :states {}}))
 
 (defn dispatch! [op op-data]
   (reset! ref-store (updater @ref-store op op-data)))
