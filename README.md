@@ -61,7 +61,8 @@ Workflow(powered by Stack Editor) https://github.com/mvc-works/stack-workflow
 Test:
 
 ```bash
-lumo -Kc $boot_deps:src/ -i test/html_test.cljs
+export deps=`boot show -c`
+lumo -Kc $deps:src/ -i test/html_test.cljs
 ```
 
 ### License
