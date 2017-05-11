@@ -58,12 +58,6 @@ App initialization:
 
 Workflow(powered by Stack Editor) https://github.com/mvc-works/stack-workflow
 
-To start editor server:
-
-```bash
-extension=.cljc stack-editor
-```
-
 To test:
 
 ```bash
