@@ -1,5 +1,5 @@
 {:package "respo",
- :extension ".cljc"
+ :extension ".cljc",
  :files {"comp.zero" {:ns ["ns"
                            "respo.comp.zero"
                            [":require" ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div" "span"]]]],
@@ -7,11 +7,7 @@
                                                "component-zero"
                                                ["create-comp"
                                                 ":zero"
-                                                ["fn"
-                                                 []
-                                                 ["fn"
-                                                  ["state" "mutate"]
-                                                  ["div" ["{}" ":attrs" ["{}" ":inner-text" "0"]]]]]]]},
+                                                ["fn" [] ["fn" ["state" "mutate"] ["div" ["{}" ":inner-text" "0"]]]]]]},
                       :procs []},
          "render.differ" {:ns ["ns"
                                "respo.render.differ"
@@ -343,7 +339,7 @@
                                                ["cursor"]
                                                ["div"
                                                 ["{}" ":style" ["merge" "default-style" "more-style"]]
-                                                ["span" ["{}" ":attrs" ["{}" ":inner-text" ["pr-str" "data"]]]]]]]]],
+                                                ["span" ["{}" [":inner-text" ["pr-str" "data"]]]]]]]]],
                               "default-style" ["def"
                                                "default-style"
                                                ["{}"
@@ -701,18 +697,15 @@
                                                ["comp-space" "8" "nil"]
                                                ["input"
                                                 ["{}"
-                                                 ":style"
-                                                 "widget/input"
-                                                 ":event"
-                                                 ["{}" ":input" ["on-text-change" "task"]]
-                                                 ":attrs"
-                                                 ["{}" ":value" [":text" "task"]]]]
+                                                 [":value" [":text" "task"]]
+                                                 [":style" "widget/input"]
+                                                 [":event" ["{}" ":input" ["on-text-change" "task"]]]]]
                                                ["comp-space" "8" "nil"]
                                                ["input"
                                                 ["{}"
+                                                 [":value" "state"]
                                                  [":style" "widget/input"]
-                                                 [":event" ["{}" [":input" ["on-text-state" "cursor"]]]]
-                                                 [":attrs" ["{}" [":value" "state"]]]]]
+                                                 [":event" ["{}" [":input" ["on-text-state" "cursor"]]]]]]
                                                ["comp-space" "8" "nil"]
                                                ["div"
                                                 ["{}"
@@ -1183,6 +1176,8 @@
                                                         ["{}" ":style" "style-panel"]
                                                         ["input"
                                                          ["{}"
+                                                          [":placeholder" "|Text"]
+                                                          [":value" [":draft" "state"]]
                                                           [":style"
                                                            ["merge"
                                                             "widget/input"
@@ -1199,9 +1194,7 @@
                                                           [":event"
                                                            ["{}"
                                                             [":input" ["on-text-change" "cursor" "state"]]
-                                                            [":focus" "on-focus"]]]
-                                                          [":attrs"
-                                                           ["{}" ":placeholder" "|Text" ":value" [":draft" "state"]]]]]
+                                                            [":focus" "on-focus"]]]]]
                                                         ["comp-space" "8" "nil"]
                                                         ["span"
                                                          ["{}"
@@ -1211,12 +1204,9 @@
                                                         ["comp-space" "8" "nil"]
                                                         ["span"
                                                          ["{}"
-                                                          ":style"
-                                                          "widget/button"
-                                                          ":event"
-                                                          ["{}" ":click" "clear-done"]
-                                                          ":attrs"
-                                                          ["{}" ":inner-text" "|Clear"]]]
+                                                          [":inner-text" "|Clear"]
+                                                          [":style" "widget/button"]
+                                                          [":event" ["{}" ":click" "clear-done"]]]]
                                                         ["comp-space" "8" "nil"]
                                                         ["div"
                                                          ["{}"]
@@ -1226,11 +1216,7 @@
                                                            [":event" ["{}" [":click" "on-test"]]]]
                                                           ["comp-text" "|heavy tasks" "nil"]]]]
                                                        ["div"
-                                                        ["{}"
-                                                         ":style"
-                                                         "style-list"
-                                                         ":attrs"
-                                                         ["{}" ":class-name" "|task-list"]]
+                                                        ["{}" [":class-name" "|task-list"] [":style" "style-list"]]
                                                         ["->>"
                                                          "tasks"
                                                          ["reverse"]
@@ -1247,9 +1233,7 @@
                                                        ["if"
                                                         [">" ["count" "tasks"] "0"]
                                                         ["div"
-                                                         ["{}"
-                                                          [":style" "style-toolbar"]
-                                                          [":attrs" ["{}" ":spell-check" "true"]]]
+                                                         ["{}" [":spell-check" "true"] [":style" "style-toolbar"]]
                                                          ["div"
                                                           ["{}"
                                                            [":style" "widget/button"]
@@ -1562,8 +1546,7 @@
                                             ["content" "style"]
                                             ["fn"
                                              ["cursor"]
-                                             ["span"
-                                              ["{}" [":attrs" ["{}" [":inner-text" "content"]]] [":style" "style"]]]]]]],
+                                             ["span" ["{}" [":inner-text" "content"] [":style" "style"]]]]]]],
                              "comp-code" ["def"
                                           "comp-code"
                                           ["create-comp"
@@ -1614,11 +1597,7 @@
                                            "create-element"
                                            ["tag-name" "props" "children"]
                                            ["let"
-                                            [["attrs"
-                                              ["if"
-                                               ["contains?" "props" ":attrs"]
-                                               ["sort-by" "first" [":attrs" "props"]]
-                                               ["list"]]]
+                                            [["attrs" ["pick-attrs" "props"]]
                                              ["styles"
                                               ["if"
                                                ["contains?" "props" ":style"]
@@ -1673,6 +1652,22 @@
                                             [":cursor" "nil"]]]]
                                          ["fn" ["&" "args"] ["assoc" "initial-comp" ":args" "args"]]]],
                          "hr" ["defn" "hr" ["props" "&" "children"] ["create-element" ":hr" "props" "children"]],
+                         "pick-attrs" ["defn"
+                                       "pick-attrs"
+                                       ["props"]
+                                       ["if"
+                                        ["nil?" "props"]
+                                        ["list"]
+                                        ["let"
+                                         [["base-attrs"
+                                           ["merge"
+                                            ["->"
+                                             "props"
+                                             ["dissoc" ":attrs"]
+                                             ["dissoc" ":event"]
+                                             ["dissoc" ":style"]
+                                             ["merge" [":attrs" "props"]]]]]]
+                                         ["sort-by" "first" "base-attrs"]]]],
                          "style" ["defn"
                                   "style"
                                   ["props" "&" "children"]
@@ -1793,10 +1788,7 @@
                                                       ["task"]
                                                       ["fn"
                                                        ["cursor"]
-                                                       ["div"
-                                                        ["{}"]
-                                                        ["span"
-                                                         ["{}" [":attrs" ["{}" [":inner-text" [":text" "task"]]]]]]]]]]]},
+                                                       ["div" ["{}"] ["span" ["{}" [":inner-text" [":text" "task"]]]]]]]]]},
                                 :procs []},
          "core" {:ns ["ns"
                       "respo.core"

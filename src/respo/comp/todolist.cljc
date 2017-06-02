@@ -71,20 +71,20 @@
           (div
            {:style style-panel}
            (input
-            {:style (merge
+            {:placeholder "Text",
+             :value (:draft state),
+             :style (merge
                      widget/input
                      {:width (max
                               200
                               (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
-             :event {:input (on-text-change cursor state), :focus on-focus},
-             :attrs {:placeholder "Text", :value (:draft state)}})
+             :event {:input (on-text-change cursor state), :focus on-focus}})
            (comp-space 8 nil)
            (span
             {:style widget/button, :event {:click (handle-add cursor state)}}
             (comp-text "Add" nil))
            (comp-space 8 nil)
-           (span
-            {:style widget/button, :event {:click clear-done}, :attrs {:inner-text "Clear"}})
+           (span {:inner-text "Clear", :style widget/button, :event {:click clear-done}})
            (comp-space 8 nil)
            (div
             {}
@@ -92,7 +92,7 @@
              {:style widget/button, :event {:click on-test}}
              (comp-text "heavy tasks" nil))))
           (div
-           {:style style-list, :attrs {:class-name "task-list"}}
+           {:class-name "task-list", :style style-list}
            (->> tasks
                 (reverse)
                 (map
@@ -101,7 +101,7 @@
                      [task-id (with-cursor task-id (comp-task (get states task-id) task))])))))
           (if (> (count tasks) 0)
             (div
-             {:style style-toolbar, :attrs {:spell-check true}}
+             {:spell-check true, :style style-toolbar}
              (div
               {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
               (comp-text "Clear2"))

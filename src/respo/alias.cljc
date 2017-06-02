@@ -9,8 +9,19 @@
          (map-indexed vector children))
        (filter (fn [pair] (some? (last pair))))))
 
+(defn pick-attrs [props]
+  (if (nil? props)
+    (list)
+    (let [base-attrs (merge
+                      (-> props
+                          (dissoc :attrs)
+                          (dissoc :event)
+                          (dissoc :style)
+                          (merge (:attrs props))))]
+      (sort-by first base-attrs))))
+
 (defn create-element [tag-name props children]
-  (let [attrs (if (contains? props :attrs) (sort-by first (:attrs props)) (list))
+  (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (if (contains? props :event) (:event props) {})
         children (arrange-children children)]

@@ -42,14 +42,10 @@
             :event {:click (handle-done (:id task))}})
           (comp-space 8 nil)
           (input
-           {:style widget/input,
-            :event {:input (on-text-change task)},
-            :attrs {:value (:text task)}})
+           {:value (:text task), :style widget/input, :event {:input (on-text-change task)}})
           (comp-space 8 nil)
           (input
-           {:style widget/input,
-            :event {:input (on-text-state cursor)},
-            :attrs {:value state}})
+           {:value state, :style widget/input, :event {:input (on-text-state cursor)}})
           (comp-space 8 nil)
           (div
            {:style widget/button, :event {:click (handle-remove task)}}

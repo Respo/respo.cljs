@@ -16,8 +16,6 @@
 (def todolist-store
  (atom [{:id 101, :text "101"} {:id 102, :text "102"}]))
 
-(defn use-text [x] {:attrs {:innerHTML x}})
-
 (def fs (js/require "fs"))
 
 (defn slurp [file-path]
@@ -28,7 +26,7 @@
   (let [todo-demo (comp-todolist @todolist-store)]
     (testing
       "test generated HTML"
-      (is (= (slurp "examples/demo.html") (make-string todo-demo))))))
+      (is (= (slurp "test/examples/demo.html") (make-string todo-demo))))))
 
 (deftest
   simple-html-test
@@ -36,12 +34,12 @@
                     {}
                     (head
                       {}
-                      (title (use-text "Demo"))
-                      (link {:attrs {:rel "icon", :type "image/png"}})
-                      (script (use-text "{}")))
-                    (body {} (div {:attrs {:id "app"}} (div {}))))]
+                      (title {:innerHTML "Demo"})
+                      (link {:rel "icon", :type "image/png"})
+                      (script {:innerHTML "{}"}))
+                    (body {} (div {:id "app"} (div {}))))]
     (testing
       "test generated HTML"
-      (is (= (slurp "examples/simple.html") (make-html tree-demo))))))
+      (is (= (slurp "test/examples/simple.html") (make-html tree-demo))))))
 
 (run-tests)

@@ -32,8 +32,8 @@ Component definition:
     (fn [content]
       (fn [cursor]
         (div
-          {:style {:color :red}
-           :attrs {:class-name "demo-container"}}
+          {:class-name "demo-container"
+           :style {:color :red}}
           (comp-text content nil))))))
 ```
 

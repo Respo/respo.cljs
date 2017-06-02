@@ -19,6 +19,4 @@
    :debug
    (fn [data more-style]
      (fn [cursor]
-       (div
-        {:style (merge default-style more-style)}
-        (span {:attrs {:inner-text (pr-str data)}}))))))
+       (div {:style (merge default-style more-style)} (span {:inner-text (pr-str data)}))))))
