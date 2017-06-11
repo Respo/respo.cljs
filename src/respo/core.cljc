@@ -8,7 +8,7 @@
             [respo.controller.client :refer [activate-instance patch-instance]]
             [polyfill.core :refer [log*]]))
 
-(defonce global-element (atom nil))
+(defonce ref-element (atom nil))
 
 (defonce cache-element (atom nil))
 
@@ -16,31 +16,31 @@
 
 (defn mount-app! [markup target dispatch!]
   (let [element (render-element markup)
-        deliver-event (build-deliver-event global-element dispatch!)]
+        deliver-event (build-deliver-event ref-element dispatch!)]
     (comment println "mount app")
     (activate-instance (purify-element element) target deliver-event)
-    (reset! global-element element)
+    (reset! ref-element element)
     (reset! cache-element element)))
 
 (defn rerender-app! [markup target dispatch!]
   (let [element (render-element markup)
-        deliver-event (build-deliver-event global-element dispatch!)
+        deliver-event (build-deliver-event ref-element dispatch!)
         changes-ref (atom [])
         collect! (fn [x] (swap! changes-ref conj x))]
-    (comment println @global-element)
+    (comment println @ref-element)
     (comment println "Changes:" (pr-str (mapv (partial take 2) @changes-ref)))
-    (find-element-diffs collect! [] @global-element element)
+    (find-element-diffs collect! [] @ref-element element)
     (patch-instance @changes-ref target deliver-event)
-    (reset! global-element element)
+    (reset! ref-element element)
     (reset! cache-element element)))
 
 (defn render! [markup target dispatch]
-  (if (some? @global-element)
+  (if (some? @ref-element)
     (rerender-app! markup target dispatch)
     (mount-app! markup target dispatch)))
 
 (defn falsify-stage! [target element dispatch!]
-  (reset! global-element (mute-element element))
+  (reset! ref-element (mute-element element))
   (reset! cache-element element))
 
 (defn clear-cache! [] (reset! cache-element nil))

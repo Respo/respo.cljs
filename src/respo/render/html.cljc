@@ -7,8 +7,6 @@
             [respo.util.detect :refer [component? element?]]
             [respo.render.expander :refer [render-app]]))
 
-(def global-element (atom nil))
-
 (defn escape-html [text] (-> text (string/replace (re-pattern "\"") "&quot;")))
 
 (defn style->string [styles]

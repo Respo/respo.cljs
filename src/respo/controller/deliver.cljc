@@ -12,10 +12,10 @@
          (map (fn [child-entry] (all-component-coords (val child-entry))))
          (apply concat))))
 
-(defn build-deliver-event [element-ref dispatch!]
+(defn build-deliver-event [ref-element dispatch!]
   (fn [coord event-name simple-event]
-    (let [target-element (find-event-target @element-ref coord event-name)
-          target-component (get-component-at @element-ref coord)
+    (let [target-element (find-event-target @ref-element coord event-name)
+          target-component (get-component-at @ref-element coord)
           target-listener (get (:event target-element) event-name)]
       (if (some? target-listener)
         (do

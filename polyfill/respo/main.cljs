@@ -15,11 +15,11 @@
        {:tasks (read-string raw) :states {}})
      schema/store)))
 
-(defonce id-ref (atom 0))
+(defonce ref-id (atom 0))
 
 (defn id! []
-  (swap! id-ref inc)
-  @id-ref)
+  (swap! ref-id inc)
+  @ref-id)
 
 (defn dispatch! [op op-data]
   (let [op-id (id!)
