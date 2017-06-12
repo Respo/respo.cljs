@@ -1,15 +1,15 @@
 
 (set-env!
-  :asset-paths #{"assets/"}
   :resource-paths #{"polyfill" "src"}
-  :dependencies '[])
+  :dependencies '[[mvc-works/hsl        "0.1.2"   :scope "provided"]
+                  [mvc-works/polyfill   "0.1.1"]])
 
 (def +version+ "0.4.4")
 
 (task-options!
   pom {:project     'respo/respo
        :version     +version+
-       :description "A front-end MVC library"
+       :description "Respo: A virtual DOM library in ClojureScript"
        :url         "https://github.com/Respo/respo"
        :scm         {:url "https://github.com/Respo/respo"}
        :license     {"MIT" "http://opensource.org/licenses/mit-license.php"}})
