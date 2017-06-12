@@ -34,20 +34,20 @@
       target
       dispatch!)))
 
-(defn -main []
+(defn main! []
   (enable-console-print!)
   ; (devtools/install!)
   (render-app!)
   (add-watch global-store :rerender render-app!))
 
-(set! (.-onload js/window) -main)
+(set! (.-onload js/window) main!)
 
 (defn save-store! []
   (.setItem js/localStorage "respo" (pr-str (:tasks @global-store))))
 
 (set! (.-onbeforeunload js/window) save-store!)
 
-(defn on-jsload []
+(defn reload! []
   (clear-cache!)
   (render-app!)
   (.log js/console "code updated."))

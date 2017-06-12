@@ -8,7 +8,14 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "html": "cp assets/* target/",
+    "watch": "shadow-cljs --build app --dev",
+    "once": "shadow-cljs --build app --once",
+    "release": "shadow-cljs --build release --release",
+    "serve": "http-server target/ -s -c-1",
+    "del": "rm -r target/*",
+    "tiye": "rsync -r target/ repo.respo.site:repo/Respo/respo",
+    "build": "yarn del && yarn html && yarn release && yarn serve"
   },
   "repository": {
     "type": "git",
@@ -20,9 +27,11 @@
     "url": "https://github.com/mvc-works/respo/issues"
   },
   "homepage": "https://github.com/mvc-works/respo#readme",
-  "dependencies": {
-    "shortid": "^2.2.4",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^0.10.0",
+    "shadow-cljs": "^0.9.5",
+    "source-map-support": "^0.4.15",
     "ws": "^1.0.1"
-  },
-  "devDependencies": {}
+  }
 }
