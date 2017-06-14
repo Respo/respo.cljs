@@ -23,7 +23,7 @@
           piece-followed
           false))))))
 
-(defn purify-events [events] (->> events (map (fn [entry] [(key entry) true])) (into {})))
+(defn purify-events [events] (->> events keys (into #{})))
 
 (defn event->edn [event]
   (comment .log js/console "simplify event:" event)

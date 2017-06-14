@@ -31,9 +31,9 @@
     (doall
      (->> (:event virtual-element)
           (map
-           (fn [entry]
+           (fn [event-name]
              (comment println "Looking into event:" entry)
-             (let [event-name (key entry), name-in-string (event->prop event-name)]
+             (let [name-in-string (event->prop event-name)]
                (comment println "listener:" event-name name-in-string)
                (aset
                 element

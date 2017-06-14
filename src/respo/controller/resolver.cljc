@@ -1,7 +1,6 @@
 
 (ns respo.controller.resolver
   (:require [clojure.string :as string]
-            [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element?]]
             [polyfill.core :refer [raise*]]
             [respo.util.list :refer [filter-first]]))

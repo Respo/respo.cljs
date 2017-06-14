@@ -2,7 +2,6 @@
 (ns respo.render.expander
   (:require [clojure.string :as string]
             [polyfill.core :refer [io-get-time*]]
-            [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component? element? =seq]]
             [respo.util.list :refer [filter-first]]))
 

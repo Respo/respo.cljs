@@ -51,7 +51,7 @@
 
 (defn on-focus [e dispatch!] (println "Just focused~"))
 
-(def initial-state {:draft "", :loacked? false})
+(def initial-state {:draft "", :locked? false})
 
 (defn on-text-change [cursor state]
   (fn [e dispatch!] (dispatch! :states [cursor (assoc state :draft (:value e))])))

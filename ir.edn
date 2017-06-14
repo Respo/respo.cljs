@@ -359,7 +359,6 @@
                                  [":require"
                                   ["[]" "clojure.string" ":as" "string"]
                                   ["[]" "polyfill.core" ":refer" ["[]" "io-get-time*"]]
-                                  ["[]" "respo.util.format" ":refer" ["[]" "purify-element"]]
                                   ["[]" "respo.util.detect" ":refer" ["[]" "component?" "element?" "=seq"]]
                                   ["[]" "respo.util.list" ":refer" ["[]" "filter-first"]]]],
                             :defs {"render-component" ["defn"
@@ -918,11 +917,10 @@
                                                       [":event" "virtual-element"]
                                                       ["map"
                                                        ["fn"
-                                                        ["entry"]
+                                                        ["event-name"]
                                                         ["--" "println" "|Looking into event:" "entry"]
                                                         ["let"
-                                                         [["event-name" ["key" "entry"]]
-                                                          ["name-in-string" ["event->prop" "event-name"]]]
+                                                         [["name-in-string" ["event->prop" "event-name"]]]
                                                          ["--" "println" "|listener:" "event-name" "name-in-string"]
                                                          ["aset"
                                                           "element"
@@ -956,7 +954,6 @@
                                      "respo.controller.resolver"
                                      [":require"
                                       ["[]" "clojure.string" ":as" "string"]
-                                      ["[]" "respo.util.format" ":refer" ["[]" "purify-element"]]
                                       ["[]" "respo.util.detect" ":refer" ["[]" "component?" "element?"]]
                                       ["[]" "polyfill.core" ":refer" ["[]" "raise*"]]
                                       ["[]" "respo.util.list" ":refer" ["[]" "filter-first"]]]],
@@ -1143,7 +1140,7 @@
                                               ["if" [">" "x" "0"] ["recur" ["dec" "x"]]]]
                                              ["println" "|time cost:" ["-" ["io-get-time*"] "started"]]]],
                                  "on-focus" ["defn" "on-focus" ["e" "dispatch!"] ["println" "|Just focused~"]],
-                                 "initial-state" ["def" "initial-state" ["{}" [":draft" "|"] [":loacked?" "false"]]],
+                                 "initial-state" ["def" "initial-state" ["{}" [":draft" "|"] [":locked?" "false"]]],
                                  "on-text-change" ["defn"
                                                    "on-text-change"
                                                    ["cursor" "state"]
@@ -1360,10 +1357,7 @@
                                "purify-events" ["defn"
                                                 "purify-events"
                                                 ["events"]
-                                                ["->>"
-                                                 "events"
-                                                 ["map" ["fn" ["entry"] ["[]" ["key" "entry"] "true"]]]
-                                                 ["into" ["{}"]]]],
+                                                ["->>" "events" "keys" ["into" ["#{}"]]]],
                                "event->edn" ["defn"
                                              "event->edn"
                                              ["event"]
