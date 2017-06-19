@@ -20,26 +20,19 @@
         element (document-create-element* tag-name)
         child-elements (->> children
                             (map (fn [entry] (make-element (last entry) listener-builder))))]
-    (doall
-     (->> attrs
-          (map
-           (fn [entry]
-             (let [k (dashed->camel (name (first entry))), v (last entry)]
-               (.setAttribute element k v)
-               (aset element k v))))))
+    (doseq [entry attrs]
+      (let [k (dashed->camel (name (first entry))), v (last entry)]
+        (.setAttribute element k v)
+        (aset element k v)))
     (.setAttribute element "style" (style->string style))
-    (doall
-     (->> (:event virtual-element)
-          (map
-           (fn [event-name]
-             (comment println "Looking into event:" entry)
-             (let [name-in-string (event->prop event-name)]
-               (comment println "listener:" event-name name-in-string)
-               (aset
-                element
-                name-in-string
-                (fn [event]
-                  ((listener-builder event-name) event (:coord virtual-element))
-                  (.stopPropagation event))))))))
+    (doseq [event-name (:event virtual-element)]
+      (let [name-in-string (event->prop event-name)]
+        (comment println "listener:" event-name name-in-string)
+        (aset
+         element
+         name-in-string
+         (fn [event]
+           ((listener-builder event-name) event (:coord virtual-element))
+           (.stopPropagation event)))))
     (doseq [child-element child-elements] (.appendChild element child-element))
     element))

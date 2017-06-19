@@ -159,13 +159,7 @@
                    new-events (into #{} (keys (:event new-tree)))
                    added-events (difference new-events old-events)
                    removed-events (difference old-events new-events)]
-               (doall
-                (map
-                 (fn [event-name]
-                   (collect! [:add-event n-coord [event-name (:coord new-tree)]]))
-                 added-events))
-               (doall
-                (map
-                 (fn [event-name] (collect! [:rm-event n-coord event-name]))
-                 removed-events)))
+               (doseq [event-name added-events]
+                 (collect! [:add-event n-coord [event-name (:coord new-tree)]]))
+               (doseq [event-name removed-events] (collect! [:rm-event n-coord event-name])))
              (find-children-diffs collect! n-coord 0 old-children new-children)))))))

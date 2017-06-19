@@ -64,26 +64,20 @@
 
 (defn apply-dom-changes [changes mount-point listener-builder]
   (let [root (.-firstChild mount-point)]
-    (doall
-     (->> changes
-          (map
-           (fn [op]
-             (let [op-type (first op)
-                   coord (get op 1)
-                   op-data (get op 2)
-                   target (find-target root coord)]
-               (comment println op-type target op-data)
-               (case op-type
-                 :replace-prop (replace-prop target op-data)
-                 :add-prop (add-prop target op-data)
-                 :rm-prop (rm-prop target op-data)
-                 :add-style (add-style target op-data)
-                 :replace-style (replace-style target op-data)
-                 :rm-style (rm-style target op-data)
-                 :add-event (add-event target op-data listener-builder)
-                 :rm-event (rm-event target op-data)
-                 :add (add-element target op-data listener-builder)
-                 :rm (rm-element target op-data)
-                 :replace (replace-element target op-data listener-builder)
-                 :append (append-element target op-data listener-builder)
-                 (println "not implemented:" op-type)))))))))
+    (doseq [op changes]
+      (let [[op-type coord op-data] op, target (find-target root coord)]
+        (comment println op-type target op-data)
+        (case op-type
+          :replace-prop (replace-prop target op-data)
+          :add-prop (add-prop target op-data)
+          :rm-prop (rm-prop target op-data)
+          :add-style (add-style target op-data)
+          :replace-style (replace-style target op-data)
+          :rm-style (rm-style target op-data)
+          :add-event (add-event target op-data listener-builder)
+          :rm-event (rm-event target op-data)
+          :add (add-element target op-data listener-builder)
+          :rm (rm-element target op-data)
+          :replace (replace-element target op-data listener-builder)
+          :append (append-element target op-data listener-builder)
+          (println "not implemented:" op-type))))))
