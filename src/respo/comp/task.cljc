@@ -1,8 +1,9 @@
 
 (ns respo.comp.task
+  (:require-macros (respo.macros :refer ()))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
-            [respo.alias :refer [div input span create-comp button]]
+            [respo.alias :refer [create-comp div input span button]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
@@ -49,6 +50,6 @@
           (comp-space 8 nil)
           (div
            {:style widget/button, :event {:click (handle-remove task)}}
-           (comp-text "Remove"))
+           (comp-text "Remove" nil))
           (comp-space 8 nil)
           (div {} (comp-text state nil))))))))

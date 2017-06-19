@@ -1,9 +1,10 @@
 
 (ns respo.comp.container
-  (:require [respo.alias :refer [create-comp div]]
-            [respo.cursor :refer [with-cursor]]
-            [respo.comp.text :refer [comp-text]]
-            [respo.comp.todolist :refer [comp-todolist]]))
+  (:require-macros (respo.macros :refer (div2)))
+  (:require (respo.alias :refer (create-comp div))
+            (respo.cursor :refer (with-cursor))
+            (respo.comp.text :refer (comp-text))
+            (respo.comp.todolist :refer (comp-todolist))))
 
 (def style-states {:padding 8})
 
@@ -13,6 +14,8 @@
    (fn [store]
      (fn [cursor]
        (let [state (:states store)]
+         (println "First" (div2 {} (div {}) (div {})))
+         (println "Second" (div2 {} (div {})))
          (div
           {}
           (with-cursor :todolist (comp-todolist (:todolist state) (:tasks store)))

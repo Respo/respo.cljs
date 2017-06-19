@@ -1,9 +1,10 @@
 
 (ns respo.comp.todolist
+  (:require-macros (respo.macros :refer ()))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
             [respo.comp.task :refer [comp-task]]
-            [respo.alias :refer [div span input create-comp]]
+            [respo.alias :refer [create-comp div span input]]
             [respo.cursor :refer [with-cursor]]
             [respo.comp.zero :refer [component-zero]]
             [respo.comp.debug :refer [comp-debug]]
@@ -104,7 +105,7 @@
              {:spell-check true, :style style-toolbar}
              (div
               {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
-              (comp-text "Clear2"))
+              (comp-text "Clear2" nil))
              (comp-space 8 nil)
              (div
               {:style widget/button, :event {:click (on-lock cursor state)}}

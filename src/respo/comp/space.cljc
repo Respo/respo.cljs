@@ -1,5 +1,7 @@
 
-(ns respo.comp.space (:require [respo.alias :refer [create-comp div]]))
+(ns respo.comp.space
+  (:require-macros (respo.macros :refer (div)))
+  (:require [respo.alias :refer [create-comp]]))
 
 (defn style-space [w h]
   (if (some? w)

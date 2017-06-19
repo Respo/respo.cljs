@@ -8,6 +8,8 @@
                 :target :browser
                 :modules {:main {:entries [respo.main]}}
                 :devtools {:after-load respo.main/reload!}}
+          :npm {:target :npm-module
+                :output-dir "target/"}
           :release {:output-dir "target"
                     :target :browser
                     :modules {:main {:entries [respo.main]}}}}}

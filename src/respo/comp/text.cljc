@@ -1,5 +1,7 @@
 
-(ns respo.comp.text (:require [respo.alias :refer [create-comp span code]]))
+(ns respo.comp.text
+  (:require-macros (respo.macros :refer ()))
+  (:require [respo.alias :refer [create-comp span code]]))
 
 (def comp-text
   (create-comp

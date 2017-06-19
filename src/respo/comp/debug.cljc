@@ -1,5 +1,6 @@
 
 (ns respo.comp.debug
+  (:require-macros (respo.macros :refer ()))
   (:require [hsl.core :refer [hsl]] [respo.alias :refer [create-comp div span]]))
 
 (def default-style
