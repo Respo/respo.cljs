@@ -5,12 +5,11 @@
             [polyfill.core :refer [document-create-element*]]))
 
 (defn style->string [styles]
-  (string/join
-   ""
-   (->> styles
-        (map
-         (fn [entry]
-           (let [k (first entry), v (ensure-string (last entry))] (str (name k) ":" v ";")))))))
+  (->> styles
+       (map
+        (fn [entry]
+          (let [k (first entry), v (ensure-string (last entry))] (str (name k) ":" v ";"))))
+       (string/join "")))
 
 (defn make-element [virtual-element listener-builder]
   (let [tag-name (name (:name virtual-element))

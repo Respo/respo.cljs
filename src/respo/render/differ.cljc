@@ -98,12 +98,14 @@
          (collect! [:rm (conj n-coord index)])
          (recur collect! n-coord index (rest old-children) []))
       :else
-        (let [old-keys (map first (take 32 old-children))
-              new-keys (map first (take 32 new-children))
+        (let [old-keys (map first (take 16 old-children))
+              new-keys (map first (take 16 new-children))
               x1 (first old-keys)
               y1 (first new-keys)
-              x1-remains? (some (fn [x] (= x x1)) new-keys)
-              y1-existed? (some (fn [x] (= x y1)) old-keys)
+              match-x1 (fn [x] (= x x1))
+              match-y1 (fn [x] (= x y1))
+              x1-remains? (some match-x1 new-keys)
+              y1-existed? (some match-y1 old-keys)
               old-follows (rest old-children)
               new-follows (rest new-children)]
           (comment println "compare:" x1 new-keys x1-remains? y1 y1-existed? old-keys)

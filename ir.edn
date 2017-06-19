@@ -135,14 +135,14 @@
                                                              ["[]"]]]]
                                                           [":else"
                                                            ["let"
-                                                            [["old-keys" ["map" "first" ["take" "32" "old-children"]]]
-                                                             ["new-keys" ["map" "first" ["take" "32" "new-children"]]]
+                                                            [["old-keys" ["map" "first" ["take" "16" "old-children"]]]
+                                                             ["new-keys" ["map" "first" ["take" "16" "new-children"]]]
                                                              ["x1" ["first" "old-keys"]]
                                                              ["y1" ["first" "new-keys"]]
-                                                             ["x1-remains?"
-                                                              ["some" ["fn" ["x"] ["=" "x" "x1"]] "new-keys"]]
-                                                             ["y1-existed?"
-                                                              ["some" ["fn" ["x"] ["=" "x" "y1"]] "old-keys"]]
+                                                             ["match-x1" ["fn" ["x"] ["=" "x" "x1"]]]
+                                                             ["match-y1" ["fn" ["x"] ["=" "x" "y1"]]]
+                                                             ["x1-remains?" ["some" "match-x1" "new-keys"]]
+                                                             ["y1-existed?" ["some" "match-y1" "old-keys"]]
                                                              ["old-follows" ["rest" "old-children"]]
                                                              ["new-follows" ["rest" "new-children"]]]
                                                             ["--"
@@ -515,20 +515,19 @@
                                "style->string" ["defn"
                                                 "style->string"
                                                 ["styles"]
-                                                ["string/join"
-                                                 "|"
-                                                 ["->>"
-                                                  "styles"
-                                                  ["map"
-                                                   ["fn"
-                                                    ["entry"]
-                                                    ["let"
-                                                     [["k" ["first" "entry"]] ["v" ["last" "entry"]]]
-                                                     ["str"
-                                                      ["name" "k"]
-                                                      "|:"
-                                                      ["if" ["string?" "v"] ["escape-html" "v"] ["ensure-string" "v"]]
-                                                      "|;"]]]]]]],
+                                                ["->>"
+                                                 "styles"
+                                                 ["map"
+                                                  ["fn"
+                                                   ["entry"]
+                                                   ["let"
+                                                    [["k" ["first" "entry"]] ["v" ["last" "entry"]]]
+                                                    ["str"
+                                                     ["name" "k"]
+                                                     "|:"
+                                                     ["if" ["string?" "v"] ["escape-html" "v"] ["ensure-string" "v"]]
+                                                     "|;"]]]]
+                                                 ["string/join" "|"]]],
                                "element->string" ["defn"
                                                   "element->string"
                                                   ["element"]
@@ -922,17 +921,16 @@
                                    "style->string" ["defn"
                                                     "style->string"
                                                     ["styles"]
-                                                    ["string/join"
-                                                     "|"
-                                                     ["->>"
-                                                      "styles"
-                                                      ["map"
-                                                       ["fn"
-                                                        ["entry"]
-                                                        ["let"
-                                                         [["k" ["first" "entry"]]
-                                                          ["v" ["ensure-string" ["last" "entry"]]]]
-                                                         ["str" ["name" "k"] "|:" "v" "|;"]]]]]]]},
+                                                    ["->>"
+                                                     "styles"
+                                                     ["map"
+                                                      ["fn"
+                                                       ["entry"]
+                                                       ["let"
+                                                        [["k" ["first" "entry"]]
+                                                         ["v" ["ensure-string" ["last" "entry"]]]]
+                                                        ["str" ["name" "k"] "|:" "v" "|;"]]]]
+                                                     ["string/join" "|"]]]},
                             :procs []},
          "controller.resolver" {:ns ["ns"
                                      "respo.controller.resolver"
@@ -1433,11 +1431,11 @@
                    :procs []},
          "test-component.page" {:ns ["ns"
                                      "respo.test-component.page"
-                                     [":require"
-                                      ["[]"
-                                       "respo.alias"
+                                     [":require-macros"
+                                      ["respo.macros"
                                        ":refer"
-                                       ["[]" "create-comp" "div" "html" "head" "body" "meta'" "link" "script" "style"]]]],
+                                       ["div" "html" "head" "body" "meta'" "link" "script" "style"]]]
+                                     [":require" ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]]],
                                 :defs {"comp-page" ["def"
                                                     "comp-page"
                                                     ["create-comp"
@@ -1541,8 +1539,9 @@
                       :procs []},
          "test-component.todolist" {:ns ["ns"
                                          "respo.test-component.todolist"
+                                         [":require-macros" ["respo.macros" ":refer" ["div"]]]
                                          [":require"
-                                          ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div"]]
+                                          ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]
                                           ["[]" "respo.test-component.task" ":refer" ["[]" "comp-task"]]]],
                                     :defs {"style-todolist" ["def"
                                                              "style-todolist"
@@ -1569,12 +1568,7 @@
          "alias" {:ns ["ns"
                        "respo.alias"
                        [":require" ["[]" "respo.util.detect" ":refer" ["[]" "component?" "element?"]]]],
-                  :defs {"canvas" ["defn"
-                                   "canvas"
-                                   ["props" "&" "children"]
-                                   ["create-element" ":canvas" "props" "children"]],
-                         "br" ["defn" "br" ["props" "&" "children"] ["create-element" ":br" "props" "children"]],
-                         "create-element" ["defn"
+                  :defs {"create-element" ["defn"
                                            "create-element"
                                            ["tag-name" "props" "&" "children"]
                                            ["let"
@@ -1593,9 +1587,6 @@
                                              [":style" "styles"]
                                              [":event" "event"]
                                              [":children" "children"]]]],
-                         "img" ["defn" "img" ["props" "&" "children"] ["create-element" ":img" "props" "children"]],
-                         "body" ["defn" "body" ["props" "&" "children"] ["create-element" ":body" "props" "children"]],
-                         "p" ["defn" "p" ["props" "&" "children"] ["create-element" ":p" "props" "children"]],
                          "arrange-children" ["defn"
                                              "arrange-children"
                                              ["children"]
@@ -1607,16 +1598,7 @@
                                                 ["not" ["element?" ["first" "children"]]]]
                                                ["first" "children"]
                                                ["map-indexed" "vector" "children"]]
-                                              ["filter" ["fn" ["pair"] ["some?" ["last" "pair"]]]]]],
-                         "option" ["defn"
-                                   "option"
-                                   ["props" "&" "children"]
-                                   ["create-element" ":option" "props" "children"]],
-                         "footer" ["defn"
-                                   "footer"
-                                   ["props" "&" "children"]
-                                   ["create-element" ":footer" "props" "children"]],
-                         "h2" ["defn" "h2" ["props" "&" "children"] ["create-element" ":h2" "props" "children"]],
+                                              ["filter" "val-exists?"]]],
                          "create-comp" ["defn"
                                         "create-comp"
                                         ["comp-name" "render"]
@@ -1632,7 +1614,6 @@
                                             [":cost" "nil"]
                                             [":cursor" "nil"]]]]
                                          ["fn" ["&" "args"] ["assoc" "initial-comp" ":args" "args"]]]],
-                         "hr" ["defn" "hr" ["props" "&" "children"] ["create-element" ":hr" "props" "children"]],
                          "pick-attrs" ["defn"
                                        "pick-attrs"
                                        ["props"]
@@ -1649,52 +1630,7 @@
                                              ["dissoc" ":style"]
                                              ["merge" [":attrs" "props"]]]]]]
                                          ["sort-by" "first" "base-attrs"]]]],
-                         "style" ["defn"
-                                  "style"
-                                  ["props" "&" "children"]
-                                  ["create-element" ":style" "props" "children"]],
-                         "section" ["defn"
-                                    "section"
-                                    ["props" "&" "children"]
-                                    ["create-element" ":section" "props" "children"]],
-                         "span" ["defn" "span" ["props" "&" "children"] ["create-element" ":span" "props" "children"]],
-                         "script" ["defn"
-                                   "script"
-                                   ["props" "&" "children"]
-                                   ["create-element" ":script" "props" "children"]],
-                         "select" ["defn"
-                                   "select"
-                                   ["props" "&" "children"]
-                                   ["create-element" ":select" "props" "children"]],
-                         "a" ["defn" "a" ["props" "&" "children"] ["create-element" ":a" "props" "children"]],
-                         "meta'" ["defn" "meta'" ["props" "&" "children"] ["create-element" ":meta" "props" "children"]],
-                         "input" ["defn"
-                                  "input"
-                                  ["props" "&" "children"]
-                                  ["create-element" ":input" "props" "children"]],
-                         "head" ["defn" "head" ["props" "&" "children"] ["create-element" ":head" "props" "children"]],
-                         "title" ["defn"
-                                  "title"
-                                  ["props" "&" "children"]
-                                  ["create-element" ":title" "props" "children"]],
-                         "textarea" ["defn"
-                                     "textarea"
-                                     ["props" "&" "children"]
-                                     ["create-element" ":textarea" "props" "children"]],
-                         "link" ["defn" "link" ["props" "&" "children"] ["create-element" ":link" "props" "children"]],
-                         "div" ["defn" "div" ["props" "&" "children"] ["create-element" ":div" "props" "children"]],
-                         "pre" ["defn" "pre" ["props" "&" "children"] ["create-element" ":pre" "props" "children"]],
-                         "html" ["defn" "html" ["props" "&" "children"] ["create-element" ":html" "props" "children"]],
-                         "h1" ["defn" "h1" ["props" "&" "children"] ["create-element" ":h1" "props" "children"]],
-                         "code" ["defn" "code" ["props" "&" "children"] ["create-element" ":code" "props" "children"]],
-                         "header" ["defn"
-                                   "header"
-                                   ["props" "&" "children"]
-                                   ["create-element" ":header" "props" "children"]],
-                         "button" ["defn"
-                                   "button"
-                                   ["props" "&" "children"]
-                                   ["create-element" ":button" "props" "children"]]},
+                         "val-exists?" ["defn" "val-exists?" ["pair"] ["some?" ["last" "pair"]]]},
                   :procs []},
          "util.detect" {:ns ["ns" "respo.util.detect"],
                         :defs {"element?" ["defn" "element?" ["x"] ["and" ["map?" "x"] ["contains?" "x" ":event"]]],
@@ -1758,8 +1694,9 @@
                               :procs []},
          "test-component.task" {:ns ["ns"
                                      "respo.test-component.task"
+                                     [":require-macros" ["respo.macros" ":refer" ["div" "span"]]]
                                      [":require"
-                                      ["[]" "respo.alias" ":refer" ["[]" "div" "span" "create-comp"]]
+                                      ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]
                                       ["[]" "hsl.core" ":refer" ["[]" "hsl"]]]],
                                 :defs {"comp-task" ["def"
                                                     "comp-task"
@@ -1774,7 +1711,7 @@
          "core" {:ns ["ns"
                       "respo.core"
                       [":require"
-                       ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div" "span"]]
+                       ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]
                        ["[]" "respo.render.expander" ":refer" ["[]" "render-app"]]
                        ["[]" "respo.controller.deliver" ":refer" ["[]" "build-deliver-event"]]
                        ["[]" "respo.render.differ" ":refer" ["[]" "find-element-diffs"]]

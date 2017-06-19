@@ -1,6 +1,6 @@
 
 (ns respo.core
-  (:require [respo.alias :refer [create-comp div span]]
+  (:require [respo.alias :refer [create-comp]]
             [respo.render.expander :refer [render-app]]
             [respo.controller.deliver :refer [build-deliver-event]]
             [respo.render.differ :refer [find-element-diffs]]

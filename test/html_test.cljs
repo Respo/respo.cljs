@@ -1,15 +1,15 @@
 
 (ns respo.html-test
+  (:require-macros [respo.macros :refer [html
+                                         head
+                                         title
+                                         script
+                                         style
+                                         meta'
+                                         div
+                                         link
+                                         body]])
   (:require [cljs.test :refer-macros [deftest is testing run-tests]]
-            [respo.alias :refer [html
-                                 head
-                                 title
-                                 script
-                                 style
-                                 meta'
-                                 div
-                                 link
-                                 body]]
             [respo.test-component.todolist :refer [comp-todolist]]
             [respo.render.html :refer [make-string make-html]]))
 

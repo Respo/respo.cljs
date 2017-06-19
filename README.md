@@ -24,8 +24,8 @@ Component definition:
 
 ```clojure
 (ns respo.comp.space
-  (:rqeuire-macros [respo.macros :refer [defcomp]])
-  (:require [respo.alias :refer [create-comp div]]
+  (:rqeuire-macros [respo.macros :refer [defcomp div]])
+  (:require [respo.alias :refer [create-comp]]
             [respo.comp.text :refer [comp-text]]))
 
 (defcomp comp-demo [content]
@@ -43,7 +43,6 @@ Component definition:
 ;           {:class-name "demo-container"
 ;            :style {:color :red}}
 ;           (comp-text content nil))))))
-;
 ```
 
 App initialization:
@@ -69,7 +68,7 @@ App initialization:
 
 ```bash
 export deps=`boot show -c`
-lumo -Kc $deps:src/ -i test/html_test.cljs
+lumo -Kc $deps:src/:polyfill/ -i test/html_test.cljs
 ```
 
 ### Develop

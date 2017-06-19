@@ -10,13 +10,12 @@
 (defn escape-html [text] (-> text (string/replace (re-pattern "\"") "&quot;")))
 
 (defn style->string [styles]
-  (string/join
-   ""
-   (->> styles
-        (map
-         (fn [entry]
-           (let [k (first entry), v (last entry)]
-             (str (name k) ":" (if (string? v) (escape-html v) (ensure-string v)) ";")))))))
+  (->> styles
+       (map
+        (fn [entry]
+          (let [k (first entry), v (last entry)]
+            (str (name k) ":" (if (string? v) (escape-html v) (ensure-string v)) ";"))))
+       (string/join "")))
 
 (defn entry->string [entry]
   (let [k (first entry), v (last entry)]
