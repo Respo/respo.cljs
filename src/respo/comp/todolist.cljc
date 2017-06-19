@@ -1,10 +1,10 @@
 
 (ns respo.comp.todolist
-  (:require-macros (respo.macros :refer ()))
+  (:require-macros (respo.macros :refer (div span input )))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
             [respo.comp.task :refer [comp-task]]
-            [respo.alias :refer [create-comp div span input]]
+            [respo.alias :refer [create-comp]]
             [respo.cursor :refer [with-cursor]]
             [respo.comp.zero :refer [component-zero]]
             [respo.comp.debug :refer [comp-debug]]

@@ -12,4 +12,6 @@
                 :output-dir "target/"}
           :release {:output-dir "target"
                     :target :browser
-                    :modules {:main {:entries [respo.main]}}}}}
+                    :modules {:main {:entries [respo.main]}}
+                    :compiler-options {:pseudo-names true
+                                       :pretty-print true}}}}

@@ -328,10 +328,10 @@
                           :procs []},
          "comp.debug" {:ns ["ns"
                             "respo.comp.debug"
-                            [":require-macros" ["respo.macros" ":refer" []]]
+                            [":require-macros" ["respo.macros" ":refer" ["div" "span"]]]
                             [":require"
                              ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
-                             ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div" "span"]]]],
+                             ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]]],
                        :defs {"comp-debug" ["def"
                                             "comp-debug"
                                             ["create-comp"
@@ -646,11 +646,11 @@
                       :procs []},
          "comp.task" {:ns ["ns"
                            "respo.comp.task"
-                           [":require-macros" ["respo.macros" ":refer" []]]
+                           [":require-macros" ["respo.macros" ":refer" ["div" "input" "span" "button"]]]
                            [":require"
                             ["[]" "clojure.string" ":as" "string"]
                             ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
-                            ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div" "input" "span" "button"]]
+                            ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]
                             ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                             ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
                             ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
@@ -1050,9 +1050,9 @@
                    :procs []},
          "comp.container" {:ns ["ns"
                                 "respo.comp.container"
-                                [":require-macros" ["respo.macros" ":refer" ["div2"]]]
+                                [":require-macros" ["respo.macros" ":refer" ["div"]]]
                                 [":require"
-                                 ["respo.alias" ":refer" ["create-comp" "div"]]
+                                 ["respo.alias" ":refer" ["create-comp"]]
                                  ["respo.cursor" ":refer" ["with-cursor"]]
                                  ["respo.comp.text" ":refer" ["comp-text"]]
                                  ["respo.comp.todolist" ":refer" ["comp-todolist"]]]],
@@ -1067,10 +1067,6 @@
                                                        ["cursor"]
                                                        ["let"
                                                         [["state" [":states" "store"]]]
-                                                        ["println"
-                                                         "|First"
-                                                         ["div2" ["{}"] ["div" ["{}"]] ["div" ["{}"]]]]
-                                                        ["println" "|Second" ["div2" ["{}"] ["div" ["{}"]]]]
                                                         ["div"
                                                          ["{}"]
                                                          ["with-cursor"
@@ -1082,12 +1078,12 @@
                            :procs []},
          "comp.todolist" {:ns ["ns"
                                "respo.comp.todolist"
-                               [":require-macros" ["respo.macros" ":refer" [""]]]
+                               [":require-macros" ["respo.macros" ":refer" ["div" "span" "input" ""]]]
                                [":require"
                                 ["[]" "clojure.string" ":as" "string"]
                                 ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                 ["[]" "respo.comp.task" ":refer" ["[]" "comp-task"]]
-                                ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div" "span" "input"]]
+                                ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]
                                 ["[]" "respo.cursor" ":refer" ["[]" "with-cursor"]]
                                 ["[]" "respo.comp.zero" ":refer" ["[]" "component-zero"]]
                                 ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
@@ -1542,8 +1538,8 @@
                          :procs []},
          "comp.text" {:ns ["ns"
                            "respo.comp.text"
-                           [":require-macros" ["respo.macros" ":refer" []]]
-                           [":require" ["[]" "respo.alias" ":refer" ["[]" "create-comp" "span" "code"]]]],
+                           [":require-macros" ["respo.macros" ":refer" ["span" "code"]]]
+                           [":require" ["[]" "respo.alias" ":refer" ["[]" "create-comp"]]]],
                       :defs {"comp-text" ["def"
                                           "comp-text"
                                           ["create-comp"
@@ -1601,7 +1597,7 @@
                          "br" ["defn" "br" ["props" "&" "children"] ["create-element" ":br" "props" "children"]],
                          "create-element" ["defn"
                                            "create-element"
-                                           ["tag-name" "props" "children"]
+                                           ["tag-name" "props" "&" "children"]
                                            ["let"
                                             [["attrs" ["pick-attrs" "props"]]
                                              ["styles"

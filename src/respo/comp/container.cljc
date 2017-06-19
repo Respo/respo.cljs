@@ -1,7 +1,7 @@
 
 (ns respo.comp.container
-  (:require-macros (respo.macros :refer (div2)))
-  (:require (respo.alias :refer (create-comp div))
+  (:require-macros (respo.macros :refer (div)))
+  (:require (respo.alias :refer (create-comp))
             (respo.cursor :refer (with-cursor))
             (respo.comp.text :refer (comp-text))
             (respo.comp.todolist :refer (comp-todolist))))
@@ -14,8 +14,6 @@
    (fn [store]
      (fn [cursor]
        (let [state (:states store)]
-         (println "First" (div2 {} (div {}) (div {})))
-         (println "Second" (div2 {} (div {})))
          (div
           {}
           (with-cursor :todolist (comp-todolist (:todolist state) (:tasks store)))

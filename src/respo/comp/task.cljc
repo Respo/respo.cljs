@@ -1,9 +1,9 @@
 
 (ns respo.comp.task
-  (:require-macros (respo.macros :refer ()))
+  (:require-macros (respo.macros :refer (div input span button)))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
-            [respo.alias :refer [create-comp div input span button]]
+            [respo.alias :refer [create-comp]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]

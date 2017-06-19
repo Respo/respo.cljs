@@ -20,7 +20,7 @@
                           (merge (:attrs props))))]
       (sort-by first base-attrs))))
 
-(defn create-element [tag-name props children]
+(defn create-element [tag-name props & children]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (if (contains? props :event) (:event props) {})

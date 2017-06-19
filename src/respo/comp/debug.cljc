@@ -1,7 +1,7 @@
 
 (ns respo.comp.debug
-  (:require-macros (respo.macros :refer ()))
-  (:require [hsl.core :refer [hsl]] [respo.alias :refer [create-comp div span]]))
+  (:require-macros (respo.macros :refer (div span)))
+  (:require [hsl.core :refer [hsl]] [respo.alias :refer [create-comp]]))
 
 (def default-style
   {:position :absolute,
