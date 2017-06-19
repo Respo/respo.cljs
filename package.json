@@ -10,6 +10,7 @@
   "scripts": {
     "html": "cp assets/* target/",
     "watch": "shadow-cljs --build app --dev",
+    "cljs-test": "shadow-cljs --build test --once",
     "once": "shadow-cljs --build app --once",
     "release": "shadow-cljs --build release --release",
     "serve": "http-server target/ -s -c-1",

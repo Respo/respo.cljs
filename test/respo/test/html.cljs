@@ -1,5 +1,5 @@
 
-(ns respo.html-test
+(ns respo.test.html
   (:require-macros [respo.macros :refer [html
                                          head
                                          title
@@ -42,4 +42,5 @@
       "test generated HTML"
       (is (= (slurp "test/examples/simple.html") (make-html tree-demo))))))
 
-(run-tests)
+(defn main! []
+  (run-tests))

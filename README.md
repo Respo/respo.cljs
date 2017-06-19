@@ -67,8 +67,8 @@ App initialization:
 ### Test
 
 ```bash
-export deps=`boot show -c`
-lumo -Kc $deps:src/:polyfill/ -i test/html_test.cljs
+yarn cljs-test
+node target/test.js
 ```
 
 ### Develop

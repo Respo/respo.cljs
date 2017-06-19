@@ -1,5 +1,5 @@
 
-{:source-paths ["src" "polyfill"]
+{:source-paths ["src" "polyfill" "test"]
  :dependencies [[mvc-works/polyfill   "0.1.1"]
                 [mvc-works/hsl        "0.1.2"]
                 [binaryage/devtools   "0.9.2"]]
@@ -14,4 +14,7 @@
                     :target :browser
                     :modules {:main {:entries [respo.main]}}
                     :compiler-options {:pseudo-names true
-                                       :pretty-print true}}}}
+                                       :pretty-print true}}
+          :test {:target :node-script
+                 :output-to "target/test.js"
+                 :main respo.test.html/main!}}}
