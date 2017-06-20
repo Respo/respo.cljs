@@ -1,5 +1,5 @@
 
-(ns respo.render.differ
+(ns respo.render.diff
   (:require [clojure.string :as string]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component?]]

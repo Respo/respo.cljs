@@ -1,18 +1,18 @@
 
-(ns respo.comp.todolist
+(ns respo.app.comp.todolist
   (:require-macros (respo.macros :refer (div span input )))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
-            [respo.comp.task :refer [comp-task]]
-            [respo.alias :refer [create-comp]]
+            [respo.app.comp.task :refer [comp-task]]
+            [respo.core :refer [create-comp]]
             [respo.cursor :refer [with-cursor]]
-            [respo.comp.zero :refer [component-zero]]
+            [respo.app.comp.zero :refer [component-zero]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
-            [respo.comp.wrap :refer [comp-wrap]]
+            [respo.app.comp.wrap :refer [comp-wrap]]
             [polyfill.core :refer [text-width* io-get-time* set-timeout*]]
-            [respo.style.widget :as widget]))
+            [respo.app.style.widget :as widget]))
 
 (defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
 

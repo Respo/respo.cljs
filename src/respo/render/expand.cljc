@@ -1,5 +1,5 @@
 
-(ns respo.render.expander
+(ns respo.render.expand
   (:require [clojure.string :as string]
             [polyfill.core :refer [io-get-time*]]
             [respo.util.detect :refer [component? element? =seq]]

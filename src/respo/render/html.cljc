@@ -5,7 +5,7 @@
              :refer
              [prop->attr purify-element mute-element ensure-string text->html]]
             [respo.util.detect :refer [component? element?]]
-            [respo.render.expander :refer [render-app]]))
+            [respo.render.expand :refer [render-app]]))
 
 (defn escape-html [text] (-> text (string/replace (re-pattern "\"") "&quot;")))
 

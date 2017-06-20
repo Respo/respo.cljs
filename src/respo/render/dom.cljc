@@ -1,5 +1,5 @@
 
-(ns respo.render.make-dom
+(ns respo.render.dom
   (:require [clojure.string :as string]
             [respo.util.format :refer [dashed->camel event->prop ensure-string]]
             [polyfill.core :refer [document-create-element*]]))

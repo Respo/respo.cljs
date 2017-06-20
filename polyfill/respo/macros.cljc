@@ -1,6 +1,6 @@
 
 (ns respo.macros
-  (:require [respo.alias :refer [create-comp create-element]]))
+  (:require [respo.core :refer [create-comp create-element]]))
 
 (defmacro defcomp [comp-name params & body]
   "

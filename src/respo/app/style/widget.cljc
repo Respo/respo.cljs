@@ -1,5 +1,5 @@
 
-(ns respo.style.widget (:require [hsl.core :refer [hsl]]))
+(ns respo.app.style.widget (:require [hsl.core :refer [hsl]]))
 
 (def input
   {:font-size "16px",

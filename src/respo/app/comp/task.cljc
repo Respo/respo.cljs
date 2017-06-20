@@ -1,13 +1,13 @@
 
-(ns respo.comp.task
+(ns respo.app.comp.task
   (:require-macros (respo.macros :refer (div input span button)))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
-            [respo.alias :refer [create-comp]]
+            [respo.core :refer [create-comp]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
-            [respo.style.widget :as widget]))
+            [respo.app.style.widget :as widget]))
 
 (def style-task {:display :flex, :padding "4px 0px"})
 

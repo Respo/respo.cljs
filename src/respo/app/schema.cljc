@@ -1,5 +1,5 @@
 
-(ns respo.schema )
+(ns respo.app.schema )
 
 (def task {:id nil, :text "", :done? false})
 

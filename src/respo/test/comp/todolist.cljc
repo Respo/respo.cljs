@@ -1,8 +1,7 @@
 
-(ns respo.test-component.todolist
+(ns respo.test.comp.todolist
   (:require-macros (respo.macros :refer (div)))
-  (:require [respo.alias :refer [create-comp]]
-            [respo.test-component.task :refer [comp-task]]))
+  (:require [respo.core :refer [create-comp]] [respo.test.comp.task :refer [comp-task]]))
 
 (def style-todolist {:color :blue, :font-family "\"微软雅黑\", Verdana"})
 

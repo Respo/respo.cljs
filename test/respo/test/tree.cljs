@@ -1,7 +1,7 @@
 
 (ns respo.test.tree
   (:require [cljs.test :refer-macros [deftest is run-tests]]
-            [respo.render.differ :refer [find-element-diffs
+            [respo.render.diff :refer [find-element-diffs
                                          find-props-diffs]]))
 
 (def example-2

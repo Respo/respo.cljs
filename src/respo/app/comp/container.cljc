@@ -1,10 +1,10 @@
 
-(ns respo.comp.container
+(ns respo.app.comp.container
   (:require-macros (respo.macros :refer (div)))
-  (:require (respo.alias :refer (create-comp))
+  (:require (respo.core :refer (create-comp))
             (respo.cursor :refer (with-cursor))
             (respo.comp.text :refer (comp-text))
-            (respo.comp.todolist :refer (comp-todolist))))
+            (respo.app.comp.todolist :refer (comp-todolist))))
 
 (def style-states {:padding 8})
 

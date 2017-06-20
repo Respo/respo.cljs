@@ -1,9 +1,9 @@
 
-(ns respo.render.patcher
+(ns respo.render.patch
   (:require [clojure.string :as string]
             [polyfill.core :refer [read-string*]]
             [respo.util.format :refer [dashed->camel event->prop ensure-string]]
-            [respo.render.make-dom :refer [make-element style->string]]))
+            [respo.render.dom :refer [make-element style->string]]))
 
 (defn rm-event [target event-name]
   (let [event-prop (event->prop event-name)] (aset target event-prop nil)))

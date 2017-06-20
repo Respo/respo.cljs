@@ -25,7 +25,7 @@ Component definition:
 ```clojure
 (ns respo.comp.space
   (:rqeuire-macros [respo.macros :refer [defcomp div]])
-  (:require [respo.alias :refer [create-comp]]
+  (:require [respo.core :refer [create-comp]]
             [respo.comp.text :refer [comp-text]]))
 
 (defcomp comp-demo [content]
@@ -58,7 +58,7 @@ App initialization:
 (defn render-app! []
   (let [target (.querySelector js/document "#app")
         app (comp-container @*store)]
-    (render! app target dispatch!)))
+    (render! target app dispatch!)))
 
 (render-app!)
 (add-watch *store :changes (fn [] (render-app!)))

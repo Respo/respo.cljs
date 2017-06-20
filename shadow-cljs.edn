@@ -1,8 +1,7 @@
 
 {:source-paths ["src" "polyfill" "test"]
  :dependencies [[mvc-works/polyfill   "0.1.1"]
-                [mvc-works/hsl        "0.1.2"]
-                [binaryage/devtools   "0.9.2"]]
+                [mvc-works/hsl        "0.1.2"]]
  :builds {:app {:output-dir "target/"
                 :asset-path "."
                 :target :browser
