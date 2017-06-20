@@ -114,17 +114,23 @@ requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
+safe-buffer@~5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
+
 shadow-cljs-jar@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-0.7.0.tgz#a2b35c680be6420c20600402db791790d0e116ae"
 
-shadow-cljs@^0.9.5:
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-0.9.5.tgz#38bff72cc28e1bd27eec5e48656e4dc889c89e63"
+shadow-cljs@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-0.10.0.tgz#0f8d4793f90cf9b4b7cd3b8ffadfe1b060ebbac9"
   dependencies:
     mkdirp "^0.5.1"
     readline-sync "^1.4.7"
     shadow-cljs-jar "^0.7.0"
+    source-map-support "^0.4.15"
+    ws "^3.0.0"
 
 source-map-support@^0.4.15:
   version "0.4.15"
@@ -139,6 +145,10 @@ source-map@^0.5.6:
 ultron@1.0.x:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.0.2.tgz#ace116ab557cd197386a4e88f4685378c8b2e4fa"
+
+ultron@~1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.1.0.tgz#b07a2e6a541a815fc6a34ccd4533baec307ca864"
 
 union@~0.4.3:
   version "0.4.6"
@@ -160,3 +170,10 @@ ws@^1.0.1:
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
+
+ws@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-3.0.0.tgz#98ddb00056c8390cb751e7788788497f99103b6c"
+  dependencies:
+    safe-buffer "~5.0.1"
+    ultron "~1.1.0"
