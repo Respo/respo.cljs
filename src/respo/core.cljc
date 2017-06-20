@@ -7,7 +7,8 @@
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [polyfill.core :refer [log*]]
-            [respo.util.list :refer (pick-attrs arrange-children)]))
+            [respo.util.list :refer [pick-attrs arrange-children]]
+            [respo.util.detect :refer [component?]]))
 
 (defn create-element [tag-name props & children]
   (let [attrs (pick-attrs props)
@@ -27,7 +28,9 @@
 
 (defonce *global-element (atom nil))
 
-(defn mount-app! [markup target dispatch!]
+(defn mount-app! [target markup dispatch!]
+  (assert (instance? js/Element target) "1st argument should be an element")
+  (assert (component? markup) "2nd argument should be a component")
   (let [element (render-element markup)
         deliver-event (build-deliver-event *global-element dispatch!)]
     (comment println "mount app")
@@ -35,7 +38,7 @@
     (reset! *global-element element)
     (reset! *dom-element element)))
 
-(defn rerender-app! [markup target dispatch!]
+(defn rerender-app! [target markup dispatch!]
   (let [element (render-element markup)
         deliver-event (build-deliver-event *global-element dispatch!)
         *changes (atom [])
@@ -47,12 +50,14 @@
     (reset! *global-element element)
     (reset! *dom-element element)))
 
-(defn render! [target markup dispatch]
+(defn render! [target markup dispatch!]
   (if (some? @*global-element)
-    (rerender-app! markup target dispatch)
-    (mount-app! markup target dispatch)))
+    (rerender-app! target markup dispatch!)
+    (mount-app! target markup dispatch!)))
 
 (defn falsify-stage! [target element dispatch!]
+  (assert (instance? js/Element target) "1st argument should be an element")
+  (assert (component? element) "2nd argument should be a component")
   (reset! *global-element (mute-element element))
   (reset! *dom-element element))
 

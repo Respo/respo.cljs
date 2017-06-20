@@ -14,6 +14,9 @@
 
     (defcomp my-comp [x y] x)
   "
+  (assert (symbol? comp-name) "1st argument should be a symbol")
+  (assert (seq? params) "2nd argument should be a sequence")
+  (assert (not (empty? body)) "don not return nil from component")
   `(def ~comp-name
     (create-comp ~(keyword comp-name)
       (~'fn [~@params]
@@ -40,6 +43,7 @@
   `(code {:inner-text ~content, :style ~style}))
 
 (defmacro space-> [w h]
+  (assert (or (number? w) (number? h)) "space-> takes at least one number!")
   (let [style (if (some? w)
                 {:width w, :height "1px", :display :inline-block}
                 {:width "1px", :height h, :display :inline-block})]
