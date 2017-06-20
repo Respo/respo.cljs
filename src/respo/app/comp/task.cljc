@@ -1,13 +1,9 @@
 
 (ns respo.app.comp.task
-  (:require-macros (respo.macros :refer (div input span button)))
-  (:require [clojure.string :as string]
-            [hsl.core :refer [hsl]]
-            [respo.core :refer [create-comp]]
-            [respo.comp.debug :refer [comp-debug]]
-            [respo.comp.space :refer [comp-space]]
-            [respo.comp.text :refer [comp-text]]
-            [respo.app.style.widget :as widget]))
+  (:require-macros [respo.macros
+                    :refer
+                    [defcomp div input span button span-> space-> value->]])
+  (:require [hsl.core :refer [hsl]] [respo.core] [respo.app.style.widget :as widget]))
 
 (def style-task {:display :flex, :padding "4px 0px"})
 
@@ -27,29 +23,24 @@
 
 (defn on-text-state [cursor] (fn [e dispatch!] (dispatch! :states [cursor (:value e)])))
 
-(def comp-task
-  (create-comp
-   :task
-   (fn [states task]
-     (fn [cursor]
-       (let [state (or (:data states) "")]
-         (div
-          {:style style-task}
-          (comp-debug task {:right 8})
-          (button
-           {:style (merge
-                    style-done
-                    {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
-            :event {:click (handle-done (:id task))}})
-          (comp-space 8 nil)
-          (input
-           {:value (:text task), :style widget/input, :event {:input (on-text-change task)}})
-          (comp-space 8 nil)
-          (input
-           {:value state, :style widget/input, :event {:input (on-text-state cursor)}})
-          (comp-space 8 nil)
-          (div
-           {:style widget/button, :event {:click (handle-remove task)}}
-           (comp-text "Remove" nil))
-          (comp-space 8 nil)
-          (div {} (comp-text state nil))))))))
+(defcomp
+ comp-task
+ (states task)
+ (let [state (or (:data states) "")]
+   (div
+    {:style style-task}
+    (value-> task {:right 8})
+    (button
+     {:style (merge
+              style-done
+              {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
+      :event {:click (handle-done (:id task))}})
+    (space-> 8 nil)
+    (input
+     {:value (:text task), :style widget/input, :event {:input (on-text-change task)}})
+    (space-> 8 nil)
+    (input {:value state, :style widget/input, :event {:input (on-text-state cursor)}})
+    (space-> 8 nil)
+    (div {:style widget/button, :event {:click (handle-remove task)}} (span-> "Remove" nil))
+    (space-> 8 nil)
+    (div {} (span-> state nil)))))

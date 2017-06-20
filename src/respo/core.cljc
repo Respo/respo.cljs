@@ -1,6 +1,7 @@
 
 (ns respo.core
-  (:require [respo.render.expand :refer [render-app]]
+  (:require (respo.style)
+            [respo.render.expand :refer [render-app]]
             [respo.controller.resolve :refer [build-deliver-event]]
             [respo.render.diff :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]

@@ -24,25 +24,24 @@ Component definition:
 
 ```clojure
 (ns respo.comp.space
-  (:rqeuire-macros [respo.macros :refer [defcomp div]])
-  (:require [respo.core :refer [create-comp]]
-            [respo.comp.text :refer [comp-text]]))
+  (:rqeuire-macros [respo.macros :refer [defcomp div span span->]])
+  (:require [respo.core :refer [create-comp create-element]]))
 
 (defcomp comp-demo [content]
   (div
     {:class-name "demo-container"
      :style {:color :red}}
-    (comp-text content nil)))
+    (span-> content nil)))
 
-; ; which is expanded to:
+; ; which expands to:
 ; (def comp-demo
 ;   (create-comp :demo
 ;     (fn [content]
 ;       (fn [cursor]
-;         (div
+;         (create-element :div
 ;           {:class-name "demo-container"
 ;            :style {:color :red}}
-;           (comp-text content nil))))))
+;           (create-element :span {:inner-text content, :style nil}))))))
 ```
 
 App initialization:

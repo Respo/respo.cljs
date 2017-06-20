@@ -1,6 +1,7 @@
 
 (ns respo.macros
-  (:require [respo.core :refer [create-comp create-element]]))
+  (:require [respo.core :refer [create-comp create-element]]
+            [respo.style :refer [style-value]]))
 
 (defmacro defcomp [comp-name params & body]
   "
@@ -28,7 +29,21 @@
      `(create-element ~(keyword '~el) ~~'props ~@~'children)))
 
 (defmacro define-element-macro []
-  (println "called during compile time")
   `(do ~@(clojure.core/map gen-dom-macro support-elements)))
 
 (define-element-macro)
+
+(defmacro span-> [content style]
+  `(span {:inner-text ~content, :style ~style}))
+
+(defmacro code-> [content style]
+  `(code {:inner-text ~content, :style ~style}))
+
+(defmacro space-> [w h]
+  (let [style (if (some? w)
+                {:width w, :height "1px", :display :inline-block}
+                {:width "1px", :height h, :display :inline-block})]
+    `(div {:style ~style})))
+
+(defmacro value-> [data more-style]
+  `(div {:inner-text (pr-str ~data) :style (merge style-value ~more-style)}))

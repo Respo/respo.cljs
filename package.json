@@ -17,7 +17,7 @@
     "serve": "http-server target/ -s -c-1",
     "del": "rm -r target/*",
     "tiye": "rsync -r target/ repo.respo.site:repo/Respo/respo",
-    "build": "yarn del && yarn html && yarn release && yarn serve"
+    "build": "yarn del && yarn html && yarn release"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 
 (ns respo.app.comp.zero
-  (:require-macros (respo.macros :refer (div span)))
-  (:require [respo.core :refer [create-comp]]))
+  (:require-macros [respo.macros :refer [defcomp div]])
+  (:require [respo.core]))
 
-(def component-zero (create-comp :zero (fn [] (fn [state mutate] (div {:inner-text 0})))))
+(defcomp comp-zero () (div {:inner-text 0}))
