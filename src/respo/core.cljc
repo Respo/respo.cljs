@@ -7,7 +7,6 @@
             [respo.render.diff :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
-            [polyfill.core :refer [log*]]
             [respo.util.list :refer [pick-attrs arrange-children]]
             [respo.util.detect :refer [component?]]))
 

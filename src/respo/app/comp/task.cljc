@@ -1,9 +1,11 @@
 
 (ns respo.app.comp.task
-  (:require-macros [respo.macros
-                    :refer
-                    [defcomp div input span button span-> space-> value->]])
-  (:require [hsl.core :refer [hsl]] [respo.core] [respo.app.style.widget :as widget]))
+  (:require-macros [respo.macros :refer [defcomp div input span button <>]])
+  (:require [hsl.core :refer [hsl]]
+            [respo.core :refer [create-comp]]
+            [respo.comp.space :refer [comp-space]]
+            [respo.comp.inspect :refer [comp-inspect]]
+            [respo.app.style.widget :as widget]))
 
 (def style-task {:display :flex, :padding "4px 0px"})
 
@@ -29,18 +31,20 @@
  (let [state (or (:data states) "")]
    (div
     {:style style-task}
-    (value-> task {:right 8})
+    (comp-inspect "Task" task {:left 200})
     (button
      {:style (merge
               style-done
               {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
       :event {:click (handle-done (:id task))}})
-    (space-> 8 nil)
+    (comp-space 8 nil)
     (input
      {:value (:text task), :style widget/input, :event {:input (on-text-change task)}})
-    (space-> 8 nil)
+    (comp-space 8 nil)
     (input {:value state, :style widget/input, :event {:input (on-text-state cursor)}})
-    (space-> 8 nil)
-    (div {:style widget/button, :event {:click (handle-remove task)}} (span-> "Remove" nil))
-    (space-> 8 nil)
-    (div {} (span-> state nil)))))
+    (comp-space 8 nil)
+    (div
+     {:style widget/button, :event {:click (handle-remove task)}}
+     (<> span "Remove" nil))
+    (comp-space 8 nil)
+    (div {} (<> span state nil)))))

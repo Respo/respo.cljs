@@ -1,11 +1,13 @@
 
 (ns respo.app.comp.todolist
-  (:require-macros (respo.macros :refer (div span input span-> space-> value-> )))
+  (:require-macros (respo.macros :refer (div span input span <> )))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
             [respo.core :refer [create-comp]]
             [respo.cursor :refer [with-cursor]]
+            [respo.comp.space :refer [comp-space]]
+            [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.comp.zero :refer [comp-zero]]
             [respo.app.comp.wrap :refer [comp-wrap]]
             [polyfill.core :refer [text-width* io-get-time* set-timeout*]]
@@ -65,7 +67,7 @@
        (let [state (or (:data states) initial-state)]
          (div
           {:style style-root}
-          (value-> state {:left "80px"})
+          (comp-inspect "States" state {:left "80px"})
           (div
            {:style style-panel}
            (input
@@ -77,16 +79,18 @@
                               200
                               (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
              :event {:input (on-text-change cursor state), :focus on-focus}})
-           (space-> 8 nil)
+           (comp-space 8 nil)
            (span
             {:style widget/button, :event {:click (handle-add cursor state)}}
-            (span-> "Add" nil))
-           (space-> 8 nil)
+            (<> span "Add" nil))
+           (comp-space 8 nil)
            (span {:inner-text "Clear", :style widget/button, :event {:click clear-done}})
-           (space-> 8 nil)
+           (comp-space 8 nil)
            (div
             {}
-            (div {:style widget/button, :event {:click on-test}} (span-> "heavy tasks" nil))))
+            (div
+             {:style widget/button, :event {:click on-test}}
+             (<> span "heavy tasks" nil))))
           (div
            {:class-name "task-list", :style style-list}
            (->> tasks
@@ -100,11 +104,11 @@
              {:spell-check true, :style style-toolbar}
              (div
               {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
-              (span-> "Clear2" nil))
-             (space-> 8 nil)
+              (<> span "Clear2" nil))
+             (comp-space 8 nil)
              (div
               {:style widget/button, :event {:click (on-lock cursor state)}}
-              (span-> (str "Lock?" (:locked? state)) nil))
-             (space-> 8 nil)
+              (<> span (str "Lock?" (:locked? state)) nil))
+             (comp-space 8 nil)
              (comp-wrap (comp-zero))))
-          (comment value-> tasks {})))))))
+          (comp-inspect "Tasks" tasks {:left 500, :top 20})))))))

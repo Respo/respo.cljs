@@ -1,7 +1,6 @@
 
 (ns respo.macros
-  (:require [respo.core :refer [create-comp create-element]]
-            [respo.style :refer [style-value]]))
+  (:require [respo.core :refer [create-comp create-element]]))
 
 (defmacro defcomp [comp-name params & body]
   "
@@ -36,18 +35,5 @@
 
 (define-element-macro)
 
-(defmacro span-> [content style]
-  `(span {:inner-text ~content, :style ~style}))
-
-(defmacro code-> [content style]
-  `(code {:inner-text ~content, :style ~style}))
-
-(defmacro space-> [w h]
-  (assert (or (number? w) (number? h)) "space-> takes at least one number!")
-  (let [style (if (some? w)
-                {:width w, :height "1px", :display :inline-block}
-                {:width "1px", :height h, :display :inline-block})]
-    `(div {:style ~style})))
-
-(defmacro value-> [data more-style]
-  `(div {:inner-text (pr-str ~data) :style (merge style-value ~more-style)}))
+(defmacro <> [el content style]
+  `(~el {:inner-text ~content, :style ~style}))
