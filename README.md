@@ -17,7 +17,7 @@ Respo is based on ClojureScript ecosystem. Use Boot or Leiningen to install it.
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.5.1"]
+[respo "0.5.2"]
 ```
 
 Component definition:
@@ -33,15 +33,15 @@ Component definition:
      :style {:color :red}}
     (<> span content nil)))
 
-; ; which expands to:
-; (def comp-demo
-;   (create-comp :demo
-;     (fn [content]
-;       (fn [cursor]
-;         (create-element :div
-;           {:class-name "demo-container"
-;            :style {:color :red}}
-;           (create-element :span {:inner-text content, :style nil}))))))
+; which expands to:
+(def comp-demo
+  (create-comp :demo
+    (fn [content]
+      (fn [cursor]
+        (create-element :div
+          {:class-name "demo-container"
+           :style {:color :red}}
+          (create-element :span {:inner-text content, :style nil}))))))
 ```
 
 App initialization:
