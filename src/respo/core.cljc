@@ -1,6 +1,7 @@
 
 (ns respo.core
-  (:require (respo.style)
+  (:require [respo.style]
+            [respo.env :refer [element-type]]
             [respo.render.expand :refer [render-app]]
             [respo.controller.resolve :refer [build-deliver-event]]
             [respo.render.diff :refer [find-element-diffs]]
@@ -29,7 +30,7 @@
 (defonce *global-element (atom nil))
 
 (defn mount-app! [target markup dispatch!]
-  (assert (instance? js/Element target) "1st argument should be an element")
+  (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? markup) "2nd argument should be a component")
   (let [element (render-element markup)
         deliver-event (build-deliver-event *global-element dispatch!)]
@@ -56,7 +57,7 @@
     (mount-app! target markup dispatch!)))
 
 (defn falsify-stage! [target element dispatch!]
-  (assert (instance? js/Element target) "1st argument should be an element")
+  (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? element) "2nd argument should be a component")
   (reset! *global-element (mute-element element))
   (reset! *dom-element element))

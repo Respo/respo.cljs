@@ -8,15 +8,15 @@
     "test": "test"
   },
   "scripts": {
+    "tiye": "rsync -r target/ repo.respo.site:repo/Respo/respo",
     "html": "cp assets/* target/",
-    "watch": "shadow-cljs --build app --dev",
-    "sv": "shadow-cljs --server",
-    "cljs-test": "shadow-cljs --build test --once",
-    "once": "shadow-cljs --build app --once",
-    "release": "shadow-cljs --build release --release",
+    "watch": "shadow-cljs watch app",
+    "sv": "shadow-cljs server",
+    "compile-test": "shadow-cljs build test",
+    "compile": "shadow-cljs compile app",
+    "release": "shadow-cljs release release",
     "serve": "http-server target/ -s -c-1",
     "del": "rm -r target/*",
-    "tiye": "rsync -r target/ repo.respo.site:repo/Respo/respo",
     "build": "yarn del && yarn html && yarn release"
   },
   "repository": {
@@ -32,8 +32,8 @@
   "dependencies": {},
   "devDependencies": {
     "http-server": "^0.10.0",
-    "shadow-cljs": "^0.10.0",
+    "shadow-cljs": "^0.12.0",
     "source-map-support": "^0.4.15",
-    "ws": "^1.0.1"
+    "ws": "^3.0.0"
   }
 }
