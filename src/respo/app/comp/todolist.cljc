@@ -6,7 +6,7 @@
             [respo.app.comp.task :refer [comp-task]]
             [respo.core :refer [create-comp]]
             [respo.cursor :refer [with-cursor]]
-            [respo.comp.space :refer [comp-space]]
+            [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.comp.zero :refer [comp-zero]]
             [respo.app.comp.wrap :refer [comp-wrap]]
@@ -79,13 +79,13 @@
                               200
                               (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
              :event {:input (on-text-change cursor state), :focus on-focus}})
-           (comp-space 8 nil)
+           (=< 8 nil)
            (span
             {:style widget/button, :event {:click (handle-add cursor state)}}
             (<> span "Add" nil))
-           (comp-space 8 nil)
+           (=< 8 nil)
            (span {:inner-text "Clear", :style widget/button, :event {:click clear-done}})
-           (comp-space 8 nil)
+           (=< 8 nil)
            (div
             {}
             (div
@@ -105,10 +105,10 @@
              (div
               {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
               (<> span "Clear2" nil))
-             (comp-space 8 nil)
+             (=< 8 nil)
              (div
               {:style widget/button, :event {:click (on-lock cursor state)}}
               (<> span (str "Lock?" (:locked? state)) nil))
-             (comp-space 8 nil)
+             (=< 8 nil)
              (comp-wrap (comp-zero))))
           (comp-inspect "Tasks" tasks {:left 500, :top 20})))))))

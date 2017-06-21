@@ -3,7 +3,7 @@
   (:require-macros [respo.macros :refer [defcomp div input span button <>]])
   (:require [hsl.core :refer [hsl]]
             [respo.core :refer [create-comp]]
-            [respo.comp.space :refer [comp-space]]
+            [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.style.widget :as widget]))
 
@@ -37,14 +37,14 @@
               style-done
               {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
       :event {:click (handle-done (:id task))}})
-    (comp-space 8 nil)
+    (=< 8 nil)
     (input
      {:value (:text task), :style widget/input, :event {:input (on-text-change task)}})
-    (comp-space 8 nil)
+    (=< 8 nil)
     (input {:value state, :style widget/input, :event {:input (on-text-state cursor)}})
-    (comp-space 8 nil)
+    (=< 8 nil)
     (div
      {:style widget/button, :event {:click (handle-remove task)}}
      (<> span "Remove" nil))
-    (comp-space 8 nil)
+    (=< 8 nil)
     (div {} (<> span state nil)))))
