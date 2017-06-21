@@ -383,13 +383,7 @@
                                             ["list"]
                                             ["let"
                                              [["base-attrs"
-                                               ["merge"
-                                                ["->"
-                                                 "props"
-                                                 ["dissoc" ":attrs"]
-                                                 ["dissoc" ":event"]
-                                                 ["dissoc" ":style"]
-                                                 ["merge" [":attrs" "props"]]]]]]
+                                               ["merge" ["->" "props" ["dissoc" ":event"] ["dissoc" ":style"]]]]]
                                              ["sort-by" "first" "base-attrs"]]]],
                              "val-exists?" ["defn" "val-exists?" ["pair"] ["some?" ["last" "pair"]]]},
                       :procs []},

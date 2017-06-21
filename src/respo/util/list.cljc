@@ -16,10 +16,5 @@
 (defn pick-attrs [props]
   (if (nil? props)
     (list)
-    (let [base-attrs (merge
-                      (-> props
-                          (dissoc :attrs)
-                          (dissoc :event)
-                          (dissoc :style)
-                          (merge (:attrs props))))]
+    (let [base-attrs (merge (-> props (dissoc :event) (dissoc :style)))]
       (sort-by first base-attrs))))
