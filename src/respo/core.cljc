@@ -1,7 +1,6 @@
 
 (ns respo.core
-  (:require [respo.style]
-            [respo.env :refer [element-type]]
+  (:require [respo.env :refer [element-type]]
             [respo.render.expand :refer [render-app]]
             [respo.controller.resolve :refer [build-deliver-event]]
             [respo.render.diff :refer [find-element-diffs]]

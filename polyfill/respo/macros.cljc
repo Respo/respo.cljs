@@ -26,6 +26,8 @@
                         option p pre script section select span style textarea title
                         ul])
 
+(defmacro meta' [props & children] `(create-element :meta ~props ~@children))
+
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
      `(create-element ~(keyword '~el) ~~'props ~@~'children)))

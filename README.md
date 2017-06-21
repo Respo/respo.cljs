@@ -24,14 +24,14 @@ Component definition:
 
 ```clojure
 (ns respo.comp.space
-  (:rqeuire-macros [respo.macros :refer [defcomp div span span->]])
+  (:rqeuire-macros [respo.macros :refer [defcomp div span <>]])
   (:require [respo.core :refer [create-comp create-element]]))
 
 (defcomp comp-demo [content]
   (div
     {:class-name "demo-container"
      :style {:color :red}}
-    (span-> content nil)))
+    (<> span content nil)))
 
 ; ; which expands to:
 ; (def comp-demo
@@ -66,7 +66,7 @@ App initialization:
 ### Test
 
 ```bash
-yarn cljs-test
+yarn compile-test
 node target/test.js
 ```
 
