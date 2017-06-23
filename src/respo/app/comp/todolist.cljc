@@ -1,11 +1,10 @@
 
 (ns respo.app.comp.todolist
-  (:require-macros (respo.macros :refer (defcomp div span input <>)))
+  (:require-macros (respo.macros :refer (defcomp div span input <> cursor->)))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
             [respo.core :refer [create-comp]]
-            [respo.cursor :refer [with-cursor]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.comp.zero :refer [comp-zero]]
@@ -86,8 +85,7 @@
           (reverse)
           (map
            (fn [task]
-             (let [task-id (:id task)]
-               [task-id (with-cursor task-id (comp-task (get states task-id) task))])))))
+             (let [task-id (:id task)] [task-id (cursor-> task-id comp-task states task)])))))
     (if (> (count tasks) 0)
       (div
        {:spell-check true, :style style-toolbar}

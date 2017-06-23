@@ -39,3 +39,6 @@
 
 (defmacro <> [el content style]
   `(~el {:inner-text ~content, :style ~style}))
+
+(defmacro cursor-> [k component states & args]
+  `(~'assoc (~component (~'get ~states ~k) ~@args) :cursor ~k))

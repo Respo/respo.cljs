@@ -412,13 +412,13 @@
                           :procs []},
          "app.comp.todolist" {:ns ["ns"
                                    "respo.app.comp.todolist"
-                                   [":require-macros" ["respo.macros" ":refer" ["defcomp" "div" "span" "input" "<>"]]]
+                                   [":require-macros"
+                                    ["respo.macros" ":refer" ["defcomp" "div" "span" "input" "<>" "cursor->"]]]
                                    [":require"
                                     ["[]" "clojure.string" ":as" "string"]
                                     ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                     ["[]" "respo.app.comp.task" ":refer" ["[]" "comp-task"]]
                                     ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
-                                    ["[]" "respo.cursor" ":refer" ["[]" "with-cursor"]]
                                     ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
                                     ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
                                     ["[]" "respo.app.comp.zero" ":refer" ["[]" "comp-zero"]]
@@ -560,9 +560,7 @@
                                                              [["task-id" [":id" "task"]]]
                                                              ["[]"
                                                               "task-id"
-                                                              ["with-cursor"
-                                                               "task-id"
-                                                               ["comp-task" ["get" "states" "task-id"] "task"]]]]]]]]
+                                                              ["cursor->" "task-id" "comp-task" "states" "task"]]]]]]]
                                                         ["if"
                                                          [">" ["count" "tasks"] "0"]
                                                          ["div"
@@ -1266,8 +1264,7 @@
                                      ["states"]
                                      ["let"
                                       [[["[]" "cursor" "next-state"] "op-data"]]
-                                      ["assoc-in" "states" ["conj" "cursor" ":data"] "next-state"]]]],
-                          "with-cursor" ["defn" "with-cursor" ["k" "component"] ["assoc" "component" ":cursor" "k"]]},
+                                      ["assoc-in" "states" ["conj" "cursor" ":data"] "next-state"]]]]},
                    :procs []},
          "test.comp.todolist" {:ns ["ns"
                                     "respo.test.comp.todolist"
@@ -1296,9 +1293,8 @@
          "app.comp.container" {:ns ["ns"
                                     "respo.app.comp.container"
                                     [":require-macros"
-                                     ["[]" "respo.macros" ":refer" ["[]" "defcomp" "div" "span" "<>"]]]
+                                     ["[]" "respo.macros" ":refer" ["[]" "defcomp" "div" "span" "<>" "cursor->"]]]
                                     [":require"
-                                     ["[]" "respo.cursor" ":refer" ["[]" "with-cursor"]]
                                      ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
                                      ["[]" "respo.app.comp.todolist" ":refer" ["[]" "comp-todolist"]]]],
                                :defs {"style-states" ["def" "style-states" ["{}" [":padding" "8"]]],
@@ -1309,9 +1305,11 @@
                                                          [["state" [":states" "store"]]]
                                                          ["div"
                                                           ["{}" [":style" "style-global"]]
-                                                          ["with-cursor"
+                                                          ["cursor->"
                                                            ":todolist"
-                                                           ["comp-todolist" [":todolist" "state"] [":tasks" "store"]]]
+                                                           "comp-todolist"
+                                                           "state"
+                                                           [":tasks" "store"]]
                                                           ["div"
                                                            ["{}" [":style" "style-states"]]
                                                            ["<>" "span" ["pr-str" [":states" "store"]] "nil"]]]]],
