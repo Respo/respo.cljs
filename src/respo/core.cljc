@@ -54,12 +54,6 @@
     (rerender-app! target markup dispatch!)
     (mount-app! target markup dispatch!)))
 
-(defn falsify-stage! [target element dispatch!]
-  (assert (instance? element-type target) "1st argument should be an element")
-  (assert (component? element) "2nd argument should be a component")
-  (reset! *global-element (mute-element element))
-  (reset! *dom-element element))
-
 (defn create-comp [comp-name render]
   (comment println "create component:" comp-name)
   (let [initial-comp {:name comp-name,
@@ -70,5 +64,12 @@
                       :cost nil,
                       :cursor nil}]
     (fn [& args] (assoc initial-comp :args args))))
+
+(defn realize-ssr! [target markup dispatch!]
+  (assert (instance? element-type target) "1st argument should be an element")
+  (assert (component? markup) "2nd argument should be a component")
+  (let [element (render-element markup)]
+    (reset! *global-element (mute-element element))
+    (reset! *dom-element element)))
 
 (defn clear-cache! [] (reset! *dom-element nil))

@@ -1720,15 +1720,6 @@
                                        ["activate-instance!" ["purify-element" "element"] "target" "deliver-event"]
                                        ["reset!" "*global-element" "element"]
                                        ["reset!" "*dom-element" "element"]]],
-                        "falsify-stage!" ["defn"
-                                          "falsify-stage!"
-                                          ["target" "element" "dispatch!"]
-                                          ["assert"
-                                           ["instance?" "element-type" "target"]
-                                           "|1st argument should be an element"]
-                                          ["assert" ["component?" "element"] "|2nd argument should be a component"]
-                                          ["reset!" "*global-element" ["mute-element" "element"]]
-                                          ["reset!" "*dom-element" "element"]],
                         "create-comp" ["defn"
                                        "create-comp"
                                        ["comp-name" "render"]
@@ -1744,6 +1735,17 @@
                                            [":cost" "nil"]
                                            [":cursor" "nil"]]]]
                                         ["fn" ["&" "args"] ["assoc" "initial-comp" ":args" "args"]]]],
+                        "realize-ssr!" ["defn"
+                                        "realize-ssr!"
+                                        ["target" "markup" "dispatch!"]
+                                        ["assert"
+                                         ["instance?" "element-type" "target"]
+                                         "|1st argument should be an element"]
+                                        ["assert" ["component?" "markup"] "|2nd argument should be a component"]
+                                        ["let"
+                                         [["element" ["render-element" "markup"]]]
+                                         ["reset!" "*global-element" ["mute-element" "element"]]
+                                         ["reset!" "*dom-element" "element"]]],
                         "*dom-element" ["defonce" "*dom-element" ["atom" "nil"]],
                         "rerender-app!" ["defn"
                                          "rerender-app!"
