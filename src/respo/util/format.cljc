@@ -2,7 +2,7 @@
 (ns respo.util.format
   (:require [clojure.string :as string] [respo.util.detect :refer [component? element?]]))
 
-(defn prop->attr [x] (case x "class-name" "class" x))
+(defn prop->attr [x] (case x "class-name" "class" "tab-index" "tabindex" x))
 
 (defn event->prop [x] (str "on" (name x)))
 

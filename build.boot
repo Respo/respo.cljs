@@ -4,7 +4,7 @@
   :dependencies '[[mvc-works/hsl        "0.1.2"   :scope "provided"]
                   [mvc-works/polyfill   "0.1.1"]])
 
-(def +version+ "0.5.4")
+(def +version+ "0.5.5")
 
 (task-options!
   pom {:project     'respo/respo

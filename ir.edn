@@ -1134,7 +1134,10 @@
                              [":require"
                               ["[]" "clojure.string" ":as" "string"]
                               ["[]" "respo.util.detect" ":refer" ["[]" "component?" "element?"]]]],
-                        :defs {"prop->attr" ["defn" "prop->attr" ["x"] ["case" "x" ["|class-name" "|class"] "x"]],
+                        :defs {"prop->attr" ["defn"
+                                             "prop->attr"
+                                             ["x"]
+                                             ["case" "x" ["|class-name" "|class"] ["|tab-index" "|tabindex"] "x"]],
                                "event->prop" ["defn" "event->prop" ["x"] ["str" "|on" ["name" "x"]]],
                                "ensure-string" ["defn"
                                                 "ensure-string"
