@@ -22,7 +22,9 @@
    :overflow :ellipsis,
    :cursor :default})
 
-(defn on-click [data] (fn [e dispatch!] (log* (data->native data)) (println data)))
+(defn on-click [data]
+  (fn [e dispatch!]
+    (let [raw (pr-str data)] (if (> (count raw) 60) (log* (data->native data))) (log* raw))))
 
 (defn grab-info [data]
   (cond

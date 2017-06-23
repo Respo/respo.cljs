@@ -54,9 +54,13 @@
   (fn [coord event-name simple-event]
     (let [target-element (find-event-target @*global-element coord event-name)
           target-component (get-component-at @*global-element coord)
-          target-listener (get (:event target-element) event-name)]
+          this-cursor (:cursor target-component)
+          target-listener (get (:event target-element) event-name)
+          mutate! (fn
+                    ([next-state] (dispatch! :states [this-cursor next-state]))
+                    ([cursor next-state] (dispatch! :states [cursor next-state])))]
       (if (some? target-listener)
         (do
          (comment println "listener found:" coord event-name)
-         (target-listener simple-event dispatch!))
+         (target-listener simple-event dispatch! mutate!))
         (comment println "found no listener:" coord event-name)))))

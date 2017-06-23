@@ -13,8 +13,9 @@
   (render-app! mount-target)
   (add-watch *store :rerender
     (fn [] (render-app! mount-target)))
-  (reset! *changes-logger (fn [old-tree new-tree changes]
-                              (.log js/console (clj->js changes)))))
+  ; (reset! *changes-logger (fn [old-tree new-tree changes]
+  ;                             (.log js/console (clj->js changes))))
+  )
 
 (set! (.-onload js/window) main!)
 

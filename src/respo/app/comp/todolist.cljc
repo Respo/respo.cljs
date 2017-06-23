@@ -1,6 +1,6 @@
 
 (ns respo.app.comp.todolist
-  (:require-macros (respo.macros :refer (div span input <>)))
+  (:require-macros (respo.macros :refer (defcomp div span input <>)))
   (:require [clojure.string :as string]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
@@ -15,10 +15,8 @@
 
 (defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
 
-(defn handle-add [cursor state]
-  (fn [e dispatch!]
-    (dispatch! :add (:draft state))
-    (dispatch! :states [cursor (assoc state :draft "")])))
+(defn handle-add [state]
+  (fn [e dispatch! mutate!] (dispatch! :add (:draft state)) (mutate! (assoc state :draft ""))))
 
 (def style-root
   {:color :black,
@@ -53,62 +51,53 @@
 
 (def initial-state {:draft "", :locked? false})
 
-(defn on-text-change [cursor state]
-  (fn [e dispatch!] (dispatch! :states [cursor (assoc state :draft (:value e))])))
+(defn on-text-change [state]
+  (fn [e dispatch! mutate!] (mutate! (assoc state :draft (:value e)))))
 
-(defn on-lock [cursor state]
-  (fn [e dispatch!] (dispatch! :states [cursor (update state :locked? not)])))
+(defn on-lock [state] (fn [e dispatch! mutate!] (mutate! (update state :locked? not))))
 
-(def comp-todolist
-  (create-comp
-   :todolist
-   (fn [states tasks]
-     (fn [cursor]
-       (let [state (or (:data states) initial-state)]
-         (div
-          {:style style-root}
-          (comp-inspect "States" state {:left "80px"})
-          (div
-           {:style style-panel}
-           (input
-            {:placeholder "Text",
-             :value (:draft state),
-             :style (merge
-                     widget/input
-                     {:width (max
-                              200
-                              (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
-             :event {:input (on-text-change cursor state), :focus on-focus}})
-           (=< 8 nil)
-           (span
-            {:style widget/button, :event {:click (handle-add cursor state)}}
-            (<> span "Add" nil))
-           (=< 8 nil)
-           (span {:inner-text "Clear", :style widget/button, :event {:click clear-done}})
-           (=< 8 nil)
-           (div
-            {}
-            (div
-             {:style widget/button, :event {:click on-test}}
-             (<> span "heavy tasks" nil))))
-          (div
-           {:class-name "task-list", :style style-list}
-           (->> tasks
-                (reverse)
-                (map
-                 (fn [task]
-                   (let [task-id (:id task)]
-                     [task-id (with-cursor task-id (comp-task (get states task-id) task))])))))
-          (if (> (count tasks) 0)
-            (div
-             {:spell-check true, :style style-toolbar}
-             (div
-              {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
-              (<> span "Clear2" nil))
-             (=< 8 nil)
-             (div
-              {:style widget/button, :event {:click (on-lock cursor state)}}
-              (<> span (str "Lock?" (:locked? state)) nil))
-             (=< 8 nil)
-             (comp-wrap (comp-zero))))
-          (comp-inspect "Tasks" tasks {:left 500, :top 20})))))))
+(defcomp
+ comp-todolist
+ (states tasks)
+ (let [state (or (:data states) initial-state)]
+   (div
+    {:style style-root}
+    (comp-inspect "States" state {:left "80px"})
+    (div
+     {:style style-panel}
+     (input
+      {:placeholder "Text",
+       :value (:draft state),
+       :style (merge
+               widget/input
+               {:width (max 200 (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
+       :event {:input (on-text-change state), :focus on-focus}})
+     (=< 8 nil)
+     (span {:style widget/button, :event {:click (handle-add state)}} (<> span "Add" nil))
+     (=< 8 nil)
+     (span {:inner-text "Clear", :style widget/button, :event {:click clear-done}})
+     (=< 8 nil)
+     (div
+      {}
+      (div {:style widget/button, :event {:click on-test}} (<> span "heavy tasks" nil))))
+    (div
+     {:class-name "task-list", :style style-list}
+     (->> tasks
+          (reverse)
+          (map
+           (fn [task]
+             (let [task-id (:id task)]
+               [task-id (with-cursor task-id (comp-task (get states task-id) task))])))))
+    (if (> (count tasks) 0)
+      (div
+       {:spell-check true, :style style-toolbar}
+       (div
+        {:style widget/button, :event (if (:locked? state) {} {:click clear-done})}
+        (<> span "Clear2" nil))
+       (=< 8 nil)
+       (div
+        {:style widget/button, :event {:click (on-lock state)}}
+        (<> span (str "Lock?" (:locked? state)) nil))
+       (=< 8 nil)
+       (comp-wrap (comp-zero))))
+    (comp-inspect "Tasks" tasks {:left 500, :top 20}))))

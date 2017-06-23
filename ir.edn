@@ -49,7 +49,12 @@
                                 "on-click" ["defn"
                                             "on-click"
                                             ["data"]
-                                            ["fn" ["e" "dispatch!"] ["log*" ["data->native" "data"]] ["println" "data"]]],
+                                            ["fn"
+                                             ["e" "dispatch!"]
+                                             ["let"
+                                              [["raw" ["pr-str" "data"]]]
+                                              ["if" [">" ["count" "raw"] "60"] ["log*" ["data->native" "data"]]]
+                                              ["log*" "raw"]]]],
                                 "grab-info" ["defn"
                                              "grab-info"
                                              ["data"]
@@ -339,8 +344,17 @@
                                                                   "event-name"]]
                                                                 ["target-component"
                                                                  ["get-component-at" "@*global-element" "coord"]]
+                                                                ["this-cursor" [":cursor" "target-component"]]
                                                                 ["target-listener"
-                                                                 ["get" [":event" "target-element"] "event-name"]]]
+                                                                 ["get" [":event" "target-element"] "event-name"]]
+                                                                ["mutate!"
+                                                                 ["fn"
+                                                                  [["next-state"]
+                                                                   ["dispatch!"
+                                                                    ":states"
+                                                                    ["[]" "this-cursor" "next-state"]]]
+                                                                  [["cursor" "next-state"]
+                                                                   ["dispatch!" ":states" ["[]" "cursor" "next-state"]]]]]]
                                                                ["if"
                                                                 ["some?" "target-listener"]
                                                                 ["do"
@@ -349,7 +363,10 @@
                                                                   "|listener found:"
                                                                   "coord"
                                                                   "event-name"]
-                                                                 ["target-listener" "simple-event" "dispatch!"]]
+                                                                 ["target-listener"
+                                                                  "simple-event"
+                                                                  "dispatch!"
+                                                                  "mutate!"]]
                                                                 ["--"
                                                                  "println"
                                                                  "|found no listener:"
@@ -395,7 +412,7 @@
                           :procs []},
          "app.comp.todolist" {:ns ["ns"
                                    "respo.app.comp.todolist"
-                                   [":require-macros" ["respo.macros" ":refer" ["div" "span" "input" "<>"]]]
+                                   [":require-macros" ["respo.macros" ":refer" ["defcomp" "div" "span" "input" "<>"]]]
                                    [":require"
                                     ["[]" "clojure.string" ":as" "string"]
                                     ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
@@ -415,13 +432,11 @@
                                                    ["dispatch!" ":clear" "nil"]],
                                      "handle-add" ["defn"
                                                    "handle-add"
-                                                   ["cursor" "state"]
+                                                   ["state"]
                                                    ["fn"
-                                                    ["e" "dispatch!"]
+                                                    ["e" "dispatch!" "mutate!"]
                                                     ["dispatch!" ":add" [":draft" "state"]]
-                                                    ["dispatch!"
-                                                     ":states"
-                                                     ["[]" "cursor" ["assoc" "state" ":draft" "|"]]]]],
+                                                    ["mutate!" ["assoc" "state" ":draft" "|"]]]],
                                      "style-root" ["def"
                                                    "style-root"
                                                    ["{}"
@@ -472,116 +487,107 @@
                                      "initial-state" ["def" "initial-state" ["{}" [":draft" "|"] [":locked?" "false"]]],
                                      "on-text-change" ["defn"
                                                        "on-text-change"
-                                                       ["cursor" "state"]
+                                                       ["state"]
                                                        ["fn"
-                                                        ["e" "dispatch!"]
-                                                        ["dispatch!"
-                                                         ":states"
-                                                         ["[]" "cursor" ["assoc" "state" ":draft" [":value" "e"]]]]]],
+                                                        ["e" "dispatch!" "mutate!"]
+                                                        ["mutate!" ["assoc" "state" ":draft" [":value" "e"]]]]],
                                      "on-lock" ["defn"
                                                 "on-lock"
-                                                ["cursor" "state"]
+                                                ["state"]
                                                 ["fn"
-                                                 ["e" "dispatch!"]
-                                                 ["dispatch!"
-                                                  ":states"
-                                                  ["[]" "cursor" ["update" "state" ":locked?" "not"]]]]],
-                                     "comp-todolist" ["def"
+                                                 ["e" "dispatch!" "mutate!"]
+                                                 ["mutate!" ["update" "state" ":locked?" "not"]]]],
+                                     "comp-todolist" ["defcomp"
                                                       "comp-todolist"
-                                                      ["create-comp"
-                                                       ":todolist"
-                                                       ["fn"
-                                                        ["states" "tasks"]
-                                                        ["fn"
-                                                         ["cursor"]
-                                                         ["let"
-                                                          [["state" ["or" [":data" "states"] "initial-state"]]]
+                                                      ["states" "tasks"]
+                                                      ["let"
+                                                       [["state" ["or" [":data" "states"] "initial-state"]]]
+                                                       ["div"
+                                                        ["{}" ":style" "style-root"]
+                                                        ["comp-inspect" "|States" "state" ["{}" [":left" "|80px"]]]
+                                                        ["div"
+                                                         ["{}" ":style" "style-panel"]
+                                                         ["input"
+                                                          ["{}"
+                                                           [":placeholder" "|Text"]
+                                                           [":value" [":draft" "state"]]
+                                                           [":style"
+                                                            ["merge"
+                                                             "widget/input"
+                                                             ["{}"
+                                                              [":width"
+                                                               ["max"
+                                                                "200"
+                                                                ["+"
+                                                                 "24"
+                                                                 ["text-width*"
+                                                                  [":draft" "state"]
+                                                                  "16"
+                                                                  "|BlinkMacSystemFont"]]]]]]]
+                                                           [":event"
+                                                            ["{}"
+                                                             [":input" ["on-text-change" "state"]]
+                                                             [":focus" "on-focus"]]]]]
+                                                         ["=<" "8" "nil"]
+                                                         ["span"
+                                                          ["{}"
+                                                           [":style" "widget/button"]
+                                                           [":event" ["{}" ":click" ["handle-add" "state"]]]]
+                                                          ["<>" "span" "|Add" "nil"]]
+                                                         ["=<" "8" "nil"]
+                                                         ["span"
+                                                          ["{}"
+                                                           [":inner-text" "|Clear"]
+                                                           [":style" "widget/button"]
+                                                           [":event" ["{}" ":click" "clear-done"]]]]
+                                                         ["=<" "8" "nil"]
+                                                         ["div"
+                                                          ["{}"]
                                                           ["div"
-                                                           ["{}" ":style" "style-root"]
-                                                           ["comp-inspect" "|States" "state" ["{}" [":left" "|80px"]]]
-                                                           ["div"
-                                                            ["{}" ":style" "style-panel"]
-                                                            ["input"
-                                                             ["{}"
-                                                              [":placeholder" "|Text"]
-                                                              [":value" [":draft" "state"]]
-                                                              [":style"
-                                                               ["merge"
-                                                                "widget/input"
-                                                                ["{}"
-                                                                 [":width"
-                                                                  ["max"
-                                                                   "200"
-                                                                   ["+"
-                                                                    "24"
-                                                                    ["text-width*"
-                                                                     [":draft" "state"]
-                                                                     "16"
-                                                                     "|BlinkMacSystemFont"]]]]]]]
-                                                              [":event"
-                                                               ["{}"
-                                                                [":input" ["on-text-change" "cursor" "state"]]
-                                                                [":focus" "on-focus"]]]]]
-                                                            ["=<" "8" "nil"]
-                                                            ["span"
-                                                             ["{}"
-                                                              [":style" "widget/button"]
-                                                              [":event" ["{}" ":click" ["handle-add" "cursor" "state"]]]]
-                                                             ["<>" "span" "|Add" "nil"]]
-                                                            ["=<" "8" "nil"]
-                                                            ["span"
-                                                             ["{}"
-                                                              [":inner-text" "|Clear"]
-                                                              [":style" "widget/button"]
-                                                              [":event" ["{}" ":click" "clear-done"]]]]
-                                                            ["=<" "8" "nil"]
-                                                            ["div"
-                                                             ["{}"]
-                                                             ["div"
-                                                              ["{}"
-                                                               [":style" "widget/button"]
-                                                               [":event" ["{}" [":click" "on-test"]]]]
-                                                              ["<>" "span" "|heavy tasks" "nil"]]]]
-                                                           ["div"
-                                                            ["{}" [":class-name" "|task-list"] [":style" "style-list"]]
-                                                            ["->>"
-                                                             "tasks"
-                                                             ["reverse"]
-                                                             ["map"
-                                                              ["fn"
-                                                               ["task"]
-                                                               ["let"
-                                                                [["task-id" [":id" "task"]]]
-                                                                ["[]"
-                                                                 "task-id"
-                                                                 ["with-cursor"
-                                                                  "task-id"
-                                                                  ["comp-task" ["get" "states" "task-id"] "task"]]]]]]]]
-                                                           ["if"
-                                                            [">" ["count" "tasks"] "0"]
-                                                            ["div"
-                                                             ["{}" [":spell-check" "true"] [":style" "style-toolbar"]]
-                                                             ["div"
-                                                              ["{}"
-                                                               [":style" "widget/button"]
-                                                               [":event"
-                                                                ["if"
-                                                                 [":locked?" "state"]
-                                                                 ["{}"]
-                                                                 ["{}" ":click" "clear-done"]]]]
-                                                              ["<>" "span" "|Clear2" "nil"]]
-                                                             ["=<" "8" "nil"]
-                                                             ["div"
-                                                              ["{}"
-                                                               [":style" "widget/button"]
-                                                               [":event" ["{}" ":click" ["on-lock" "cursor" "state"]]]]
-                                                              ["<>" "span" ["str" "|Lock?" [":locked?" "state"]] "nil"]]
-                                                             ["=<" "8" "nil"]
-                                                             ["comp-wrap" ["comp-zero"]]]]
-                                                           ["comp-inspect"
-                                                            "|Tasks"
-                                                            "tasks"
-                                                            ["{}" [":left" "500"] [":top" "20"]]]]]]]]]},
+                                                           ["{}"
+                                                            [":style" "widget/button"]
+                                                            [":event" ["{}" [":click" "on-test"]]]]
+                                                           ["<>" "span" "|heavy tasks" "nil"]]]]
+                                                        ["div"
+                                                         ["{}" [":class-name" "|task-list"] [":style" "style-list"]]
+                                                         ["->>"
+                                                          "tasks"
+                                                          ["reverse"]
+                                                          ["map"
+                                                           ["fn"
+                                                            ["task"]
+                                                            ["let"
+                                                             [["task-id" [":id" "task"]]]
+                                                             ["[]"
+                                                              "task-id"
+                                                              ["with-cursor"
+                                                               "task-id"
+                                                               ["comp-task" ["get" "states" "task-id"] "task"]]]]]]]]
+                                                        ["if"
+                                                         [">" ["count" "tasks"] "0"]
+                                                         ["div"
+                                                          ["{}" [":spell-check" "true"] [":style" "style-toolbar"]]
+                                                          ["div"
+                                                           ["{}"
+                                                            [":style" "widget/button"]
+                                                            [":event"
+                                                             ["if"
+                                                              [":locked?" "state"]
+                                                              ["{}"]
+                                                              ["{}" ":click" "clear-done"]]]]
+                                                           ["<>" "span" "|Clear2" "nil"]]
+                                                          ["=<" "8" "nil"]
+                                                          ["div"
+                                                           ["{}"
+                                                            [":style" "widget/button"]
+                                                            [":event" ["{}" ":click" ["on-lock" "state"]]]]
+                                                           ["<>" "span" ["str" "|Lock?" [":locked?" "state"]] "nil"]]
+                                                          ["=<" "8" "nil"]
+                                                          ["comp-wrap" ["comp-zero"]]]]
+                                                        ["comp-inspect"
+                                                         "|Tasks"
+                                                         "tasks"
+                                                         ["{}" [":left" "500"] [":top" "20"]]]]]]},
                               :procs []},
          "util.id" {:ns ["ns" "respo.util.id"],
                     :defs {"get-id!" ["defn" "get-id!" [] ["swap!" "*cached-id" "inc"] "@*cached-id"],
@@ -645,7 +651,7 @@
                                                  ["{}"
                                                   [":value" "state"]
                                                   [":style" "widget/input"]
-                                                  [":event" ["{}" [":input" ["on-text-state" "cursor"]]]]]]
+                                                  [":event" ["{}" [":input" "on-text-state"]]]]]
                                                 ["=<" "8" "nil"]
                                                 ["div"
                                                  ["{}"
@@ -668,10 +674,8 @@
                                                   ["fn" ["e" "dispatch!"] ["dispatch!" ":remove" [":id" "task"]]]],
                                  "on-text-state" ["defn"
                                                   "on-text-state"
-                                                  ["cursor"]
-                                                  ["fn"
-                                                   ["e" "dispatch!"]
-                                                   ["dispatch!" ":states" ["[]" "cursor" [":value" "e"]]]]]},
+                                                  ["e" "dispatch!" "mutate!"]
+                                                  ["mutate!" [":value" "e"]]]},
                           :procs []},
          "app.schema" {:ns ["ns" "respo.app.schema"],
                        :defs {"task" ["def" "task" ["{}" [":id" "nil"] [":text" "|"] [":done?" "false"]]],
@@ -1061,7 +1065,16 @@
                                                         ["cost" ["-" ["io-get-time*"] "begin-time"]]]
                                                        ["--" "println" "|markup tree:" ["pr-str" "markup-tree"]]
                                                        ["--" "println" "|no cache:" "coord"]
-                                                       ["assoc" "markup" ":coord" "coord" ":tree" "tree" ":cost" "cost"]]]],
+                                                       ["assoc"
+                                                        "markup"
+                                                        ":coord"
+                                                        "coord"
+                                                        ":tree"
+                                                        "tree"
+                                                        ":cost"
+                                                        "cost"
+                                                        ":cursor"
+                                                        "new-cursor"]]]],
                                  "render-app" ["defn"
                                                "render-app"
                                                ["markup" "old-element"]

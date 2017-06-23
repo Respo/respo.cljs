@@ -23,7 +23,7 @@
 
 (defn handle-remove [task] (fn [e dispatch!] (dispatch! :remove (:id task))))
 
-(defn on-text-state [cursor] (fn [e dispatch!] (dispatch! :states [cursor (:value e)])))
+(defn on-text-state [e dispatch! mutate!] (mutate! (:value e)))
 
 (defcomp
  comp-task
@@ -41,7 +41,7 @@
     (input
      {:value (:text task), :style widget/input, :event {:input (on-text-change task)}})
     (=< 8 nil)
-    (input {:value state, :style widget/input, :event {:input (on-text-state cursor)}})
+    (input {:value state, :style widget/input, :event {:input on-text-state}})
     (=< 8 nil)
     (div
      {:style widget/button, :event {:click (handle-remove task)}}

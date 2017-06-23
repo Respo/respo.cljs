@@ -76,6 +76,6 @@
           cost (- (io-get-time*) begin-time)]
       (comment println "markup tree:" (pr-str markup-tree))
       (comment println "no cache:" coord)
-      (assoc markup :coord coord :tree tree :cost cost))))
+      (assoc markup :coord coord :tree tree :cost cost :cursor new-cursor))))
 
 (defn render-app [markup old-element] (render-markup markup [] [] [] old-element))
