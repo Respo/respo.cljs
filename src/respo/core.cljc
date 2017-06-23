@@ -9,6 +9,8 @@
             [respo.util.list :refer [pick-attrs arrange-children]]
             [respo.util.detect :refer [component?]]))
 
+(defonce *changes-logger (atom nil))
+
 (defn create-element [tag-name props & children]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
@@ -45,6 +47,8 @@
     (comment println @*global-element)
     (comment println "Changes:" (pr-str (mapv (partial take 2) @*changes)))
     (find-element-diffs collect! [] @*global-element element)
+    (let [logger @*changes-logger]
+      (if (some? logger) (logger @*global-element element @*changes)))
     (patch-instance! @*changes target deliver-event)
     (reset! *global-element element)
     (reset! *dom-element element)))

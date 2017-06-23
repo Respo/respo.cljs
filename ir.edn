@@ -1679,7 +1679,8 @@
                        ["[]" "respo.controller.client" ":refer" ["[]" "activate-instance!" "patch-instance!"]]
                        ["[]" "respo.util.list" ":refer" ["[]" "pick-attrs" "arrange-children"]]
                        ["[]" "respo.util.detect" ":refer" ["[]" "component?"]]]],
-                 :defs {"create-element" ["defn"
+                 :defs {"*changes-logger" ["defonce" "*changes-logger" ["atom" "nil"]],
+                        "create-element" ["defn"
                                           "create-element"
                                           ["tag-name" "props" "&" "children"]
                                           ["let"
@@ -1761,6 +1762,9 @@
                                            "|Changes:"
                                            ["pr-str" ["mapv" ["partial" "take" "2"] "@*changes"]]]
                                           ["find-element-diffs" "collect!" ["[]"] "@*global-element" "element"]
+                                          ["let"
+                                           [["logger" "@*changes-logger"]]
+                                           ["if" ["some?" "logger"] ["logger" "@*global-element" "element" "@*changes"]]]
                                           ["patch-instance!" "@*changes" "target" "deliver-event"]
                                           ["reset!" "*global-element" "element"]
                                           ["reset!" "*dom-element" "element"]]],

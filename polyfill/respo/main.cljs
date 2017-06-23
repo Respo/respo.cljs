@@ -1,6 +1,6 @@
 
 (ns respo.main
-  (:require [respo.core :refer [clear-cache!]]
+  (:require [respo.core :refer [clear-cache! *changes-logger]]
             [cljs.reader :refer [read-string]]
             [respo.app.core :refer [render-app! *store]]))
 
@@ -12,7 +12,9 @@
       (swap! *store assoc :tasks (read-string raw))))
   (render-app! mount-target)
   (add-watch *store :rerender
-    (fn [] (render-app! mount-target))))
+    (fn [] (render-app! mount-target)))
+  (reset! *changes-logger (fn [old-tree new-tree changes]
+                              (.log js/console (clj->js changes)))))
 
 (set! (.-onload js/window) main!)
 
