@@ -17,7 +17,7 @@
     "release": "shadow-cljs release release",
     "serve": "http-server target/ -s -c-1",
     "del": "rm -r target/*",
-    "build": "yarn del && yarn html && yarn release"
+    "build": "yarn del && yarn html && yarn release && yarn serve"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
   "dependencies": {},
   "devDependencies": {
     "http-server": "^0.10.0",
-    "shadow-cljs": "^0.14.0",
+    "shadow-cljs": "^0.15.0",
     "source-map-support": "^0.4.15",
     "ws": "^3.0.0"
   }

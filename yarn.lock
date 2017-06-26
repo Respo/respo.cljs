@@ -118,9 +118,9 @@ shadow-cljs-jar@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-0.10.0.tgz#9895e6e5ccfde1c7b673737b1dfd9149194b644f"
 
-shadow-cljs@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-0.14.0.tgz#815aa56e248bf544cf07738c8121c80d0987656e"
+shadow-cljs@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-0.15.0.tgz#25213f86968f01f3b3011826d56cc2e14466e2eb"
   dependencies:
     mkdirp "^0.5.1"
     readline-sync "^1.4.7"

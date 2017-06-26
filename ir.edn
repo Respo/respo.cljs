@@ -1577,7 +1577,7 @@
                                                  [["k" ["dashed->camel" ["name" ["first" "entry"]]]]
                                                   ["v" ["last" "entry"]]]
                                                  ["aset" "element" "k" "v"]]]
-                                               [".setAttribute" "element" "|style" ["style->string" "style"]]
+                                               ["aset" "element" "|style" ["style->string" "style"]]
                                                ["doseq"
                                                 ["[]" "event-name" [":event" "virtual-element"]]
                                                 ["let"
