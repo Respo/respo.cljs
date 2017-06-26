@@ -21,7 +21,8 @@
                             (map (fn [entry] (make-element (last entry) listener-builder))))]
     (doseq [entry attrs]
       (let [k (dashed->camel (name (first entry))), v (last entry)] (aset element k v)))
-    (aset element "style" (style->string style))
+    (let [raw-style (style->string style)]
+      (if (not (string/blank? raw-style)) (aset element "style" raw-style)))
     (doseq [event-name (:event virtual-element)]
       (let [name-in-string (event->prop event-name)]
         (comment println "listener:" event-name name-in-string)
