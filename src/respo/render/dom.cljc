@@ -20,9 +20,7 @@
         child-elements (->> children
                             (map (fn [entry] (make-element (last entry) listener-builder))))]
     (doseq [entry attrs]
-      (let [k (dashed->camel (name (first entry))), v (last entry)]
-        (.setAttribute element k v)
-        (aset element k v)))
+      (let [k (dashed->camel (name (first entry))), v (last entry)] (aset element k v)))
     (.setAttribute element "style" (style->string style))
     (doseq [event-name (:event virtual-element)]
       (let [name-in-string (event->prop event-name)]
