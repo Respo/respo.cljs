@@ -2,7 +2,7 @@
 (ns respo.macros
   (:require [respo.core :refer [create-comp create-element]]))
 
-(defmacro defcomp [comp-name params & body]
+(defmacro defcomp [comp-name params body]
   "
     (def comp-my
       (create-comp :comp-my
@@ -15,11 +15,11 @@
   "
   (assert (symbol? comp-name) "1st argument should be a symbol")
   (assert (coll? params) "2nd argument should be a collection")
-  (assert (not (empty? body)) "should not return nil from component")
+  (assert (some? body) "3rd argument should be element")
   `(def ~comp-name
     (create-comp ~(keyword comp-name)
       (~'fn [~@params]
-        (~'fn [~'cursor] ~@body)))))
+        (~'fn [~'cursor] ~body)))))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr img input li link

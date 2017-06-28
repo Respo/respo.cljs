@@ -17,7 +17,7 @@ Respo is based on ClojureScript ecosystem. Use Boot or Leiningen to install it.
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.5.10"]
+[respo "0.5.11"]
 ```
 
 Component definition:
