@@ -53,8 +53,10 @@
                                              ["e" "dispatch!"]
                                              ["let"
                                               [["raw" ["pr-str" "data"]]]
-                                              ["if" [">" ["count" "raw"] "60"] ["log*" ["data->native" "data"]]]
-                                              ["log*" "raw"]]]],
+                                              ["if"
+                                               [">" ["count" "raw"] "60"]
+                                               ["log*" ["data->native" "data"]]
+                                               ["log*" "raw"]]]]],
                                 "grab-info" ["defn"
                                              "grab-info"
                                              ["data"]

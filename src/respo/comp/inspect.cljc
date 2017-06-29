@@ -24,7 +24,7 @@
 
 (defn on-click [data]
   (fn [e dispatch!]
-    (let [raw (pr-str data)] (if (> (count raw) 60) (log* (data->native data))) (log* raw))))
+    (let [raw (pr-str data)] (if (> (count raw) 60) (log* (data->native data)) (log* raw)))))
 
 (defn grab-info [data]
   (cond
