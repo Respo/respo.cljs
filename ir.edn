@@ -77,7 +77,7 @@
                                                  ["{}"
                                                   [":inner-text" ["str" "tip" "|: " ["grab-info" "data"]]]
                                                   [":style" ["merge" "style-data" "style"]]
-                                                  [":event" ["{}" [":click" ["on-click" "data"]]]]]]]},
+                                                  [":on" ["{}" [":click" ["on-click" "data"]]]]]]]},
                          :procs []},
          "render.html" {:ns ["ns"
                              "respo.render.html"
@@ -382,18 +382,6 @@
                                              "filter-first"
                                              ["f" "xs"]
                                              ["reduce" ["fn" ["acc" "x"] ["when" ["f" "x"] ["reduced" "x"]]] "nil" "xs"]],
-                             "create-element" ["defn"
-                                               "arrange-children"
-                                               ["children"]
-                                               ["->>"
-                                                ["if"
-                                                 ["and"
-                                                  ["=" "1" ["count" "children"]]
-                                                  ["not" ["component?" ["first" "children"]]]
-                                                  ["not" ["element?" ["first" "children"]]]]
-                                                 ["first" "children"]
-                                                 ["map-indexed" "vector" "children"]]
-                                                ["filter" "val-exists?"]]],
                              "pick-attrs" ["defn"
                                            "pick-attrs"
                                            ["props"]
@@ -402,9 +390,22 @@
                                             ["list"]
                                             ["let"
                                              [["base-attrs"
-                                               ["merge" ["->" "props" ["dissoc" ":event"] ["dissoc" ":style"]]]]]
+                                               ["merge"
+                                                ["->" "props" ["dissoc" ":on"] ["dissoc" ":event"] ["dissoc" ":style"]]]]]
                                              ["sort-by" "first" "base-attrs"]]]],
-                             "val-exists?" ["defn" "val-exists?" ["pair"] ["some?" ["last" "pair"]]]},
+                             "val-exists?" ["defn" "val-exists?" ["pair"] ["some?" ["last" "pair"]]],
+                             "arrange-children" ["defn"
+                                                 "arrange-children"
+                                                 ["children"]
+                                                 ["->>"
+                                                  ["if"
+                                                   ["and"
+                                                    ["=" "1" ["count" "children"]]
+                                                    ["not" ["component?" ["first" "children"]]]
+                                                    ["not" ["element?" ["first" "children"]]]]
+                                                   ["first" "children"]
+                                                   ["map-indexed" "vector" "children"]]
+                                                  ["filter" "val-exists?"]]]},
                       :procs []},
          "app.comp.wrap" {:ns ["ns"
                                "respo.app.comp.wrap"
@@ -526,7 +527,7 @@
                                                                   [":draft" "state"]
                                                                   "16"
                                                                   "|BlinkMacSystemFont"]]]]]]]
-                                                           [":event"
+                                                           [":on"
                                                             ["{}"
                                                              [":input" ["on-text-change" "state"]]
                                                              [":focus" "on-focus"]]]]]
@@ -534,21 +535,21 @@
                                                          ["span"
                                                           ["{}"
                                                            [":style" "widget/button"]
-                                                           [":event" ["{}" ":click" ["handle-add" "state"]]]]
+                                                           [":on" ["{}" ":click" ["handle-add" "state"]]]]
                                                           ["<>" "span" "|Add" "nil"]]
                                                          ["=<" "8" "nil"]
                                                          ["span"
                                                           ["{}"
                                                            [":inner-text" "|Clear"]
                                                            [":style" "widget/button"]
-                                                           [":event" ["{}" ":click" "clear-done"]]]]
+                                                           [":on" ["{}" ":click" "clear-done"]]]]
                                                          ["=<" "8" "nil"]
                                                          ["div"
                                                           ["{}"]
                                                           ["div"
                                                            ["{}"
                                                             [":style" "widget/button"]
-                                                            [":event" ["{}" [":click" "on-test"]]]]
+                                                            [":on" ["{}" [":click" "on-test"]]]]
                                                            ["<>" "span" "|heavy tasks" "nil"]]]]
                                                         ["div"
                                                          ["{}" [":class-name" "|task-list"] [":style" "style-list"]]
@@ -570,7 +571,7 @@
                                                           ["div"
                                                            ["{}"
                                                             [":style" "widget/button"]
-                                                            [":event"
+                                                            [":on"
                                                              ["if"
                                                               [":locked?" "state"]
                                                               ["{}"]
@@ -580,7 +581,7 @@
                                                           ["div"
                                                            ["{}"
                                                             [":style" "widget/button"]
-                                                            [":event" ["{}" ":click" ["on-lock" "state"]]]]
+                                                            [":on" ["{}" ":click" ["on-lock" "state"]]]]
                                                            ["<>" "span" ["str" "|Lock?" [":locked?" "state"]] "nil"]]
                                                           ["=<" "8" "nil"]
                                                           ["comp-wrap" ["comp-zero"]]]]
@@ -639,24 +640,24 @@
                                                        [":done?" "task"]
                                                        ["hsl" "200" "20" "80"]
                                                        ["hsl" "200" "80" "70"]]]]]]
-                                                  [":event" ["{}" [":click" ["handle-done" [":id" "task"]]]]]]]
+                                                  [":on" ["{}" [":click" ["handle-done" [":id" "task"]]]]]]]
                                                 ["=<" "8" "nil"]
                                                 ["input"
                                                  ["{}"
                                                   [":value" [":text" "task"]]
                                                   [":style" "widget/input"]
-                                                  [":event" ["{}" ":input" ["on-text-change" "task"]]]]]
+                                                  [":on" ["{}" ":input" ["on-text-change" "task"]]]]]
                                                 ["=<" "8" "nil"]
                                                 ["input"
                                                  ["{}"
                                                   [":value" "state"]
                                                   [":style" "widget/input"]
-                                                  [":event" ["{}" [":input" "on-text-state"]]]]]
+                                                  [":on" ["{}" [":input" "on-text-state"]]]]]
                                                 ["=<" "8" "nil"]
                                                 ["div"
                                                  ["{}"
                                                   [":style" "widget/button"]
-                                                  [":event" ["{}" ":click" ["handle-remove" "task"]]]]
+                                                  [":on" ["{}" ":click" ["handle-remove" "task"]]]]
                                                  ["<>" "span" "|Remove" "nil"]]
                                                 ["=<" "8" "nil"]
                                                 ["div" ["{}"] ["<>" "span" "state" "nil"]]]]],
@@ -1709,7 +1710,7 @@
                                               ["contains?" "props" ":style"]
                                               ["sort-by" "first" [":style" "props"]]
                                               ["list"]]]
-                                            ["event" ["if" ["contains?" "props" ":event"] [":event" "props"] ["{}"]]]
+                                            ["event" ["or" [":on" "props"] [":event" "props"] ["{}"]]]
                                             ["children" ["arrange-children" "children"]]]
                                            ["{}"
                                             [":name" "tag-name"]

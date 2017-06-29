@@ -14,7 +14,7 @@
 (defn create-element [tag-name props & children]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
-        event (if (contains? props :event) (:event props) {})
+        event (or (:on props) (:event props) {})
         children (arrange-children children)]
     {:name tag-name,
      :coord nil,

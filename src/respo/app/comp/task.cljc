@@ -36,15 +36,12 @@
      {:style (merge
               style-done
               {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
-      :event {:click (handle-done (:id task))}})
+      :on {:click (handle-done (:id task))}})
     (=< 8 nil)
-    (input
-     {:value (:text task), :style widget/input, :event {:input (on-text-change task)}})
+    (input {:value (:text task), :style widget/input, :on {:input (on-text-change task)}})
     (=< 8 nil)
-    (input {:value state, :style widget/input, :event {:input on-text-state}})
+    (input {:value state, :style widget/input, :on {:input on-text-state}})
     (=< 8 nil)
-    (div
-     {:style widget/button, :event {:click (handle-remove task)}}
-     (<> span "Remove" nil))
+    (div {:style widget/button, :on {:click (handle-remove task)}} (<> span "Remove" nil))
     (=< 8 nil)
     (div {} (<> span state nil)))))
