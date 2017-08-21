@@ -1580,11 +1580,15 @@
                                                  [["k" ["dashed->camel" ["name" ["first" "entry"]]]]
                                                   ["v" ["last" "entry"]]]
                                                  ["aset" "element" "k" "v"]]]
-                                               ["let"
-                                                [["raw-style" ["style->string" "style"]]]
-                                                ["if"
-                                                 ["not" ["string/blank?" "raw-style"]]
-                                                 ["aset" "element" "|style" "raw-style"]]]
+                                               ["doseq"
+                                                ["[]" "entry" "style"]
+                                                ["let"
+                                                 [["k" ["dashed->camel" ["name" ["first" "entry"]]]]
+                                                  ["v" ["last" "entry"]]]
+                                                 ["aset"
+                                                  ["aget" "element" "|style"]
+                                                  "k"
+                                                  ["if" ["keyword?" "v"] ["name" "v"] "v"]]]]
                                                ["doseq"
                                                 ["[]" "event-name" [":event" "virtual-element"]]
                                                 ["let"
