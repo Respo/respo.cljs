@@ -6,18 +6,15 @@
 
 (def +version+ "0.5.15")
 
-(task-options!
-  pom {:project     'respo/respo
-       :version     +version+
-       :description "Respo: A virtual DOM library in ClojureScript"
-       :url         "https://github.com/Respo/respo"
-       :scm         {:url "https://github.com/Respo/respo"}
-       :license     {"MIT" "http://opensource.org/licenses/mit-license.php"}})
-
 ; some problems due to uglifying
 (deftask build []
   (comp
-    (pom)
+    (pom :project     'respo/respo
+         :version     +version+
+         :description "Respo: A virtual DOM library in ClojureScript"
+         :url         "https://github.com/Respo/respo"
+         :scm         {:url "https://github.com/Respo/respo"}
+         :license     {"MIT" "http://opensource.org/licenses/mit-license.php"})
     (jar)
     (install)
     (target)))
