@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mvc-works/respo.git"
+    "url": "git+https://github.com/Respo/respo.git"
   },
   "author": "jiyinyiyong",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mvc-works/respo/issues"
+    "url": "https://github.com/Respo/respo/issues"
   },
-  "homepage": "https://github.com/mvc-works/respo#readme",
+  "homepage": "https://github.com/Respo/respo#readme",
   "dependencies": {},
   "devDependencies": {
     "http-server": "^0.10.0",
