@@ -30,7 +30,7 @@
 
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
-     `(create-element ~(keyword '~el) ~~'props ~@~'children)))
+    `(create-element ~(keyword '~el) ~~'props ~@~'children)))
 
 (defmacro define-element-macro []
   `(do ~@(clojure.core/map gen-dom-macro support-elements)))

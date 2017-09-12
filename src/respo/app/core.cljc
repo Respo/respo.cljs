@@ -1,10 +1,10 @@
 
 (ns respo.app.core
-  (:require (respo.app.comp.container :refer (comp-container))
-            (respo.core :refer (render!))
-            (respo.app.schema :as schema)
-            (respo.app.updater.core :refer (updater))
-            (respo.util.id :refer (get-id!))))
+  (:require [respo.app.comp.container :refer [comp-container]]
+            [respo.core :refer [render!]]
+            [respo.app.schema :as schema]
+            [respo.app.updater.core :refer [updater]]
+            [respo.util.id :refer [get-id!]]))
 
 (def *store (atom schema/store))
 
