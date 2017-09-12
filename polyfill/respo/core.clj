@@ -1,6 +1,5 @@
 
-(ns respo.macros
-  (:require [respo.core :refer [create-comp create-element]]))
+(ns respo.core)
 
 (defmacro defcomp [comp-name params & body]
   "
@@ -17,7 +16,7 @@
   (assert (coll? params) "2nd argument should be a collection")
   (assert (some? (last body)) "defcomp should return a component")
   `(def ~comp-name
-    (create-comp ~(keyword comp-name)
+    (respo.core/create-comp ~(keyword comp-name)
       (~'fn [~@params]
         (~'fn [~'cursor] ~@body)))))
 
@@ -26,11 +25,11 @@
                         option p pre script section select span style textarea title
                         ul])
 
-(defmacro meta' [props & children] `(create-element :meta ~props ~@children))
+(defmacro meta' [props & children] `(respo.core/create-element :meta ~props ~@children))
 
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
-    `(create-element ~(keyword '~el) ~~'props ~@~'children)))
+    `(respo.core/create-element ~(keyword '~el) ~~'props ~@~'children)))
 
 (defmacro define-element-macro []
   `(do ~@(clojure.core/map gen-dom-macro support-elements)))

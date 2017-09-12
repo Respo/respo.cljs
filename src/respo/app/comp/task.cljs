@@ -1,8 +1,7 @@
 
 (ns respo.app.comp.task
-  (:require-macros [respo.macros :refer [defcomp div input span button <>]])
+  (:require-macros [respo.core :refer [defcomp div input span button <>]])
   (:require [hsl.core :refer [hsl]]
-            [respo.core :refer [create-comp]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.style.widget :as widget]))
