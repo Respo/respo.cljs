@@ -24,7 +24,7 @@ Component definition:
 
 ```clojure
 (ns respo.comp.space
-  (:require-macros [respo.macros :refer [defcomp div span <>]])
+  (:require-macros [respo.core :refer [defcomp div span <>]])
   (:require [respo.core :refer [create-comp create-element]]))
 
 (defcomp comp-demo [content]
