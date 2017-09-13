@@ -41,6 +41,6 @@
     (=< 8 nil)
     (input {:value state, :style widget/input, :on {:input on-text-state}})
     (=< 8 nil)
-    (div {:style widget/button, :on {:click (handle-remove task)}} (<> span "Remove" nil))
+    (div {:style widget/button, :on {:click (handle-remove task)}} (<> "Remove"))
     (=< 8 nil)
-    (div {} (<> span state nil)))))
+    (div {} (<> state)))))

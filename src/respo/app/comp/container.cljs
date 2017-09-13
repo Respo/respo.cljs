@@ -15,4 +15,4 @@
    (div
     {:style style-global}
     (cursor-> :todolist comp-todolist state (:tasks store))
-    (div {:style style-states} (<> span (pr-str (:states store)) nil)))))
+    (div {:style style-states} (<> (pr-str (:states store)))))))

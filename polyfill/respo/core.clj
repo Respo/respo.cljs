@@ -36,8 +36,10 @@
 
 (define-element-macro)
 
-(defmacro <> [el content style]
-  `(~el {:inner-text ~content, :style ~style}))
+(defmacro <>
+  ([content] `(respo.core/create-element :span {:inner-text ~content}))
+  ([el content] `(~el {:inner-text ~content}))
+  ([el content style] `(~el {:inner-text ~content, :style ~style})))
 
 (defmacro cursor-> [k component states & args]
   `(~'assoc (~component (~'get ~states ~k) ~@args) :cursor ~k))
