@@ -1,5 +1,5 @@
 
-(ns respo.core)
+(ns respo.macros)
 
 (defmacro defcomp [comp-name params & body]
   "

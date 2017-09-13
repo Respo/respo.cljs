@@ -1,5 +1,7 @@
 
-(ns respo.comp.space (:require-macros [respo.core :refer [div defcomp]]))
+(ns respo.comp.space
+  (:require-macros [respo.macros :refer [div defcomp]])
+  (:require [respo.core :refer [create-comp create-element]]))
 
 (def style-space {:height 1, :width 1, :display :inline-block})
 
