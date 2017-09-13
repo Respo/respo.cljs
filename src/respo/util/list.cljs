@@ -1,5 +1,5 @@
 
-(ns respo.util.list (:require [respo.util.detect :refer [component? element?]]))
+(ns respo.util.list (:require [respo.util.detect :refer [component? element? dsl?]]))
 
 (defn filter-first [f xs] (reduce (fn [acc x] (when (f x) (reduced x))) nil xs))
 
@@ -14,7 +14,8 @@
 (defn arrange-children [children]
   (->> (if (and (= 1 (count children))
                 (not (component? (first children)))
-                (not (element? (first children))))
+                (not (element? (first children)))
+                (not (dsl? (first children))))
          (first children)
          (map-indexed vector children))
        (filter val-exists?)))

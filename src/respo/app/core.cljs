@@ -6,7 +6,7 @@
             [respo.app.updater.core :refer [updater]]
             [respo.util.id :refer [get-id!]]))
 
-(def *store (atom schema/store))
+(defonce *store (atom schema/store))
 
 (defn dispatch! [op op-data]
   (comment println op)
