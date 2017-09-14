@@ -3,7 +3,9 @@
   (:require [clojure.string :as string]
             [polyfill.core :refer [io-get-time*]]
             [respo.util.detect :refer [component? element? dsl? =seq]]
-            [respo.util.list :refer [filter-first pick-attrs arrange-children]]))
+            [respo.util.list :refer [filter-first pick-attrs arrange-children]]
+            [respo.util.alias :refer [parse-alias]]
+            [respo.schema :as schema]))
 
 (declare render-component)
 
@@ -17,8 +19,9 @@
 
 (defn render-dsl [markup coord comp-coord cursor old-element]
   (comment println "render DSL:" markup)
-  (if (zero? (count markup)) (throw (js/Error. (str "Respo: empty markup: " markup))))
+  (if (zero? (count markup)) (throw (js/Error. (str "Empty markup: " markup))))
   (let [alias (nth markup 0)
+        alias-detail (parse-alias (name alias))
         has-props? (and (>= (count markup) 2)
                         (map? (nth markup 1))
                         (not (component? (nth markup 1))))
@@ -26,15 +29,20 @@
         children (arrange-children
                   (->> (subvec markup (if has-props? 2 1))
                        (map
-                        (fn [x] (if (string? x) {:name :span, :attrs {:inner-text x}} x)))))]
-    {:name alias,
+                        (fn [x]
+                          (if (string? x)
+                            (merge schema/element {:name :span, :attrs {:inner-text x}})
+                            x)))))]
+    (comment println "children to render:" children)
+    {:name (:name alias-detail),
      :coord coord,
-     :attrs (pick-attrs props),
+     :attrs (pick-attrs (merge (dissoc alias-detail :name) props)),
      :style (if (contains? props :style) (sort-by first (:style props)) (list)),
      :event (or (:on props) (:event props) {}),
      :children (render-children children coord comp-coord cursor (:children old-element))}))
 
 (defn render-markup [markup coord comp-coord cursor old-element]
+  (comment println "render markup:" markup)
   (if (dsl? markup)
     (render-dsl markup coord comp-coord cursor old-element)
     (if (component? markup)

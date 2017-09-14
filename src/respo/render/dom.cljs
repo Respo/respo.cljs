@@ -13,7 +13,8 @@
         child-elements (->> children
                             (map (fn [entry] (make-element (last entry) listener-builder))))]
     (doseq [entry attrs]
-      (let [k (dashed->camel (name (first entry))), v (last entry)] (aset element k v)))
+      (let [k (dashed->camel (name (first entry))), v (last entry)]
+        (if (some? v) (aset element k v))))
     (doseq [entry style]
       (let [k (dashed->camel (name (first entry))), v (last entry)]
         (aset (aget element "style") k (if (keyword? v) (name v) v))))

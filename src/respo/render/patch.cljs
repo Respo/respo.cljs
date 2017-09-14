@@ -49,7 +49,10 @@
 (defn rm-style [target op]
   (let [style-name (dashed->camel (name op))] (aset (.-style target) style-name nil)))
 
-(defn rm-element [target op] (.remove target))
+(defn rm-element [target op]
+  (if (some? target)
+    (.remove target)
+    (.warn js/console "Respo: Element already removed! Probably by :inner-text.")))
 
 (defn find-target [root coord]
   (if (empty? coord)
