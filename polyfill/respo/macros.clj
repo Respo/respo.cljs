@@ -17,8 +17,8 @@
   (assert (some? (last body)) "defcomp should return a component")
   `(def ~comp-name
     (respo.core/create-comp ~(keyword comp-name)
-      (~'fn [~@params]
-        (~'fn [~'cursor] ~@body)))))
+      (fn [~@params]
+        (fn [~'cursor] ~@body)))))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr img input li link
@@ -42,4 +42,4 @@
   ([el content style] `(~el {:inner-text ~content, :style ~style})))
 
 (defmacro cursor-> [k component states & args]
-  `(~'assoc (~component (~'get ~states ~k) ~@args) :cursor ~k))
+  `(assoc (~component (get ~states ~k) ~@args) :cursor ~k))
