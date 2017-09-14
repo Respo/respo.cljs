@@ -20,6 +20,8 @@
 (defn render-dsl [markup coord comp-coord cursor old-element]
   (comment println "render DSL:" markup)
   (if (zero? (count markup)) (throw (js/Error. (str "Empty markup: " markup))))
+  (if (fn? (nth markup 0))
+    (throw js/Error. "Respo does not support [c x] for component, please use (c x)"))
   (let [alias (nth markup 0)
         alias-detail (parse-alias (name alias))
         has-props? (and (>= (count markup) 2)
