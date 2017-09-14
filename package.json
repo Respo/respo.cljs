@@ -11,12 +11,12 @@
     "tiye": "rsync -r target/ repo.respo.site:repo/Respo/respo",
     "html": "cp assets/* target/",
     "watch": "shadow-cljs watch app",
-    "sv": "shadow-cljs server",
     "compile-test": "shadow-cljs compile test",
     "compile": "shadow-cljs compile app",
     "release": "shadow-cljs release release",
     "serve": "http-server target/ -s -c-1",
     "del": "rm -r target/*",
+    "dev": "yarn html && yarn serve",
     "build": "yarn del && yarn html && yarn release && yarn serve"
   },
   "repository": {
