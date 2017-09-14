@@ -6,7 +6,7 @@
     (def comp-my
       (create-comp :comp-my
         (fn [x y]
-          (fn [cursor] x))))
+          (fn [*cursor*] x))))
 
     becomes:
 
@@ -18,7 +18,7 @@
   `(def ~comp-name
     (respo.core/create-comp ~(keyword comp-name)
       (fn [~@params]
-        (fn [~'cursor] ~@body)))))
+        (fn [~'*cursor*] ~@body)))))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr img input li link
