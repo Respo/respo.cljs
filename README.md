@@ -12,12 +12,12 @@ Respo: A virtual DOM library in ClojureScript
 
 ### Usage
 
-Respo is based on ClojureScript ecosystem. Use Boot or Leiningen to install it.
+Respo is released on Clojars.
 
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.5.15"]
+[respo "0.6.0"]
 ```
 
 Component definition:
@@ -37,7 +37,7 @@ Component definition:
 (def comp-demo
   (create-comp :demo
     (fn [content]
-      (fn [cursor]
+      (fn [*cursor*]
         (create-element :div
           {:class-name "demo-container"
            :style {:color :red}}
