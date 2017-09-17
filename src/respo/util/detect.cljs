@@ -13,4 +13,4 @@
 
 (defn component? [x] (and (map? x) (contains? x :tree) (contains? x :render)))
 
-(defn dsl? [x] (and (vector? x) (or (keyword? (nth x 0)) (fn? (nth x 0)))))
+(defn dsl? [x] (and (vector? x) (not (empty? x)) (or (keyword? (nth x 0)) (fn? (nth x 0)))))
