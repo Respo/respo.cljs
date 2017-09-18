@@ -38,8 +38,13 @@
 
 (defmacro <>
   ([content] `(respo.core/create-element :span {:inner-text ~content}))
-  ([el content] `(~el {:inner-text ~content}))
+  ([el content]
+    (if (string? el)
+      (let [content el
+            style content]
+        `(span {:inner-text ~content, :style ~style}))
+      `(~el {:inner-text ~content})))
   ([el content style] `(~el {:inner-text ~content, :style ~style})))
 
 (defmacro cursor-> [k component states & args]
-  `(assoc (~component (get ~states ~k) ~@args) :cursor ~k))
+  `(assoc (~component (get ~states ~k) ~@args) :cursor (conj ~'*cursor* ~k)))

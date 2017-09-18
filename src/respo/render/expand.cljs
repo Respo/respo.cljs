@@ -95,8 +95,7 @@
           args (:args markup)
           component (first markup)
           new-coord (conj coord (:name markup))
-          new-cursor (let [cursor-name (:cursor markup)]
-                       (if (some? cursor-name) (conj cursor cursor-name) cursor))
+          new-cursor (or (:cursor markup) cursor)
           render (:render markup)
           half-render (apply render args)
           markup-tree (half-render new-cursor)
