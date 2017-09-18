@@ -17,7 +17,7 @@ Respo is released on Clojars.
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.6.1"]
+[respo "0.6.2"]
 ```
 
 Component definition:
