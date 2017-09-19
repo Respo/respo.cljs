@@ -35,7 +35,7 @@ Component definition:
 
 ; which expands to:
 (def comp-demo
-  (create-comp :demo
+  (create-comp :comp-demo
     (fn [content]
       (fn [*cursor*]
         (create-element :div
