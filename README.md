@@ -8,7 +8,7 @@ Respo: A virtual DOM library in ClojureScript
 * Demo http://repo.respo.site/respo/
 * Examples https://github.com/Respo/respo-examples
 * Minimal App https://github.com/Respo/minimal-respo
-* Quick Start https://github.com/Respo/respo/wiki/Quick-Start
+* Beginner Guide https://github.com/Respo/respo/wiki/Beginner-Guide
 
 ### Usage
 
