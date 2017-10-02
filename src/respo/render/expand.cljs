@@ -71,20 +71,21 @@
 (defn render-children [children coord comp-coord cursor old-children]
   (comment println "render children:" children)
   (let [mapped-cache (into {} old-children)]
-    (->> children
-         (map
-          (fn [child-entry]
-            (let [k (first child-entry)
-                  child-element (last child-entry)
-                  old-child (get mapped-cache k)]
-              (comment
-               if
-               (nil? old-child)
-               (do (println "old child:" coord (some? old-child))))
-              [k
-               (if (some? child-element)
-                 (render-markup child-element (conj coord k) comp-coord cursor old-child)
-                 nil)]))))))
+    (doall
+     (->> children
+          (map
+           (fn [child-entry]
+             (let [k (first child-entry)
+                   child-element (last child-entry)
+                   old-child (get mapped-cache k)]
+               (comment
+                if
+                (nil? old-child)
+                (do (println "old child:" coord (some? old-child))))
+               [k
+                (if (some? child-element)
+                  (render-markup child-element (conj coord k) comp-coord cursor old-child)
+                  nil)])))))))
 
 (defn render-component [markup coord cursor old-element]
   (if (and (some? old-element)
