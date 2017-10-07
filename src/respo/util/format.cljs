@@ -29,13 +29,14 @@
   (comment .log js/console "simplify event:" event)
   (-> (case (.-type event)
         "click" {:type :click}
-        "keydown" {:type :keydown, :key-code (.-keyCode event)}
-        "keyup" {:type :keyup, :key-code (.-keyCode event)}
+        "keydown" {:type :keydown, :key-code (.-keyCode event), :keycode (.-keyCode event)}
+        "keyup" {:type :keyup, :key-code (.-keyCode event), :keycode (.-keyCode event)}
         "input" {:type :input, :value (aget (.-target event) "value")}
         "change" {:type :change, :value (aget (.-target event) "value")}
         "focus" {:type :focus}
         {:type (.-type event), :msg (str "Unhandled event: " (.-type event))})
-      (assoc :original-event event)))
+      (assoc :original-event event)
+      (assoc :event event)))
 
 (defn mute-element [element]
   (if (component? element)
