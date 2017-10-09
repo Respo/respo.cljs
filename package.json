@@ -13,7 +13,7 @@
     "watch": "shadow-cljs watch app",
     "compile-test": "shadow-cljs compile test",
     "compile": "shadow-cljs compile app",
-    "release": "shadow-cljs release release",
+    "release": "shadow-cljs release release --debug",
     "serve": "http-server target/ -s -c-1",
     "del": "rm -r target/*",
     "dev": "yarn html && yarn serve",

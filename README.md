@@ -17,7 +17,7 @@ Respo is released on Clojars.
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.6.3"]
+[respo "0.6.4"]
 ```
 
 Component definition:
@@ -32,16 +32,6 @@ Component definition:
     {:class-name "demo-container"
      :style {:color :red}}
     (<> span content nil)))
-
-; which expands to:
-(def comp-demo
-  (create-comp :comp-demo
-    (fn [content]
-      (fn [*cursor*]
-        (create-element :div
-          {:class-name "demo-container"
-           :style {:color :red}}
-          (create-element :span {:inner-text content, :style nil}))))))
 ```
 
 App initialization:
