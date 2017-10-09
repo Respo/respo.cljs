@@ -4,30 +4,22 @@ Respo: A virtual DOM library in ClojureScript
 
 > Inspired by React and Reagent.
 
-* Docs http://respo.site
-* Demo http://repo.respo.site/respo/
-* Examples https://github.com/Respo/respo-examples
-* Minimal App https://github.com/Respo/minimal-respo
-* Beginner Guide https://github.com/Respo/respo/wiki/Beginner-Guide
-
-### Usage
-
-Respo is released on Clojars.
-
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
 [respo "0.6.4"]
 ```
 
+* Home http://respo.site
+* [Bundled example](http://repo.respo.site/respo/)
+* [Docs](https://github.com/Respo/respo/wiki)
+
+### Usage
+
 Component definition:
 
 ```clojure
-(ns respo.comp.space
-  (:require-macros [respo.core :refer [defcomp div span <>]])
-  (:require [respo.core :refer [create-comp create-element]]))
-
-(defcomp comp-demo [content]
+(defcomp comp-container [content]
   (div
     {:class-name "demo-container"
      :style {:color :red}}
@@ -37,21 +29,31 @@ Component definition:
 App initialization:
 
 ```clojure
-(require '[respo.core :refer [render!]])
-
+; initialize store and update store
 (defonce *store (atom {:point 0 :states {}}))
+(defn dispatch! [op op-data] (reset! *store updated-store))
 
-(defn dispatch! [op op-data]
-  (reset! *store (updater @*store op op-data)))
-
-(defn render-app! []
-  (let [target (.querySelector js/document "#app")
-        app (comp-container @*store)]
-    (render! target app dispatch!)))
-
+; render to the DOM
+(defn render-app! [] (render! mount-point (comp-container @*store) dispatch!))
 (render-app!)
+
+; watch store changes and render again
 (add-watch *store :changes (fn [] (render-app!)))
 ```
+
+Reset virtual DOM caching during hot code swapping, and rerender:
+
+```clojure
+(defn reload! []
+  (clear-cache!)
+  (render-app!))
+```
+
+Read docs to use Respo:
+
+* [Beginner Guide](https://github.com/Respo/respo/wiki/Beginner-Guide)
+* [Minimal App](https://github.com/Respo/minimal-respo)
+* [Examples](https://github.com/Respo/respo-examples)
 
 ### Test
 
@@ -62,7 +64,7 @@ node target/test.js
 
 ### Develop
 
-Workflow https://github.com/mvc-works/stack-workflow
+CoWorkflow https://github.com/mvc-works/coworkflow
 
 ### License
 
