@@ -1,19 +1,15 @@
 
 {:source-paths ["src" "polyfill" "test"]
- :http {:port 8200}
  :dependencies [[mvc-works/polyfill   "0.1.1"]
                 [mvc-works/hsl        "0.1.2"]]
+ :open-file-command ["subl" ["%s:%s:%s" :file :line :column]]
  :builds {:app {:output-dir "target/"
                 :asset-path "."
                 :target :browser
                 :modules {:main {:entries [respo.main]}}
                 :devtools {:after-load respo.main/reload!
-                           :preloads [shadow.cljs.devtools.client.hud]}}
-          :release {:output-dir "target"
-                    :target :browser
-                    :modules {:main {:entries [respo.main]}}
-                    :compiler-options {:pseudo-names true
-                                       :pretty-print true}}
+                           :preloads [shadow.cljs.devtools.client.hud]}
+                :release {:output-dir "dist/"}}
           :test {:target :node-script
                  :output-to "target/test.js"
                  :main respo.test.html/main!}}}
