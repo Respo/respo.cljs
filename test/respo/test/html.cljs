@@ -11,7 +11,7 @@
                                          body]])
   (:require [cljs.test :refer-macros [deftest is testing run-tests]]
             [respo.test.comp.todolist :refer [comp-todolist]]
-            [respo.render.html :refer [make-string make-html]]))
+            [respo.render.html :refer [make-string]]))
 
 (def todolist-store
  (atom [{:id 101, :text "101"} {:id 102, :text "102"}]))
@@ -40,7 +40,7 @@
                     (body {} (div {:id "app"} (div {}))))]
     (testing
       "test generated HTML"
-      (is (= (slurp "test/examples/simple.html") (make-html tree-demo))))))
+      (is (= (slurp "test/examples/simple.html") (make-string tree-demo))))))
 
 
 (deftest html-quote-test
@@ -48,7 +48,7 @@
                         :x "y"
                         :style {:content "d\"e\"f"}})]
     (testing "HTML contains quotes"
-      (is (= (slurp "test/examples/quote.html") (make-html tree-demo))))))
+      (is (= (slurp "test/examples/quote.html") (make-string tree-demo))))))
 
 (defn main! []
   (run-tests))

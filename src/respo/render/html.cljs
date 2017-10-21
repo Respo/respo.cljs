@@ -39,41 +39,11 @@
        (map entry->string)
        (string/join " ")))
 
-(defn element->html [element]
-  (let [tag-name (name (:name element))
-        attrs (into {} (:attrs element))
-        text-inside (or (:innerHTML attrs) (text->html (:inner-text attrs)))
-        styles (or (:style element) {})
-        tailored-props (-> attrs
-                           (dissoc :innerHTML)
-                           (dissoc :inner-text)
-                           ((fn [props]
-                              (if (empty? styles) props (assoc props :style styles)))))
-        props-in-string (props->string tailored-props)
-        children (->> (:children element)
-                      (map (fn [entry] (let [child (last entry)] (element->html child)))))]
-    (str
-     "<"
-     tag-name
-     (if (> (count props-in-string) 0) " " "")
-     props-in-string
-     ">"
-     (or text-inside (string/join "" children))
-     "</"
-     tag-name
-     ">")))
-
-(defn make-html [tree]
-  (let [element (render-app tree nil)]
-    (element->html (purify-element (mute-element element)))))
-
 (defn element->string [element]
   (let [tag-name (name (:name element))
         attrs (into {} (:attrs element))
         styles (or (:style element) {})
         text-inside (or (:innerHTML attrs) (text->html (:inner-text attrs)))
-        formatted-coord (pr-str (:coord element))
-        formatted-event (pr-str (into #{} (keys (:event element))))
         tailored-props (-> attrs
                            (dissoc :innerHTML)
                            (dissoc :inner-text)
