@@ -10,15 +10,16 @@
   "scripts": {
     "tiye": "rsync -r target/ repo.respo.site:repo/Respo/respo",
     "html": "cp assets/* target/",
-    "html-release": "cp assets/* dist/",
+    "html-dist": "cp assets/* dist/",
     "watch": "shadow-cljs watch app",
     "compile-test": "shadow-cljs compile test",
     "compile": "shadow-cljs compile app",
     "release": "shadow-cljs release app --debug",
     "serve": "http-server target/ -s -c-1",
+    "serve-dist": "http-server dist/ -s -c-1",
     "dev": "yarn html && yarn serve",
-    "del": "rm -r dist/*",
-    "build": "yarn del && yarn html-release && yarn release && yarn serve"
+    "del": "rm -fr dist/*",
+    "build": "yarn del && yarn html-dist && yarn release && yarn serve-dist"
   },
   "repository": {
     "type": "git",
