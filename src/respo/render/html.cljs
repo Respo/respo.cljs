@@ -19,7 +19,17 @@
 
 (defn entry->string [entry]
   (let [k (first entry), v (last entry)]
-    (str (prop->attr (name k)) "=" (pr-str (if (= k :style) (style->string v) v)))))
+    (str
+     (prop->attr (name k))
+     "="
+     (pr-str
+      (cond
+        (= k :style) (style->string v)
+        (boolean? v) (str v)
+        (number? v) (str v)
+        (keyword? v) (name v)
+        (string? v) (escape-html v)
+        :else (str v))))))
 
 (defn props->string [props]
   (->> props
@@ -33,7 +43,12 @@
   (let [tag-name (name (:name element))
         attrs (into {} (:attrs element))
         text-inside (or (:innerHTML attrs) (text->html (:inner-text attrs)))
-        tailored-props (-> attrs (dissoc :innerHTML) (dissoc :inner-text))
+        styles (or (:style element) {})
+        tailored-props (-> attrs
+                           (dissoc :innerHTML)
+                           (dissoc :inner-text)
+                           ((fn [props]
+                              (if (empty? styles) props (assoc props :style styles)))))
         props-in-string (props->string tailored-props)
         children (->> (:children element)
                       (map (fn [entry] (let [child (last entry)] (element->html child)))))]
@@ -63,7 +78,7 @@
                            (dissoc :innerHTML)
                            (dissoc :inner-text)
                            ((fn [props]
-                              (if (> (count styles) 0) (assoc props :style styles) props))))
+                              (if (empty? styles) props (assoc props :style styles)))))
         props-in-string (props->string tailored-props)
         children (->> (:children element)
                       (map (fn [entry] (let [child (last entry)] (element->string child)))))]

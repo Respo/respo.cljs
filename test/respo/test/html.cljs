@@ -42,5 +42,16 @@
       "test generated HTML"
       (is (= (slurp "test/examples/simple.html") (make-html tree-demo))))))
 
+
+(deftest html-quote-test
+  (let [tree-demo (div {:value "a\"b\"c"
+                        :x "y"
+                        :style {:content "d\"e\"f"}})]
+    (testing "HTML contains quotes"
+      (is (= (slurp "test/examples/quote.html") (make-html tree-demo))))))
+
 (defn main! []
+  (run-tests))
+
+(defn reload! []
   (run-tests))

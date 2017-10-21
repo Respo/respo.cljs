@@ -12,4 +12,5 @@
                 :release {:output-dir "dist/"}}
           :test {:target :node-script
                  :output-to "target/test.js"
-                 :main respo.test.html/main!}}}
+                 :main respo.test.html/main!
+                 :devtools {:after-load respo.test.html/reload!}}}}
