@@ -1,7 +1,6 @@
 
 (ns respo.comp.inspect
-  (:require-macros [respo.macros :refer [defcomp pre <>]])
-  (:require [respo.core :refer [create-comp create-element]]
+  (:require [respo.macros :refer-macros [defcomp pre <>]]
             [hsl.core :refer [hsl]]
             [respo.env :refer [data->native]]
             [polyfill.core :refer [log*]]))

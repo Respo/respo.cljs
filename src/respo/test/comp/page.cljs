@@ -1,6 +1,5 @@
 
 (ns respo.test.comp.page
-  (:require-macros [respo.macros :refer [div html head body meta' link script style]])
-  (:require [respo.core :refer [create-comp create-element]]))
+  (:require [respo.macros :refer-macros [div html head body meta' link script style]]))
 
 (defcomp comp-page (store) (div {}))

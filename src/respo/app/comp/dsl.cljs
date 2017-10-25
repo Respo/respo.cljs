@@ -1,7 +1,6 @@
 
 (ns respo.app.comp.dsl
-  (:require-macros [respo.macros :refer [defcomp div span <>]])
-  (:require [respo.core :refer [create-comp create-element]] [respo.comp.space :refer [=<]]))
+  (:require [respo.macros :refer-macros [defcomp div span <>]] [respo.comp.space :refer [=<]]))
 
 (defcomp
  comp-dsl

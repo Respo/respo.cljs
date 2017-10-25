@@ -1,7 +1,6 @@
 
 (ns respo.app.comp.task
-  (:require-macros [respo.macros :refer [defcomp div input span button <>]])
-  (:require [respo.core :refer [create-comp create-element]]
+  (:require [respo.macros :refer-macros [defcomp div input span button <>]]
             [hsl.core :refer [hsl]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]

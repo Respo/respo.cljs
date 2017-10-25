@@ -1,6 +1,5 @@
 
 (ns respo.test.comp.task
-  (:require-macros (respo.macros :refer (defcomp div span)))
-  (:require [hsl.core :refer [hsl]] [respo.core :refer [create-comp create-element]]))
+  (:require [hsl.core :refer [hsl]] [respo.macros :refer-macros (defcomp div span)]))
 
 (defcomp comp-task (task) (div {} (span {:inner-text (:text task)})))
