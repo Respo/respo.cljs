@@ -1,7 +1,7 @@
 
 (ns respo.app.comp.todolist
   (:require [clojure.string :as string]
-            [respo.macros :refer-macros [defcomp div span input <> cursor->]]
+            [respo.macros :refer [defcomp div span input <> cursor->]]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
             [respo.comp.space :refer [=<]]

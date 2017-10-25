@@ -1,6 +1,6 @@
 
 (ns respo.app.comp.container
-  (:require [respo.macros :refer-macros [defcomp div span <> cursor->]]
+  (:require [respo.macros :refer [defcomp div span <> cursor->]]
             [respo.app.comp.todolist :refer [comp-todolist]]
             [respo.app.comp.dsl :refer [comp-dsl]]))
 
