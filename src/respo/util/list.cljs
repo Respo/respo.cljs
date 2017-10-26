@@ -11,7 +11,9 @@
 
 (defn val-exists? [pair] (some? (last pair)))
 
-(defn arrange-children [children]
+(defn arrange-children [children] (->> (map-indexed vector children) (filter val-exists?)))
+
+(defn arrange-children-old [children]
   (->> (if (and (= 1 (count children))
                 (not (component? (first children)))
                 (not (element? (first children)))

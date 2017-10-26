@@ -38,13 +38,12 @@
 
 (defmacro <>
   ([content] `(respo.core/create-element :span {:inner-text ~content}))
-  ([el content]
-    (if (fn? el)
-      `(~el {:inner-text ~content})
-      (let [content el
-            style content]
-        `(span {:inner-text ~content, :style ~style}))))
+  ([content style] `(span {:inner-text ~content, :style ~style}))
   ([el content style] `(~el {:inner-text ~content, :style ~style})))
 
 (defmacro cursor-> [k component states & args]
   `(assoc (~component (get ~states ~k) ~@args) :cursor (conj ~'*cursor* ~k)))
+
+(defmacro list-> [tag props children]
+  (assert (keyword? tag) "tag in list-> should be keyword")
+  `(respo.core/create-list-element ~tag ~props ~children))

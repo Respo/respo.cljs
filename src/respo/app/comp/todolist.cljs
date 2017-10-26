@@ -1,7 +1,7 @@
 
 (ns respo.app.comp.todolist
   (:require [clojure.string :as string]
-            [respo.macros :refer [defcomp div span input <> cursor->]]
+            [respo.macros :refer [defcomp div span input <> cursor-> list->]]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
             [respo.comp.space :refer [=<]]
@@ -76,7 +76,8 @@
      (span {:inner-text "Clear", :style widget/button, :on {:click clear-done}})
      (=< 8 nil)
      (div {} (div {:style widget/button, :on {:click on-test}} (<> "heavy tasks"))))
-    (div
+    (list->
+     :div
      {:class-name "task-list", :style style-list}
      (->> tasks
           (reverse)

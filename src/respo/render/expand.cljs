@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [polyfill.core :refer [io-get-time*]]
             [respo.util.detect :refer [component? element? dsl? =seq]]
-            [respo.util.list :refer [filter-first pick-attrs arrange-children]]
+            [respo.util.list :refer [filter-first pick-attrs arrange-children-old]]
             [respo.util.alias :refer [parse-alias]]
             [respo.schema :as schema]))
 
@@ -28,7 +28,7 @@
                         (map? (nth markup 1))
                         (not (component? (nth markup 1))))
         props (if has-props? (nth markup 1) {})
-        children (arrange-children
+        children (arrange-children-old
                   (->> (subvec markup (if has-props? 2 1))
                        (map
                         (fn [x]
