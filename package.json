@@ -19,7 +19,7 @@
     "serve-dist": "http-server dist/ -s -c-1",
     "dev": "yarn html && yarn serve",
     "del": "rm -fr dist/*",
-    "build": "yarn del && yarn html-dist && yarn release && yarn serve-dist"
+    "build": "yarn del && yarn html-dist && yarn release"
   },
   "repository": {
     "type": "git",

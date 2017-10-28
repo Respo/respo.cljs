@@ -35,15 +35,19 @@
 
 (def style-panel {:display :flex, :margin-bottom 4})
 
-(defn on-test [e dispatch!]
-  (println "trigger test!")
-  (dispatch! :clear nil)
+(defn run-test! [dispatch! acc]
   (let [started (io-get-time*)]
+    (dispatch! :clear nil)
     (loop [x 200] (dispatch! :add "empty") (if (> x 0) (recur (dec x))))
     (loop [x 20] (dispatch! :hit-first (rand)) (if (> x 0) (recur (dec x))))
     (dispatch! :clear nil)
     (loop [x 10] (dispatch! :add "only 10 items") (if (> x 0) (recur (dec x))))
-    (println "time cost:" (- (io-get-time*) started))))
+    (let [cost (- (io-get-time*) started)]
+      (if (< (count acc) 40)
+        (js/setTimeout (fn [] (run-test! dispatch! (conj acc cost))) 0)
+        (println "result:" (vec (sort acc)))))))
+
+(defn on-test [e dispatch!] (println "trigger test!") (run-test! dispatch! []))
 
 (defn on-focus [e dispatch!] (println "Just focused~"))
 

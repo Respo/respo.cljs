@@ -15,7 +15,7 @@
     (fn [] (render-app! mount-target)))
   ; (reset! *changes-logger (fn [old-tree new-tree changes]
   ;                             (.log js/console (clj->js changes))))
-  )
+  (println "Loaded." (.now js/performance)))
 
 (set! (.-onload js/window) main!)
 
