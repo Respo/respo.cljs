@@ -7,7 +7,7 @@ Respo: A virtual DOM library in ClojureScript
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.7.0-a1"]
+[respo "0.7.1"]
 ```
 
 * Home http://respo.site
@@ -16,6 +16,24 @@ Respo: A virtual DOM library in ClojureScript
 
 ### Usage
 
+DOM syntax
+
+```clojure
+(div {:class-name "demo-container"
+      :style {:color :red}
+      :on {:click (fn [event dispatch! mutate!])}}
+      (div {}))
+```
+
+Text Node:
+
+```clojure
+(<> content)
+; with styles
+(<> content {:color :red
+             :font-size 14})
+```
+
 Component definition:
 
 ```clojure
@@ -23,7 +41,7 @@ Component definition:
   (div
     {:class-name "demo-container"
      :style {:color :red}}
-    (<> span content nil)))
+    (<> content)))
 ```
 
 App initialization:
@@ -34,10 +52,14 @@ App initialization:
 (defn dispatch! [op op-data] (reset! *store updated-store))
 
 ; render to the DOM
-(defn render-app! [] (render! mount-point (comp-container @*store) dispatch!))
-(render-app!)
+(render! mount-point (comp-container @*store) dispatch!)
+```
 
-; watch store changes and render again
+Rerender on store changes:
+
+```clojure
+(defn render-app! [] (render! mount-point (comp-container @*store) dispatch!))
+
 (add-watch *store :changes (fn [] (render-app!)))
 ```
 
