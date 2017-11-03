@@ -8,4 +8,4 @@
  (w h)
  (div {:style (if (some? w) (assoc style-space :width w) (assoc style-space :height h))}))
 
-(def =< comp-space)
+(defn =< [w x] (comp-space w x))

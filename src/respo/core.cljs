@@ -7,7 +7,8 @@
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs arrange-children]]
-            [respo.util.detect :refer [component?]]))
+            [respo.util.detect :refer [component?]]
+            [respo.schema :as schema]))
 
 (defonce *changes-logger (atom nil))
 
@@ -58,7 +59,7 @@
     (rerender-app! target markup dispatch!)
     (mount-app! target markup dispatch!)))
 
-(defn create-list-element [tag-name props children]
+(defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (or (:on props) (:event props) {})]
@@ -67,18 +68,11 @@
      :attrs attrs,
      :style styles,
      :event event,
-     :children children}))
+     :children child-map}))
 
 (defn create-comp [comp-name render]
   (comment println "create component:" comp-name)
-  (let [initial-comp {:name comp-name,
-                      :coord nil,
-                      :args [],
-                      :render render,
-                      :tree nil,
-                      :cost nil,
-                      :cursor nil}]
-    (fn [& args] (assoc initial-comp :args args))))
+  (fn [& args] (merge schema/component {:args args, :name comp-name, :render render})))
 
 (defn realize-ssr! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")

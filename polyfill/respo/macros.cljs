@@ -1,4 +1,5 @@
 
 (ns respo.macros
-  (:require [respo.core :refer [create-comp create-element create-list-element]])
+  (:require [respo.core :refer [create-element create-list-element]]
+            [respo.schema :as schema])
   (:require-macros [respo.macros]))

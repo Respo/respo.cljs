@@ -2,23 +2,14 @@
 (ns respo.macros)
 
 (defmacro defcomp [comp-name params & body]
-  "
-    (def comp-my
-      (create-comp :comp-my
-        (fn [x y]
-          (fn [*cursor*] x))))
-
-    becomes:
-
-    (defcomp my-comp [x y] x)
-  "
   (assert (symbol? comp-name) "1st argument should be a symbol")
   (assert (coll? params) "2nd argument should be a collection")
   (assert (some? (last body)) "defcomp should return a component")
-  `(def ~comp-name
-    (respo.core/create-comp ~(keyword comp-name)
-      (fn [~@params]
-        (fn [~'*cursor*] ~@body)))))
+  `(defn ~comp-name [~@params]
+    (merge respo.schema/component
+      {:args (list ~@params) ,
+       :name ~(keyword comp-name),
+       :render (fn [~@params] (fn [~'*cursor*] ~@body))})))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr img input li link
