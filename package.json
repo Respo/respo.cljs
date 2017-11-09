@@ -15,7 +15,6 @@
     "compile-test": "shadow-cljs compile test",
     "compile": "shadow-cljs compile app",
     "release": "shadow-cljs release app --debug",
-    "serve": "http-server target/ -s -c-1",
     "serve-dist": "http-server dist/ -s -c-1",
     "dev": "yarn html && yarn serve",
     "del": "rm -fr dist/*",
