@@ -1190,20 +1190,20 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shadow-cljs-jar@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-0.10.0.tgz#9895e6e5ccfde1c7b673737b1dfd9149194b644f"
+shadow-cljs-jar@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-1.1.0.tgz#17fee311c5832b12eec65072b5d265f1c35ff67a"
 
-shadow-cljs@^2.0.41:
-  version "2.0.66"
-  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.0.66.tgz#816c3cdc44e5a6d8777f521aa0c8f9e8e86e0c10"
+shadow-cljs@^2.0.102:
+  version "2.0.102"
+  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.0.102.tgz#d2c4ae3a8d5250759d9c45ce4937450fc189fe9d"
   dependencies:
     babel-core "^6.26.0"
     babel-preset-env "^1.6.0"
     mkdirp "^0.5.1"
     node-libs-browser "^2.0.0"
     readline-sync "^1.4.7"
-    shadow-cljs-jar "^0.10.0"
+    shadow-cljs-jar "1.1.0"
     signal-exit "^3.0.2"
     source-map-support "^0.4.15"
     ws "^3.0.0"
@@ -1336,9 +1336,17 @@ wordwrap@~0.0.2:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.3.tgz#a3d5da6cd5c0bc0008d37234bbaf1bed63059107"
 
-ws@^3.0.0, ws@^3.1.0:
+ws@^3.0.0:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-3.3.1.tgz#d97e34dee06a1190c61ac1e95f43cb60b78cf939"
+  dependencies:
+    async-limiter "~1.0.0"
+    safe-buffer "~5.1.0"
+    ultron "~1.1.0"
+
+ws@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-3.3.2.tgz#96c1d08b3fefda1d5c1e33700d3bfaa9be2d5608"
   dependencies:
     async-limiter "~1.0.0"
     safe-buffer "~5.1.0"

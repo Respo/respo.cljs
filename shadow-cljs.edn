@@ -1,5 +1,5 @@
 
-{:source-paths ["src" "polyfill" "test"]
+{:source-paths ["src" "polyfill"]
  :dependencies [[mvc-works/polyfill   "0.1.1"]
                 [mvc-works/hsl        "0.1.2"]]
  :open-file-command ["subl" ["%s:%s:%s" :file :line :column]]
@@ -14,5 +14,5 @@
                 :release {:output-dir "dist/"}}
           :test {:target :node-script
                  :output-to "target/test.js"
-                 :main respo.test.html/main!
-                 :devtools {:after-load respo.test.html/reload!}}}}
+                 :main respo.test.main/main!
+                 :devtools {:after-load respo.test.main/reload!}}}}
