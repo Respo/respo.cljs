@@ -1,7 +1,6 @@
 
 (ns respo.controller.client
   (:require [respo.render.patch :refer [apply-dom-changes]]
-            [polyfill.core :refer [read-string*]]
             [respo.util.format :refer [event->string event->edn]]
             [respo.render.dom :refer [make-element]]))
 

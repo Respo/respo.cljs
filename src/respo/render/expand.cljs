@@ -1,7 +1,6 @@
 
 (ns respo.render.expand
   (:require [clojure.string :as string]
-            [polyfill.core :refer [io-get-time*]]
             [respo.util.detect :refer [component? element? dsl? =seq]]
             [respo.util.list :refer [filter-first pick-attrs arrange-children-old]]
             [respo.util.alias :refer [parse-alias]]
@@ -92,7 +91,7 @@
            (=seq (:args markup) (:args old-element))
            (identical? (:render markup) (:render old-element)))
     (do (comment println "not changed" coord) old-element)
-    (let [begin-time (io-get-time*)
+    (let [begin-time (.valueOf (js/Date.))
           args (:args markup)
           component (first markup)
           new-coord (conj coord (:name markup))
@@ -106,7 +105,7 @@
                 new-coord
                 new-cursor
                 (:tree old-element))
-          cost (- (io-get-time*) begin-time)]
+          cost (- (.valueOf (js/Date.)) begin-time)]
       (comment println "markup tree:" (pr-str markup-tree))
       (comment println "no cache:" coord)
       (assoc markup :coord coord :tree tree :cost cost :cursor new-cursor))))

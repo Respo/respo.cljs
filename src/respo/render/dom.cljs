@@ -1,15 +1,14 @@
 
 (ns respo.render.dom
   (:require [clojure.string :as string]
-            [respo.util.format :refer [dashed->camel event->prop ensure-string]]
-            [polyfill.core :refer [document-create-element*]]))
+            [respo.util.format :refer [dashed->camel event->prop ensure-string]]))
 
 (defn make-element [virtual-element listener-builder]
   (let [tag-name (name (:name virtual-element))
         attrs (:attrs virtual-element)
         style (:style virtual-element)
         children (:children virtual-element)
-        element (document-create-element* tag-name)
+        element (.createElement js/document tag-name)
         child-elements (->> children
                             (map (fn [entry] (make-element (last entry) listener-builder))))]
     (doseq [entry attrs]

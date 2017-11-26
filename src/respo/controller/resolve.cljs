@@ -2,7 +2,6 @@
 (ns respo.controller.resolve
   (:require [clojure.string :as string]
             [respo.util.detect :refer [component? element?]]
-            [polyfill.core :refer [raise*]]
             [respo.util.list :refer [filter-first]]))
 
 (defn get-component-at
@@ -30,7 +29,7 @@
                         (:children markup))]
         (if (some? child-pair)
           (get-markup-at (get child-pair 1) (rest coord))
-          (raise* (str "child not found:" coord (map first (:children markup)))))))))
+          (throw (js/Error. (str "child not found:" coord (map first (:children markup))))))))))
 
 (defn find-event-target [element coord event-name]
   (let [target-element (get-markup-at element coord), element-exists? (some? target-element)]

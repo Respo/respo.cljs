@@ -8,7 +8,7 @@
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.comp.zero :refer [comp-zero]]
             [respo.app.comp.wrap :refer [comp-wrap]]
-            [polyfill.core :refer [text-width* io-get-time* set-timeout*]]
+            [respo.util.dom :refer [text-width]]
             [respo.app.style.widget :as widget]))
 
 (defn clear-done [e dispatch!] (println "dispatch clear-done") (dispatch! :clear nil))
@@ -36,13 +36,13 @@
 (def style-panel {:display :flex, :margin-bottom 4})
 
 (defn run-test! [dispatch! acc]
-  (let [started (io-get-time*)]
+  (let [started (.valueOf (js/Date.))]
     (dispatch! :clear nil)
     (loop [x 200] (dispatch! :add "empty") (if (> x 0) (recur (dec x))))
     (loop [x 20] (dispatch! :hit-first (rand)) (if (> x 0) (recur (dec x))))
     (dispatch! :clear nil)
     (loop [x 10] (dispatch! :add "only 10 items") (if (> x 0) (recur (dec x))))
-    (let [cost (- (io-get-time*) started)]
+    (let [cost (- (.valueOf (js/Date.)) started)]
       (if (< (count acc) 40)
         (js/setTimeout (fn [] (run-test! dispatch! (conj acc cost))) 0)
         (println "result:" (vec (sort acc)))))))
@@ -72,7 +72,7 @@
        :value (:draft state),
        :style (merge
                widget/input
-               {:width (max 200 (+ 24 (text-width* (:draft state) 16 "BlinkMacSystemFont")))}),
+               {:width (max 200 (+ 24 (text-width (:draft state) 16 "BlinkMacSystemFont")))}),
        :on {:input (on-text-change state), :focus on-focus}})
      (=< 8 nil)
      (span {:style widget/button, :on {:click (handle-add state)}} (<> "Add"))

@@ -1,12 +1,12 @@
 
-(ns respo.util.comparator (:require [polyfill.core :refer [raise*]]))
+(ns respo.util.comparator )
 
 (defn type-as-int [x]
   (cond
     (number? x) 0
     (keyword? x) 1
     (string? x) 2
-    :else (raise* "use number, keyword or string in coord!")))
+    :else (throw (js/Error. "use number, keyword or string in coord!"))))
 
 (defn compare-more [x y]
   (let [type-x (type-as-int x), type-y (type-as-int y)]
