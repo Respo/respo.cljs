@@ -1,8 +1,7 @@
 
 (ns respo.app.comp.container
   (:require [respo.macros :refer [defcomp div span <> cursor->]]
-            [respo.app.comp.todolist :refer [comp-todolist]]
-            [respo.app.comp.dsl :refer [comp-dsl]]))
+            [respo.app.comp.todolist :refer [comp-todolist]]))
 
 (def style-states {:padding 8})
 
@@ -15,5 +14,4 @@
    (div
     {:style style-global}
     (cursor-> :todolist comp-todolist state (:tasks store))
-    (div {:style style-states} (<> (pr-str (:states store))))
-    (comp-dsl))))
+    (div {:style style-states} (<> (pr-str (:states store)))))))

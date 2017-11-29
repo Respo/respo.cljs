@@ -13,6 +13,9 @@
 (defonce *changes-logger (atom nil))
 
 (defn create-element [tag-name props & children]
+  (assert
+   (not (some sequential? children))
+   (str "For rendering lists, please use list-> , got: " (pr-str children)))
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (or (:on props) (:event props) {})

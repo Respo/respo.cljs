@@ -1,9 +1,8 @@
 
 (ns respo.render.expand
   (:require [clojure.string :as string]
-            [respo.util.detect :refer [component? element? dsl? =seq]]
-            [respo.util.list :refer [filter-first pick-attrs arrange-children-old]]
-            [respo.util.alias :refer [parse-alias]]
+            [respo.util.detect :refer [component? element? =seq]]
+            [respo.util.list :refer [filter-first pick-attrs]]
             [respo.schema :as schema]))
 
 (declare render-component)
@@ -14,41 +13,11 @@
 
 (declare render-markup)
 
-(declare render-dsl)
-
-(defn render-dsl [markup coord comp-coord cursor old-element]
-  (comment println "render DSL:" markup)
-  (if (zero? (count markup)) (throw (js/Error. (str "Empty markup: " markup))))
-  (if (fn? (nth markup 0))
-    (throw js/Error. "Respo does not support [c x] for component, please use (c x)"))
-  (let [alias (nth markup 0)
-        alias-detail (parse-alias (name alias))
-        has-props? (and (>= (count markup) 2)
-                        (map? (nth markup 1))
-                        (not (component? (nth markup 1))))
-        props (if has-props? (nth markup 1) {})
-        children (arrange-children-old
-                  (->> (subvec markup (if has-props? 2 1))
-                       (map
-                        (fn [x]
-                          (if (string? x)
-                            (merge schema/element {:name :span, :attrs {:inner-text x}})
-                            x)))))]
-    (comment println "children to render:" children)
-    {:name (:name alias-detail),
-     :coord coord,
-     :attrs (pick-attrs (merge (dissoc alias-detail :name) props)),
-     :style (if (contains? props :style) (sort-by first (:style props)) (list)),
-     :event (or (:on props) (:event props) {}),
-     :children (render-children children coord comp-coord cursor (:children old-element))}))
-
 (defn render-markup [markup coord comp-coord cursor old-element]
   (comment println "render markup:" markup)
-  (if (dsl? markup)
-    (render-dsl markup coord comp-coord cursor old-element)
-    (if (component? markup)
-      (render-component markup coord cursor old-element)
-      (render-element markup coord comp-coord cursor old-element))))
+  (if (component? markup)
+    (render-component markup coord cursor old-element)
+    (render-element markup coord comp-coord cursor old-element)))
 
 (defn render-element [markup coord comp-coord cursor old-element]
   (let [children (:children markup)
