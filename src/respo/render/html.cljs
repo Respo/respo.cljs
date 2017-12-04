@@ -7,7 +7,13 @@
             [respo.util.detect :refer [component? element?]]
             [respo.render.expand :refer [render-app]]))
 
-(defn escape-html [text] (-> text (string/replace (re-pattern "\"") "&quot;")))
+(defn escape-html [text]
+  (if (nil? text)
+    ""
+    (-> text
+        (string/replace (re-pattern "\"") "&quot;")
+        (string/replace (re-pattern "<") "&lt;")
+        (string/replace (re-pattern ">") "&gt;"))))
 
 (defn style->string [styles]
   (->> styles
@@ -43,7 +49,9 @@
   (let [tag-name (name (:name element))
         attrs (into {} (:attrs element))
         styles (or (:style element) {})
-        text-inside (or (:innerHTML attrs) (text->html (:inner-text attrs)))
+        text-inside (if (= (:name element) :textarea)
+                      (escape-html (:value attrs))
+                      (or (:innerHTML attrs) (text->html (:inner-text attrs))))
         tailored-props (-> attrs
                            (dissoc :innerHTML)
                            (dissoc :inner-text)

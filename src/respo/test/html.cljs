@@ -1,7 +1,9 @@
 
 (ns respo.test.html
   (:require [cljs.test :refer [deftest is testing run-tests]]
-            [respo.macros :refer [html head title script style meta' div link body]]
+            [respo.macros
+             :refer
+             [html head title script style meta' div link body textarea]]
             [respo.test.comp.todolist :refer [comp-todolist]]
             [respo.render.html :refer [make-string]]
             ["fs" :as fs]))
@@ -37,5 +39,15 @@
    (testing
     "HTML contains quotes"
     (is (= (slurp "test/examples/quote.html") (make-string tree-demo))))))
+
+(deftest
+ textarea-test
+ (let [piece (textarea {:value "a\nb\nc\n\"\nd"})]
+   (testing
+    "test generated HTML from component"
+    (is
+     (=
+      "<textarea value=\"a\\nb\\nc\\n&quot;\\nd\">a\nb\nc\n&quot;\nd</textarea>"
+      (make-string piece))))))
 
 (defn main! [] (run-tests))
