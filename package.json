@@ -4,7 +4,7 @@
   "description": "FIXME: description",
   "main": "index.js",
   "scripts": {
-    "tiye": "rsync -r target/ repo.respo.site:repo/Respo/respo",
+    "tiye": "rsync -r dist/ repo.respo.site:repo/Respo/respo",
     "html": "cp assets/* target/",
     "html-dist": "cp assets/* dist/",
     "watch": "shadow-cljs watch app",
