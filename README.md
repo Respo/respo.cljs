@@ -21,7 +21,7 @@ DOM syntax
 ```clojure
 (div {:class-name "demo-container"
       :style {:color :red}
-      :on {:click (fn [event dispatch! mutate!])}}
+      :on-click (fn [event dispatch! mutate!])}
       (div {}))
 ```
 

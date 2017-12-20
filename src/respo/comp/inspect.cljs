@@ -43,4 +43,4 @@
  (pre
   {:inner-text (str tip ": " (grab-info data)),
    :style (merge style-data style),
-   :on {:click (on-click data)}}))
+   :on-click (on-click data)}))

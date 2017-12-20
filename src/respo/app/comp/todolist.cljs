@@ -73,13 +73,14 @@
        :style (merge
                widget/input
                {:width (max 200 (+ 24 (text-width (:draft state) 16 "BlinkMacSystemFont")))}),
-       :on {:input (on-text-change state), :focus on-focus}})
+       :on-input (on-text-change state),
+       :on-focus on-focus})
      (=< 8 nil)
-     (span {:style widget/button, :on {:click (handle-add state)}} (<> "Add"))
+     (span {:style widget/button, :on-click (handle-add state)} (<> "Add"))
      (=< 8 nil)
-     (span {:inner-text "Clear", :style widget/button, :on {:click clear-done}})
+     (span {:inner-text "Clear", :style widget/button, :on-click clear-done})
      (=< 8 nil)
-     (div {} (div {:style widget/button, :on {:click on-test}} (<> "heavy tasks"))))
+     (div {} (div {:style widget/button, :on-click on-test} (<> "heavy tasks"))))
     (list->
      :div
      {:class-name "task-list", :style style-list}
@@ -96,7 +97,7 @@
         (<> "Clear2"))
        (=< 8 nil)
        (div
-        {:style widget/button, :on {:click (on-lock state)}}
+        {:style widget/button, :on-click (on-lock state)}
         (<> (str "Lock?" (:locked? state))))
        (=< 8 nil)
        (comp-wrap (comp-zero))))
