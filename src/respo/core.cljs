@@ -6,7 +6,7 @@
             [respo.render.diff :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
-            [respo.util.list :refer [pick-attrs arrange-children]]
+            [respo.util.list :refer [pick-attrs pick-event arrange-children]]
             [respo.util.detect :refer [component?]]
             [respo.schema :as schema]))
 
@@ -18,7 +18,7 @@
    (str "For rendering lists, please use list-> , got: " (pr-str children)))
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
-        event (or (:on props) (:event props) {})
+        event (pick-event props)
         children (arrange-children children)]
     {:name tag-name,
      :coord nil,

@@ -6,9 +6,19 @@
 (defn pick-attrs [props]
   (if (nil? props)
     (list)
-    (let [base-attrs (merge (-> props (dissoc :on) (dissoc :event) (dissoc :style)))]
+    (let [base-attrs (->> (-> props (dissoc :on) (dissoc :event) (dissoc :style))
+                          (filter
+                           (fn [[k v]] (not (re-matches (re-pattern "on-\\w+") (name k))))))]
       (sort-by first base-attrs))))
 
 (defn val-exists? [pair] (some? (last pair)))
 
 (defn arrange-children [children] (->> (map-indexed vector children) (filter val-exists?)))
+
+(defn pick-event [props]
+  (merge
+   (:on props)
+   (->> props
+        (filter (fn [[k v]] (re-matches (re-pattern "on-\\w+") (name k))))
+        (map (fn [[k v]] [(keyword (subs (name k) 3)) v]))
+        (into {}))))
