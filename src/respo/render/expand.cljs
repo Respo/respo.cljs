@@ -42,10 +42,8 @@
     (doall
      (->> children
           (map
-           (fn [child-entry]
-             (let [k (first child-entry)
-                   child-element (last child-entry)
-                   old-child (get mapped-cache k)]
+           (fn [[k child-element]]
+             (let [old-child (get mapped-cache k)]
                (comment
                 if
                 (nil? old-child)
@@ -62,7 +60,6 @@
     (do (comment println "not changed" coord) old-element)
     (let [begin-time (.valueOf (js/Date.))
           args (:args markup)
-          component (first markup)
           new-coord (conj coord (:name markup))
           new-cursor (or (:cursor markup) cursor)
           render (:render markup)

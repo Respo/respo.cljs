@@ -42,13 +42,6 @@
           (recur element (subvec coord 0 (- (count coord) 1)) event-name)
           nil)))))
 
-(defn all-component-coords [markup]
-  (if (component? markup)
-    (cons (:coord markup) (all-component-coords (:tree markup)))
-    (->> (:children markup)
-         (map (fn [child-entry] (all-component-coords (val child-entry))))
-         (apply concat))))
-
 (defn build-deliver-event [*global-element dispatch!]
   (fn [coord event-name simple-event]
     (let [target-element (find-event-target @*global-element coord event-name)

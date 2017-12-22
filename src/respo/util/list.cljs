@@ -6,10 +6,9 @@
 (defn pick-attrs [props]
   (if (nil? props)
     (list)
-    (let [base-attrs (->> (-> props (dissoc :on) (dissoc :event) (dissoc :style))
-                          (filter
-                           (fn [[k v]] (not (re-matches (re-pattern "on-\\w+") (name k))))))]
-      (sort-by first base-attrs))))
+    (->> (-> props (dissoc :on) (dissoc :event) (dissoc :style))
+         (filter (fn [[k v]] (not (re-matches (re-pattern "on-\\w+") (name k)))))
+         (sort-by first))))
 
 (defn val-exists? [pair] (some? (last pair)))
 
