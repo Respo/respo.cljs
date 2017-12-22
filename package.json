@@ -30,8 +30,8 @@
   "dependencies": {},
   "devDependencies": {
     "http-server": "^0.10.0",
-    "shadow-cljs": "^2.0.117",
+    "shadow-cljs": "^2.0.122",
     "source-map-support": "^0.5.0",
-    "ws": "^3.3.2"
+    "ws": "^3.3.3"
   }
 }

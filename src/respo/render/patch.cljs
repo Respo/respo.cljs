@@ -2,7 +2,8 @@
 (ns respo.render.patch
   (:require [clojure.string :as string]
             [respo.util.format :refer [dashed->camel event->prop ensure-string]]
-            [respo.render.dom :refer [make-element style->string]]))
+            [respo.render.dom :refer [make-element style->string]]
+            [respo.schema.op :as op]))
 
 (defn rm-event [target event-name]
   (let [event-prop (event->prop event-name)] (aset target event-prop nil)))
@@ -69,17 +70,17 @@
     (doseq [op changes]
       (let [[op-type coord op-data] op, target (find-target root coord)]
         (comment println op-type target op-data)
-        (case op-type
-          :replace-prop (replace-prop target op-data)
-          :add-prop (add-prop target op-data)
-          :rm-prop (rm-prop target op-data)
-          :add-style (add-style target op-data)
-          :replace-style (replace-style target op-data)
-          :rm-style (rm-style target op-data)
-          :add-event (add-event target op-data listener-builder)
-          :rm-event (rm-event target op-data)
-          :add (add-element target op-data listener-builder)
-          :rm (rm-element target op-data)
-          :replace (replace-element target op-data listener-builder)
-          :append (append-element target op-data listener-builder)
-          (println "not implemented:" op-type))))))
+        (cond
+          (= op-type op/replace-prop) (replace-prop target op-data)
+          (= op-type op/add-prop) (add-prop target op-data)
+          (= op-type op/rm-prop) (rm-prop target op-data)
+          (= op-type op/add-style) (add-style target op-data)
+          (= op-type op/replace-style) (replace-style target op-data)
+          (= op-type op/rm-style) (rm-style target op-data)
+          (= op-type op/set-event) (add-event target op-data listener-builder)
+          (= op-type op/rm-event) (rm-event target op-data)
+          (= op-type op/add-element) (add-element target op-data listener-builder)
+          (= op-type op/rm-element) (rm-element target op-data)
+          (= op-type op/replace-element) (replace-element target op-data listener-builder)
+          (= op-type op/append-element) (append-element target op-data listener-builder)
+          :else (println "not implemented:" op-type))))))

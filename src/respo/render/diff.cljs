@@ -3,7 +3,8 @@
   (:require [clojure.string :as string]
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component?]]
-            [clojure.set :refer [difference]]))
+            [clojure.set :refer [difference]]
+            [respo.schema.op :as op]))
 
 (declare find-element-diffs)
 
@@ -17,11 +18,11 @@
         (and was-empty? now-empty?) nil
         (and was-empty? (not now-empty?))
           (let [entry (first new-style), follows (rest new-style)]
-            (collect! [:add-style coord entry])
+            (collect! [op/add-style coord entry])
             (recur collect! coord old-style follows))
         (and (not was-empty?) now-empty?)
           (let [entry (first old-style), follows (rest old-style)]
-            (collect! [:rm-style coord (key entry)])
+            (collect! [op/rm-style coord (key entry)])
             (recur collect! coord follows new-style))
         :else
           (let [old-entry (first old-style)
@@ -31,15 +32,15 @@
             (case (compare (key old-entry) (key new-entry))
               -1
                 (do
-                 (collect! [:rm-style coord (key old-entry)])
+                 (collect! [op/rm-style coord (key old-entry)])
                  (recur collect! coord old-follows new-style))
               1
                 (do
-                 (collect! [:add-style coord new-entry])
+                 (collect! [op/add-style coord new-entry])
                  (recur collect! coord old-style new-follows))
               (do
                (if (not (identical? (val old-entry) (val new-entry)))
-                 (collect! [:replace-style coord new-entry]))
+                 (collect! [op/replace-style coord new-entry]))
                (recur collect! coord old-follows new-follows))))))))
 
 (defn find-props-diffs [collect! coord old-props new-props]
@@ -57,11 +58,11 @@
       (and was-empty? now-empty?) nil
       (and was-empty? (not now-empty?))
         (do
-         (collect! [:add-prop coord (first new-props)])
+         (collect! [op/add-prop coord (first new-props)])
          (recur collect! coord old-props (rest new-props)))
       (and (not was-empty?) now-empty?)
         (do
-         (collect! [:rm-prop coord (key (first old-props))])
+         (collect! [op/rm-prop coord (key (first old-props))])
          (recur collect! coord (rest old-props) new-props))
       :else
         (let [old-entry (first old-props)
@@ -74,14 +75,14 @@
           (case (compare old-k new-k)
             -1
               (do
-               (collect! [:rm-prop coord old-k])
+               (collect! [op/rm-prop coord old-k])
                (recur collect! coord old-follows new-props))
             1
               (do
-               (collect! [:add-prop coord new-entry])
+               (collect! [op/add-prop coord new-entry])
                (recur collect! coord old-props new-follows))
             (do
-             (if (not= old-v new-v) (collect! [:replace-prop coord new-entry]))
+             (if (not= old-v new-v) (collect! [op/replace-prop coord new-entry]))
              (recur collect! coord old-follows new-follows)))))))
 
 (defn find-children-diffs [collect! n-coord index old-children new-children]
@@ -91,11 +92,11 @@
       (and was-empty? now-empty?) nil
       (and was-empty? (not now-empty?))
         (let [element (last (first new-children))]
-          (collect! [:append n-coord (purify-element element)])
+          (collect! [op/append-element n-coord (purify-element element)])
           (recur collect! n-coord (inc index) [] (rest new-children)))
       (and (not was-empty?) now-empty?)
         (do
-         (collect! [:rm (conj n-coord index)])
+         (collect! [op/rm-element (conj n-coord index)])
          (recur collect! n-coord index (rest old-children) []))
       :else
         (let [old-keys (map first (take 16 old-children))
@@ -119,11 +120,11 @@
               (do
                (collect!
                 (let [element (last (first new-children))]
-                  [:add (conj n-coord index) (purify-element element)]))
+                  [op/add-element (conj n-coord index) (purify-element element)]))
                (recur collect! n-coord (inc index) old-children new-follows))
             (and (not x1-remains?) y1-existed?)
               (do
-               (collect! [:rm (conj n-coord index)])
+               (collect! [op/rm-element (conj n-coord index)])
                (recur collect! n-coord index old-follows new-children))
             :else
               (let [xi (.indexOf new-keys x1)
@@ -133,10 +134,11 @@
                 (comment println "index:" xi yi)
                 (if (<= xi yi)
                   (let [new-element (last (first new-children))]
-                    (collect! [:add (conj n-coord index) (purify-element new-element)])
+                    (collect!
+                     [op/add-element (conj n-coord index) (purify-element new-element)])
                     (recur collect! n-coord (inc index) old-children new-follows))
                   (do
-                   (collect! [:rm (conj n-coord index)])
+                   (collect! [op/rm-element (conj n-coord index)])
                    (recur collect! n-coord index old-follows new-children)))))))))
 
 (defn find-element-diffs [collect! n-coord old-tree new-tree]
@@ -151,7 +153,7 @@
           (if (or (not= (:coord old-tree) (:coord new-tree))
                   (not= (:name old-tree) (:name new-tree))
                   (not= (:c-name old-tree) (:c-name new-tree)))
-            (do (collect! [:replace n-coord (purify-element new-tree)]) nil)
+            (do (collect! [op/replace-element n-coord (purify-element new-tree)]) nil)
             (do
              (find-props-diffs collect! n-coord (:attrs old-tree) (:attrs new-tree))
              (let [old-style (:style old-tree), new-style (:style new-tree)]
@@ -162,6 +164,7 @@
                    added-events (difference new-events old-events)
                    removed-events (difference old-events new-events)]
                (doseq [event-name added-events]
-                 (collect! [:add-event n-coord [event-name (:coord new-tree)]]))
-               (doseq [event-name removed-events] (collect! [:rm-event n-coord event-name])))
+                 (collect! [op/set-event n-coord [event-name (:coord new-tree)]]))
+               (doseq [event-name removed-events]
+                 (collect! [op/rm-event n-coord event-name])))
              (find-children-diffs collect! n-coord 0 old-children new-children)))))))
