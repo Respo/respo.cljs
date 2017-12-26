@@ -4,19 +4,6 @@
             [respo.util.detect :refer [component? element?]]
             [respo.util.list :refer [filter-first]]))
 
-(defn get-component-at
-  ([markup coord] (get-component-at nil markup coord))
-  ([acc markup coord]
-   (if (empty? coord)
-     acc
-     (let [coord-head (first coord)]
-       (if (component? markup)
-         (if (= (:name markup) coord-head) (recur markup (:tree markup) (rest coord)) nil)
-         (let [child-pair (filter-first
-                           (fn [child-entry] (= (get child-entry 0) coord-head))
-                           (:children markup))]
-           (if (some? child-pair) (recur acc (last child-pair) (rest coord)) nil)))))))
-
 (defn get-markup-at [markup coord]
   (comment println "markup:" (pr-str coord))
   (if (empty? coord)
@@ -41,6 +28,19 @@
         (if element-exists?
           (recur element (subvec coord 0 (- (count coord) 1)) event-name)
           nil)))))
+
+(defn get-component-at
+  ([markup coord] (get-component-at nil markup coord))
+  ([acc markup coord]
+   (if (empty? coord)
+     acc
+     (let [coord-head (first coord)]
+       (if (component? markup)
+         (if (= (:name markup) coord-head) (recur markup (:tree markup) (rest coord)) nil)
+         (let [child-pair (filter-first
+                           (fn [child-entry] (= (get child-entry 0) coord-head))
+                           (:children markup))]
+           (if (some? child-pair) (recur acc (last child-pair) (rest coord)) nil)))))))
 
 (defn build-deliver-event [*global-element dispatch!]
   (fn [coord event-name simple-event]

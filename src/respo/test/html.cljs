@@ -8,9 +8,16 @@
             [respo.render.html :refer [make-string]]
             ["fs" :as fs]))
 
-(def todolist-store [{:id 101, :text "101"} {:id 102, :text "102"}])
-
 (defn slurp [file-path] (.readFileSync fs file-path "utf8"))
+
+(deftest
+ html-quote-test
+ (let [tree-demo (div {:value "a\"b\"c", :x "y", :style {:content "d\"e\"f"}})]
+   (testing
+    "HTML contains quotes"
+    (is (= (slurp "test/examples/quote.html") (make-string tree-demo))))))
+
+(def todolist-store [{:id 101, :text "101"} {:id 102, :text "102"}])
 
 (deftest
  html-test
@@ -32,13 +39,6 @@
    (testing
     "test generated HTML from tree"
     (is (= (slurp "test/examples/simple.html") (make-string tree-demo))))))
-
-(deftest
- html-quote-test
- (let [tree-demo (div {:value "a\"b\"c", :x "y", :style {:content "d\"e\"f"}})]
-   (testing
-    "HTML contains quotes"
-    (is (= (slurp "test/examples/quote.html") (make-string tree-demo))))))
 
 (deftest
  textarea-test

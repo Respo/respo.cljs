@@ -4,6 +4,23 @@
             [hsl.core :refer [hsl]]
             [respo.env :refer [data->native]]))
 
+(defn grab-info [data]
+  (cond
+    (map? data) (str "Map/" (count data))
+    (vector? data) (str "Vector/" (count data))
+    (set? data) (str "Set/" (count data))
+    (nil? data) "nil"
+    (number? data) (str data)
+    (keyword? data) (str data)
+    (boolean? data) (str data)
+    (fn? data) "Fn"
+    :else (pr-str data)))
+
+(defn on-click [data]
+  (fn [e dispatch!]
+    (let [raw (pr-str data)]
+      (if (> (count raw) 60) (.log js/console (data->native data)) (.log js/console raw)))))
+
 (def style-data
   {:position :absolute,
    :background-color (hsl 240 100 0),
@@ -19,23 +36,6 @@
    :white-space :normal,
    :overflow :ellipsis,
    :cursor :default})
-
-(defn on-click [data]
-  (fn [e dispatch!]
-    (let [raw (pr-str data)]
-      (if (> (count raw) 60) (.log js/console (data->native data)) (.log js/console raw)))))
-
-(defn grab-info [data]
-  (cond
-    (map? data) (str "Map/" (count data))
-    (vector? data) (str "Vector/" (count data))
-    (set? data) (str "Set/" (count data))
-    (nil? data) "nil"
-    (number? data) (str data)
-    (keyword? data) (str data)
-    (boolean? data) (str data)
-    (fn? data) "Fn"
-    :else (pr-str data)))
 
 (defcomp
  comp-inspect

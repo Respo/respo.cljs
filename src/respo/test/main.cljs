@@ -9,13 +9,13 @@
 (defn reload! [] (main!))
 
 (deftest
+ test-pick-attrs
+ (is (= (pick-attrs {:value "string", :on-click (fn [] )}) (list [:value "string"]))))
+
+(deftest
  test-pick-event
  (testing
   "test event"
   (let [f (fn [] )]
     (is (= (pick-event {:value "a", :on-click f}) {:click f}))
     (is (= (pick-event {:value "a", :on-click f, :on {:input f}}) {:click f, :input f})))))
-
-(deftest
- test-pick-attrs
- (is (= (pick-attrs {:value "string", :on-click (fn [] )}) (list [:value "string"]))))

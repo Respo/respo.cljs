@@ -17,12 +17,12 @@
      (fn [old-tree new-tree changes] (.log js/console (clj->js changes))))
     (println "Loaded." (.now js/performance))))
 
-(defn save-store! [] (.setItem js/window.localStorage "respo" (pr-str (:tasks @*store))))
-
 (defn reload! []
   (clear-cache!)
   (render-app! mount-target)
   (.log js/console "code updated."))
+
+(defn save-store! [] (.setItem js/window.localStorage "respo" (pr-str (:tasks @*store))))
 
 (set! (.-onload js/window) main!)
 

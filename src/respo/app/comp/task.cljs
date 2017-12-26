@@ -6,23 +6,21 @@
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.style.widget :as widget]))
 
-(def style-task {:display :flex, :padding "4px 0px"})
-
-(defn on-click [props state] (fn [event dispatch!] (println "clicked.")))
-
 (defn handle-done [task-id] (fn [e dispatch!] (dispatch! :toggle task-id)))
 
-(def style-done
-  {:width 32, :height 32, :outline :none, :border :none, :vertical-align :middle})
+(defn handle-remove [task] (fn [e dispatch!] (dispatch! :remove (:id task))))
 
 (defn on-text-change [task]
   (fn [event dispatch!]
     (let [task-id (:id task), text (:value event)]
       (dispatch! :update {:id task-id, :text text}))))
 
-(defn handle-remove [task] (fn [e dispatch!] (dispatch! :remove (:id task))))
-
 (defn on-text-state [e dispatch! mutate!] (mutate! (:value e)))
+
+(def style-done
+  {:width 32, :height 32, :outline :none, :border :none, :vertical-align :middle})
+
+(def style-task {:display :flex, :padding "4px 0px"})
 
 (defcomp
  comp-task
@@ -44,3 +42,5 @@
     (div {:style widget/button, :on-click (handle-remove task)} (<> "Remove"))
     (=< 8 nil)
     (div {} (<> state)))))
+
+(defn on-click [props state] (fn [event dispatch!] (println "clicked.")))

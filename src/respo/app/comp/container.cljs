@@ -3,9 +3,9 @@
   (:require [respo.macros :refer [defcomp div span <> cursor->]]
             [respo.app.comp.todolist :refer [comp-todolist]]))
 
-(def style-states {:padding 8})
-
 (def style-global {:font-family "Avenir,Verdana"})
+
+(def style-states {:padding 8})
 
 (defcomp
  comp-container

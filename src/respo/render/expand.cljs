@@ -5,9 +5,9 @@
             [respo.util.list :refer [filter-first pick-attrs]]
             [respo.schema :as schema]))
 
-(declare render-component)
-
 (declare render-children)
+
+(declare render-component)
 
 (declare render-element)
 
@@ -36,23 +36,6 @@
      (pr-str markup))
     (assoc markup :coord coord :children child-elements)))
 
-(defn render-children [children coord comp-coord cursor old-children]
-  (comment println "render children:" children)
-  (let [mapped-cache (into {} old-children)]
-    (doall
-     (->> children
-          (map
-           (fn [[k child-element]]
-             (let [old-child (get mapped-cache k)]
-               (comment
-                if
-                (nil? old-child)
-                (do (println "old child:" coord (some? old-child))))
-               [k
-                (if (some? child-element)
-                  (render-markup child-element (conj coord k) comp-coord cursor old-child)
-                  nil)])))))))
-
 (defn render-component [markup coord cursor old-element]
   (if (and (some? old-element)
            (=seq (:args markup) (:args old-element))
@@ -75,5 +58,22 @@
       (comment println "markup tree:" (pr-str markup-tree))
       (comment println "no cache:" coord)
       (assoc markup :coord coord :tree tree :cost cost :cursor new-cursor))))
+
+(defn render-children [children coord comp-coord cursor old-children]
+  (comment println "render children:" children)
+  (let [mapped-cache (into {} old-children)]
+    (doall
+     (->> children
+          (map
+           (fn [[k child-element]]
+             (let [old-child (get mapped-cache k)]
+               (comment
+                if
+                (nil? old-child)
+                (do (println "old child:" coord (some? old-child))))
+               [k
+                (if (some? child-element)
+                  (render-markup child-element (conj coord k) comp-coord cursor old-child)
+                  nil)])))))))
 
 (defn render-app [markup old-element] (render-markup markup [] [] [] old-element))
