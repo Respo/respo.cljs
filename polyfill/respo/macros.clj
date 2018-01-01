@@ -35,6 +35,9 @@
 (defmacro cursor-> [k component states & args]
   `(assoc (~component (get ~states ~k) ~@args) :cursor (conj ~'*cursor* ~k)))
 
-(defmacro list-> [tag props children]
-  (assert (keyword? tag) "tag in list-> should be keyword")
-  `(respo.core/create-list-element ~tag ~props ~children))
+(defmacro list->
+  ([props children]
+    `(respo.core/create-list-element :div ~props ~children))
+  ([tag props children]
+    (assert (keyword? tag) "tag in list-> should be keyword")
+    `(respo.core/create-list-element ~tag ~props ~children)))

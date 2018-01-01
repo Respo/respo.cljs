@@ -82,7 +82,6 @@
      (=< 8 nil)
      (div {} (div {:style widget/button, :on-click on-test} (<> "heavy tasks"))))
     (list->
-     :div
      {:class-name "task-list", :style style-list}
      (->> tasks
           (reverse)

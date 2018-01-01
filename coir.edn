@@ -1461,7 +1461,6 @@
             :type :expr, :id "rkvzBMluK0Y-", :by nil, :at 1504774121421
             :data {
              "D" {:type :leaf, :text "list->", :id "Sk71ar3xf", :by "root", :at 1511967962941}
-             "T" {:type :leaf, :id "S1_Mrfx_tRtZ", :text ":div", :by "root", :at 1511967965654}
              "j" {
               :type :expr, :id "SyKzSGluKRtW", :by nil, :at 1504774121421
               :data {
