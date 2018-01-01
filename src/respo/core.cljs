@@ -6,7 +6,7 @@
             [respo.render.diff :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
-            [respo.util.list :refer [pick-attrs pick-event arrange-children]]
+            [respo.util.list :refer [pick-attrs pick-event val-exists?]]
             [respo.util.detect :refer [component?]]
             [respo.schema :as schema]))
 
@@ -19,7 +19,7 @@
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (pick-event props)
-        children (arrange-children children)]
+        children (->> (map-indexed vector children) (filter val-exists?))]
     {:name tag-name,
      :coord nil,
      :attrs attrs,
@@ -65,7 +65,7 @@
 (defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
-        event (or (:on props) (:event props) {})]
+        event (pick-event props)]
     {:name tag-name,
      :coord nil,
      :attrs attrs,

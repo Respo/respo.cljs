@@ -1,10 +1,6 @@
 
 (ns respo.util.list (:require [respo.util.detect :refer [component? element?]]))
 
-(defn val-exists? [pair] (some? (last pair)))
-
-(defn arrange-children [children] (->> (map-indexed vector children) (filter val-exists?)))
-
 (defn filter-first [f xs] (reduce (fn [acc x] (when (f x) (reduced x))) nil xs))
 
 (defn pick-attrs [props]
@@ -21,3 +17,5 @@
         (filter (fn [[k v]] (re-matches (re-pattern "on-\\w+") (name k))))
         (map (fn [[k v]] [(keyword (subs (name k) 3)) v]))
         (into {}))))
+
+(defn val-exists? [pair] (some? (last pair)))

@@ -9,6 +9,5 @@
  comp-todolist
  (tasks)
  (list->
-  :div
   {:style style-todolist}
   (->> tasks (map (fn [task] [(:id task) (comp-task task)])))))
