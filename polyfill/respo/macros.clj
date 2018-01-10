@@ -41,3 +41,11 @@
   ([tag props children]
     (assert (keyword? tag) "tag in list-> should be keyword")
     `(respo.core/create-list-element ~tag ~props ~children)))
+
+(defmacro action-> [op op-data]
+  `(fn [~'%e d!# m!#]
+    (d!# ~op ~op-data)))
+
+(defmacro mutation-> [state]
+  `(fn [~'%e d!# m!#]
+    (m!# ~state)))

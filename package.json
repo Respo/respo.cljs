@@ -1,7 +1,7 @@
 {
   "name": "respo",
   "version": "0.1.0",
-  "description": "FIXME: description",
+  "description": "Virtual DOM library",
   "main": "index.js",
   "scripts": {
     "tiye": "rsync -r dist/ repo.respo.site:repo/Respo/respo",
@@ -30,7 +30,7 @@
   "dependencies": {},
   "devDependencies": {
     "http-server": "^0.10.0",
-    "shadow-cljs": "^2.0.125",
+    "shadow-cljs": "^2.0.129",
     "source-map-support": "^0.5.0",
     "ws": "^3.3.3"
   }
