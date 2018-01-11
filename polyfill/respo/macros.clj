@@ -9,7 +9,7 @@
     (merge respo.schema/component
       {:args (list ~@params) ,
        :name ~(keyword comp-name),
-       :render (fn [~@params] (fn [~'*cursor*] ~@body))})))
+       :render (fn [~@params] (fn [~'%cursor] ~@body))})))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr img input li link
@@ -33,7 +33,7 @@
   ([el content style] `(~el {:inner-text ~content, :style ~style})))
 
 (defmacro cursor-> [k component states & args]
-  `(assoc (~component (get ~states ~k) ~@args) :cursor (conj ~'*cursor* ~k)))
+  `(assoc (~component (get ~states ~k) ~@args) :cursor (conj ~'%cursor ~k)))
 
 (defmacro list->
   ([props children]
