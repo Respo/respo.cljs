@@ -7,7 +7,7 @@
             [respo.app.style.widget :as widget]))
 
 (defn on-text-change [task]
-  (fn [event dispatch!]
+  (fn [event dispatch! mutate!]
     (let [task-id (:id task), text (:value event)]
       (dispatch! :update {:id task-id, :text text}))))
 

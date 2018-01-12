@@ -713,6 +713,7 @@
           :data {
            "T" {:type :leaf, :id "Sk0nIGgdtAYW", :text "event", :by "root", :at 1504774121421}
            "j" {:type :leaf, :id "rkkpUzxdtAKZ", :text "dispatch!", :by "root", :at 1504774121421}
+           "r" {:type :leaf, :by "root", :at 1515731343882, :text "mutate!", :id "ryv9KhHVz"}
           }
          }
          "r" {

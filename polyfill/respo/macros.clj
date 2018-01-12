@@ -16,14 +16,21 @@
                         option p pre script section select span style textarea title
                         ul])
 
+(def svg-elements '[svg animate circle defs ellipse font font font-face g
+                    image line mask path pattern polygon polyline rect stop style
+                    text view])
+
 (defmacro meta' [props & children] `(respo.core/create-element :meta ~props ~@children))
+(defmacro filter' [props & children] `(respo.core/create-element :filter ~props ~@children))
+(defmacro fe-blend [props & children] `(respo.core/create-element :feBlend ~props ~@children))
+(defmacro fe-offset' [props & children] `(respo.core/create-element :feOffset ~props ~@children))
 
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
     `(respo.core/create-element ~(keyword '~el) ~~'props ~@~'children)))
 
 (defmacro define-element-macro []
-  `(do ~@(clojure.core/map gen-dom-macro support-elements)))
+  `(do ~@(clojure.core/map gen-dom-macro (concat support-elements svg-elements))))
 
 (define-element-macro)
 
