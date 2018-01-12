@@ -5,21 +5,10 @@
             [respo.render.dom :refer [make-element style->string]]
             [respo.schema.op :as op]))
 
-(defn rm-event [target event-name]
-  (let [event-prop (event->prop event-name)] (aset target event-prop nil)))
-
-(defn replace-style [target op]
-  (let [style-name (dashed->camel (name (key op))), style-value (ensure-string (val op))]
-    (aset (.-style target) style-name style-value)))
-
-(defn replace-element [target op listener-builder]
+(defn add-element [target op listener-builder]
   (let [new-element (make-element op listener-builder)
         parent-element (.-parentElement target)]
-    (.insertBefore parent-element new-element target)
-    (.remove target)))
-
-(defn append-element [target op listener-builder]
-  (let [new-element (make-element op listener-builder)] (.appendChild target new-element)))
+    (.insertBefore parent-element new-element target)))
 
 (defn add-event [target op-data listener-builder]
   (let [[event-name coord] op-data, event-prop (event->prop event-name)]
@@ -28,31 +17,25 @@
      event-prop
      (fn [event] ((listener-builder event-name) event coord) (.stopPropagation event)))))
 
-(defn rm-prop [target op] (aset target (dashed->camel (name op)) nil))
-
-(defn add-prop [target op]
-  (let [prop-name (dashed->camel (name (key op))), prop-value (val op)]
+(defn add-prop [target op svg?]
+  (let [prop-name (dashed->camel (name (key op)))
+        svg-prop (name (key op))
+        prop-value (val op)]
     (case prop-name
-      "style" (aset target prop-name (style->string prop-value))
-      (aset target prop-name prop-value))))
-
-(defn replace-prop [target op]
-  (let [prop-name (dashed->camel (name (key op))), prop-value (val op)]
-    (if (= prop-name "value")
-      (if (not= prop-value (.-value target)) (aset target prop-name prop-value))
-      (aset target prop-name prop-value))))
+      "style"
+        (if (and svg? (not= svg-prop "innerHTML"))
+          (.setAttribute target svg-prop (style->string prop-value))
+          (aset target prop-name (style->string prop-value)))
+      (if (and svg? (not= svg-prop "innerHTML"))
+        (.setAttribute target svg-prop prop-value)
+        (aset target prop-name prop-value)))))
 
 (defn add-style [target op]
   (let [style-name (dashed->camel (name (key op))), style-value (ensure-string (val op))]
     (aset (.-style target) style-name style-value)))
 
-(defn rm-style [target op]
-  (let [style-name (dashed->camel (name op))] (aset (.-style target) style-name nil)))
-
-(defn rm-element [target op]
-  (if (some? target)
-    (.remove target)
-    (.warn js/console "Respo: Element already removed! Probably by :inner-text.")))
+(defn append-element [target op listener-builder]
+  (let [new-element (make-element op listener-builder)] (.appendChild target new-element)))
 
 (defn find-target [root coord]
   (if (empty? coord)
@@ -60,20 +43,53 @@
     (let [index (first coord), child (aget (.-children root) index)]
       (recur child (rest coord)))))
 
-(defn add-element [target op listener-builder]
+(defn replace-element [target op listener-builder]
   (let [new-element (make-element op listener-builder)
         parent-element (.-parentElement target)]
-    (.insertBefore parent-element new-element target)))
+    (.insertBefore parent-element new-element target)
+    (.remove target)))
+
+(defn replace-prop [target op svg?]
+  (let [prop-name (dashed->camel (name (key op)))
+        svg-prop (name (key op))
+        prop-value (val op)]
+    (if (= prop-name "value")
+      (if (not= prop-value (.-value target))
+        (if (and svg? (not= svg-prop "innerHTML"))
+          (.setAttribute target svg-prop prop-value)
+          (aset target prop-name prop-value)))
+      (if (and svg? (not= svg-prop "innerHTML"))
+        (.setAttribute target svg-prop prop-value)
+        (aset target prop-name prop-value)))))
+
+(defn replace-style [target op]
+  (let [style-name (dashed->camel (name (key op))), style-value (ensure-string (val op))]
+    (aset (.-style target) style-name style-value)))
+
+(defn rm-element [target op]
+  (if (some? target)
+    (.remove target)
+    (.warn js/console "Respo: Element already removed! Probably by :inner-text.")))
+
+(defn rm-event [target event-name]
+  (let [event-prop (event->prop event-name)] (aset target event-prop nil)))
+
+(defn rm-prop [target op svg?]
+  (let [k (dashed->camel (name op)), svg-k (name op)]
+    (if (and svg? (not= svg-k "innerHTML")) (.removeAttribute target k) (aset target k nil))))
+
+(defn rm-style [target op]
+  (let [style-name (dashed->camel (name op))] (aset (.-style target) style-name nil)))
 
 (defn apply-dom-changes [changes mount-point listener-builder]
   (let [root (.-firstChild mount-point)]
     (doseq [op changes]
-      (let [[op-type coord op-data] op, target (find-target root coord)]
+      (let [[op-type coord op-data svg?] op, target (find-target root coord)]
         (comment println op-type target op-data)
         (cond
-          (= op-type op/replace-prop) (replace-prop target op-data)
-          (= op-type op/add-prop) (add-prop target op-data)
-          (= op-type op/rm-prop) (rm-prop target op-data)
+          (= op-type op/replace-prop) (replace-prop target op-data svg?)
+          (= op-type op/add-prop) (add-prop target op-data svg?)
+          (= op-type op/rm-prop) (rm-prop target op-data svg?)
           (= op-type op/add-style) (add-style target op-data)
           (= op-type op/replace-style) (replace-style target op-data)
           (= op-type op/rm-style) (rm-style target op-data)

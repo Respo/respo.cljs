@@ -21,18 +21,25 @@
                     text view])
 
 (defmacro meta' [props & children] `(respo.core/create-element :meta ~props ~@children))
-(defmacro filter' [props & children] `(respo.core/create-element :filter ~props ~@children))
-(defmacro fe-blend [props & children] `(respo.core/create-element :feBlend ~props ~@children))
-(defmacro fe-offset' [props & children] `(respo.core/create-element :feOffset ~props ~@children))
+
+(defmacro filter' [props & children] `(respo.core/create-svg-element :filter ~props ~@children))
+(defmacro fe-blend [props & children] `(respo.core/create-svg-element :feBlend ~props ~@children))
+(defmacro fe-offset' [props & children] `(respo.core/create-svg-element :feOffset ~props ~@children))
 
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
     `(respo.core/create-element ~(keyword '~el) ~~'props ~@~'children)))
+(defn gen-svg-macro [el]
+  `(defmacro ~el [~'props ~'& ~'children]
+    `(respo.core/create-svg-element ~(keyword '~el) ~~'props ~@~'children)))
 
 (defmacro define-element-macro []
-  `(do ~@(clojure.core/map gen-dom-macro (concat support-elements svg-elements))))
+  `(do ~@(clojure.core/map gen-dom-macro support-elements)))
+(defmacro define-svg-element-macro []
+  `(do ~@(clojure.core/map gen-svg-macro svg-elements)))
 
 (define-element-macro)
+(define-svg-element-macro)
 
 (defmacro <>
   ([content] `(respo.core/create-element :span {:inner-text ~content}))
@@ -48,6 +55,13 @@
   ([tag props children]
     (assert (keyword? tag) "tag in list-> should be keyword")
     `(respo.core/create-list-element ~tag ~props ~children)))
+
+(defmacro svg-list->
+  ([props children]
+    `(respo.core/create-svg-list :g ~props ~children))
+  ([tag props children]
+    (assert (keyword? tag) "tag in list-> should be keyword")
+    `(respo.core/create-svg-list ~tag ~props ~children)))
 
 (defmacro action-> [op op-data]
   `(fn [~'%e d!# m!#]

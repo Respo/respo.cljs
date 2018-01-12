@@ -12,6 +12,16 @@
 
 (defonce *changes-logger (atom nil))
 
+(defonce *dom-element (atom nil))
+
+(defonce *global-element (atom nil))
+
+(defn clear-cache! [] (reset! *dom-element nil))
+
+(defn create-comp [comp-name render]
+  (comment println "create component:" comp-name)
+  (fn [& args] (merge schema/component {:args args, :name comp-name, :render render})))
+
 (defn create-element [tag-name props & children]
   (assert
    (not (some sequential? children))
@@ -25,13 +35,50 @@
      :attrs attrs,
      :style styles,
      :event event,
-     :children children}))
+     :children children,
+     :svg? false}))
 
-(defonce *dom-element (atom nil))
+(defn create-list-element [tag-name props child-map]
+  (let [attrs (pick-attrs props)
+        styles (if (contains? props :style) (sort-by first (:style props)) (list))
+        event (pick-event props)]
+    {:name tag-name,
+     :coord nil,
+     :attrs attrs,
+     :style styles,
+     :event event,
+     :children child-map,
+     :svg? false}))
+
+(defn create-svg-element [tag-name props & children]
+  (assert
+   (not (some sequential? children))
+   (str "For rendering lists, please use list-> , got: " (pr-str children)))
+  (let [attrs (pick-attrs props)
+        styles (if (contains? props :style) (sort-by first (:style props)) (list))
+        event (pick-event props)
+        children (->> (map-indexed vector children) (filter val-exists?))]
+    {:name tag-name,
+     :coord nil,
+     :attrs attrs,
+     :style styles,
+     :event event,
+     :children children,
+     :svg? true}))
+
+(defn create-svg-list [tag-name props child-map]
+  (let [attrs (pick-attrs props)
+        styles (if (contains? props :style) (sort-by first (:style props)) (list))
+        event (pick-event props)]
+    {:name tag-name,
+     :coord nil,
+     :attrs attrs,
+     :style styles,
+     :event event,
+     :children child-map,
+     :svg? true}))
 
 (defn render-element [markup] (render-app markup @*dom-element))
-
-(defonce *global-element (atom nil))
 
 (defn mount-app! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
@@ -43,11 +90,20 @@
     (reset! *global-element element)
     (reset! *dom-element element)))
 
+(defn realize-ssr! [target markup dispatch!]
+  (assert (instance? element-type target) "1st argument should be an element")
+  (assert (component? markup) "2nd argument should be a component")
+  (let [element (render-element markup)]
+    (reset! *global-element (mute-element element))
+    (reset! *dom-element element)))
+
 (defn rerender-app! [target markup dispatch!]
   (let [element (render-element markup)
         deliver-event (build-deliver-event *global-element dispatch!)
         *changes (atom [])
-        collect! (fn [x] (swap! *changes conj x))]
+        collect! (fn [x]
+                   (assert (= 4 (count x)) "change op should has length 4")
+                   (swap! *changes conj x))]
     (comment println @*global-element)
     (comment println "Changes:" (pr-str (mapv (partial take 2) @*changes)))
     (find-element-diffs collect! [] @*global-element element)
@@ -61,27 +117,3 @@
   (if (some? @*global-element)
     (rerender-app! target markup dispatch!)
     (mount-app! target markup dispatch!)))
-
-(defn create-list-element [tag-name props child-map]
-  (let [attrs (pick-attrs props)
-        styles (if (contains? props :style) (sort-by first (:style props)) (list))
-        event (pick-event props)]
-    {:name tag-name,
-     :coord nil,
-     :attrs attrs,
-     :style styles,
-     :event event,
-     :children child-map}))
-
-(defn create-comp [comp-name render]
-  (comment println "create component:" comp-name)
-  (fn [& args] (merge schema/component {:args args, :name comp-name, :render render})))
-
-(defn realize-ssr! [target markup dispatch!]
-  (assert (instance? element-type target) "1st argument should be an element")
-  (assert (component? markup) "2nd argument should be a component")
-  (let [element (render-element markup)]
-    (reset! *global-element (mute-element element))
-    (reset! *dom-element element)))
-
-(defn clear-cache! [] (reset! *dom-element nil))
