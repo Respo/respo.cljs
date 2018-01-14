@@ -2,15 +2,6 @@
 (ns respo.util.format
   (:require [clojure.string :as string] [respo.util.detect :refer [component? element?]]))
 
-(defn prop->attr [x]
-  (case x "class-name" "class" "tab-index" "tabindex" "read-only" "readonly" x))
-
-(defn event->prop [x] (str "on" (name x)))
-
-(defn ensure-string [x] (cond (string? x) x (keyword? x) (name x) :else (str x)))
-
-(defn event->string [x] (subs (name x) 3))
-
 (defn dashed->camel
   ([x] (dashed->camel "" x false))
   ([acc piece promoted?]
@@ -24,7 +15,7 @@
           piece-followed
           false))))))
 
-(defn purify-events [events] (->> events keys (into #{})))
+(defn ensure-string [x] (cond (string? x) x (keyword? x) (name x) :else (str x)))
 
 (defn event->edn [event]
   (comment .log js/console "simplify event:" event)
@@ -39,6 +30,10 @@
       (assoc :original-event event)
       (assoc :event event)))
 
+(defn event->prop [x] (str "on" (name x)))
+
+(defn event->string [x] (subs (name x) 3))
+
 (defn mute-element [element]
   (if (component? element)
     (update element :tree mute-element)
@@ -48,6 +43,11 @@
          :children
          (fn [children]
            (->> children (map (fn [entry] [(first entry) (mute-element (last entry))]))))))))
+
+(defn prop->attr [x]
+  (case x "class-name" "class" "tab-index" "tabindex" "read-only" "readonly" x))
+
+(defn purify-events [events] (->> events keys (into #{})))
 
 (defn purify-element [markup]
   (if (nil? markup)

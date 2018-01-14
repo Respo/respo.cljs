@@ -11,8 +11,7 @@
             [respo.app.comp.zero :refer [comp-zero]]
             [respo.app.comp.wrap :refer [comp-wrap]]
             [respo.util.dom :refer [text-width]]
-            [respo.app.style.widget :as widget]
-            [respo.app.comp.svg-example :refer [comp-svg-example]]))
+            [respo.app.style.widget :as widget]))
 
 (defn handle-add [state]
   (fn [e dispatch! mutate!] (dispatch! :add (:draft state)) (mutate! (assoc state :draft ""))))
@@ -96,5 +95,4 @@
         (<> (str "Lock?" (:locked? state))))
        (=< 8 nil)
        (comp-wrap (comp-zero))))
-    (comp-svg-example)
     (comp-inspect "Tasks" tasks {:left 500, :top 20}))))
