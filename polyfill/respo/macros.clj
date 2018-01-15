@@ -17,14 +17,17 @@
                         ul])
 
 (def svg-elements '[svg animate circle defs ellipse font font font-face g
-                    image line mask path pattern polygon polyline rect stop style
+                    image line marker mask path pattern polygon polyline rect stop
                     text view])
 
 (defmacro meta' [props & children] `(respo.core/create-element :meta ~props ~@children))
 
+(defmacro a' [props & children] `(respo.core/create-svg-element :a ~props ~@children))
+(defmacro clip-path' [props & children] `(respo.core/create-svg-element :clipPath ~props ~@children))
 (defmacro filter' [props & children] `(respo.core/create-svg-element :filter ~props ~@children))
 (defmacro fe-blend [props & children] `(respo.core/create-svg-element :feBlend ~props ~@children))
 (defmacro fe-offset' [props & children] `(respo.core/create-svg-element :feOffset ~props ~@children))
+(defmacro style' [props & children] `(respo.core/create-svg-element :style ~props ~@children))
 
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
