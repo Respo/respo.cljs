@@ -20,6 +20,7 @@
             [hsl.core :refer [hsl]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
+            [respo.util.format :refer [path-data]]
             [respo.app.style.widget :as widget]))
 
 (defcomp
@@ -48,4 +49,9 @@
    (svg-list->
     {}
     [[1 (text {:x 100, :y 40, :fill "blue", :innerHTML "Content 1"})]
-     [2 (text {:x 100, :y 60, :innerHTML "Content 2"})]]))))
+     [2 (text {:x 100, :y 60, :innerHTML "Content 2"})]])
+   (path
+    {:d (path-data :M 20 120 :L 40 200 :c 0 -80 40 -40 40 0),
+     :stroke "red",
+     :strokeWidth 1,
+     :fill (hsl 200 80 80)}))))
