@@ -2,6 +2,44 @@
 (ns respo.util.format
   (:require [clojure.string :as string] [respo.util.detect :refer [component? element?]]))
 
+(defn concat-path-data [acc xs]
+  (if (empty? xs)
+    acc
+    (let [cursor (first xs), following (rest xs)]
+      (cond
+        (contains? #{:M :m :L :l :T :t} cursor)
+          (let [params (take 2 following)]
+            (assert
+             (and (= 2 (count params)) (every? number? params))
+             (str cursor " takes 2 numbers"))
+            (recur (str acc " " (name cursor) (string/join "," params)) (drop 2 following)))
+        (contains? #{:H :h :V :v} cursor)
+          (let [params (take 1 following)]
+            (assert
+             (and (= 1 (count params)) (every? number? params))
+             (str cursor " takes 1 numbers"))
+            (recur (str acc " " (name cursor) (string/join "," params)) (drop 1 following)))
+        (contains? #{:C :c} cursor)
+          (let [params (take 6 following)]
+            (assert
+             (and (= 6 (count params)) (every? number? params))
+             (str cursor " takes 6 numbers"))
+            (recur (str acc " " (name cursor) (string/join "," params)) (drop 6 following)))
+        (contains? #{:A :a} cursor)
+          (let [params (take 7 following)]
+            (assert
+             (and (= 7 (count params)) (every? number? params))
+             (str cursor " takes 6 numbers"))
+            (recur (str acc " " (name cursor) (string/join "," params)) (drop 7 following)))
+        (contains? #{:S :s :Q :q} cursor)
+          (let [params (take 4 following)]
+            (assert
+             (and (= 4 (count params)) (every? number? params))
+             (str cursor " takes 4 numbers"))
+            (recur (str acc " " (name cursor) (string/join "," params)) (drop 4 following)))
+        (contains? #{:Z :z} cursor) (recur (str acc " Z") following)
+        :else (throw (js/Error. (str "Unknown command: " cursor)))))))
+
 (defn dashed->camel
   ([x] (dashed->camel "" x false))
   ([acc piece promoted?]
@@ -43,6 +81,8 @@
          :children
          (fn [children]
            (->> children (map (fn [entry] [(first entry) (mute-element (last entry))]))))))))
+
+(defn path-data [& xs] (subs (concat-path-data "" xs) 1))
 
 (defn prop->attr [x]
   (case x "class-name" "class" "tab-index" "tabindex" "read-only" "readonly" x))
