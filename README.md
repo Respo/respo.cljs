@@ -86,7 +86,7 @@ node target/test.js
 
 ### Develop
 
-CoWorkflow https://github.com/mvc-works/coworkflow
+Calcit Workflow https://github.com/mvc-works/calcit-workflow
 
 ### License
 
