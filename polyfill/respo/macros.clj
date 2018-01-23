@@ -18,7 +18,7 @@
 
 (def svg-elements '[svg animate circle defs ellipse font font font-face g
                     image line marker mask path pattern polygon polyline rect stop
-                    text view])
+                    text tspan view])
 
 (defmacro meta' [props & children] `(respo.core/create-element :meta ~props ~@children))
 
