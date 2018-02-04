@@ -1,13 +1,16 @@
 
 (ns respo.util.detect )
 
-(defn =seq [a b]
-  (let [a-empty? (empty? a), b-empty? (empty? b)]
+(defn =seq [xs ys]
+  (let [a-empty? (empty? xs), b-empty? (empty? ys)]
     (if (and a-empty? b-empty?)
       true
       (if (or a-empty? b-empty?)
         false
-        (if (identical? (first a) (first b)) (recur (rest a) (rest b)) false)))))
+        (let [x0 (first xs), y0 (first ys)]
+          (if (= (type x0) (type y0))
+            (if (or (fn? x0) (= x0 y0)) (recur (rest xs) (rest ys)) false)
+            false))))))
 
 (defn component? [x] (and (map? x) (contains? x :tree) (contains? x :render)))
 

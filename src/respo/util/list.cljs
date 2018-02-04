@@ -3,6 +3,16 @@
 
 (defn filter-first [f xs] (reduce (fn [acc x] (when (f x) (reduced x))) nil xs))
 
+(defn map-val [f xs]
+  (assert (fn? f) "expects function")
+  (assert (or (map? xs) (sequential? xs)) "expects key/value pairs")
+  (map (fn [[k v]] [k (f v)]) xs))
+
+(defn map-with-idx [f xs]
+  (assert (fn? f) "expects function")
+  (assert (sequential? xs) "expects sequence")
+  (map-indexed (fn [idx x] [idx (f x)]) xs))
+
 (defn pick-attrs [props]
   (if (nil? props)
     (list)

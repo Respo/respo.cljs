@@ -1,3 +1,3 @@
 
-coir.edn -diff
+calcit.edn -diff
 yarn.lock -diff

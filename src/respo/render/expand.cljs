@@ -3,7 +3,8 @@
   (:require [clojure.string :as string]
             [respo.util.detect :refer [component? element? =seq]]
             [respo.util.list :refer [filter-first pick-attrs]]
-            [respo.schema :as schema]))
+            [respo.schema :as schema]
+            [verbosely.core :refer [log!]]))
 
 (declare render-children)
 
@@ -15,6 +16,7 @@
 
 (defn render-markup [markup coord comp-coord cursor old-element]
   (comment println "render markup:" markup)
+  (assert (map? markup) (str "expects component or element, but got: " (pr-str markup)))
   (if (component? markup)
     (render-component markup coord cursor old-element)
     (render-element markup coord comp-coord cursor old-element)))
@@ -38,9 +40,9 @@
 
 (defn render-component [markup coord cursor old-element]
   (if (and (some? old-element)
-           (=seq (:args markup) (:args old-element))
-           (identical? (:render markup) (:render old-element)))
-    (do (comment println "not changed" coord) old-element)
+           (= (:name markup) (:name old-element))
+           (=seq (:args markup) (:args old-element)))
+    (do (comment println "not changed" (:name markup) (:args markup)) old-element)
     (let [begin-time (.valueOf (js/Date.))
           args (:args markup)
           new-coord (conj coord (:name markup))

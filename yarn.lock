@@ -1194,9 +1194,9 @@ shadow-cljs-jar@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-1.1.1.tgz#5d74383f5aff8fba25a5d00ee3c3ad035a1bd7a3"
 
-shadow-cljs@^2.0.142:
-  version "2.0.142"
-  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.0.142.tgz#c3b4ab3f3f1067d458d378f37a14f2e9a8e149f1"
+shadow-cljs@^2.0.150:
+  version "2.0.150"
+  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.0.150.tgz#f0c70dbe5064ee58ed1d8638a1b6bb861102e347"
   dependencies:
     babel-core "^6.26.0"
     babel-preset-env "^1.6.0"
@@ -1222,9 +1222,9 @@ source-map-support@^0.4.15:
   dependencies:
     source-map "^0.5.6"
 
-source-map-support@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.2.tgz#1a6297fd5b2e762b39688c7fc91233b60984f0a5"
+source-map-support@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.3.tgz#2b3d5fff298cfa4d1afd7d4352d569e9a0158e76"
   dependencies:
     source-map "^0.6.0"
 
