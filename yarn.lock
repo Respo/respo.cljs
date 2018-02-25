@@ -1190,20 +1190,20 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shadow-cljs-jar@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-1.1.1.tgz#5d74383f5aff8fba25a5d00ee3c3ad035a1bd7a3"
+shadow-cljs-jar@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-1.1.2.tgz#88664fae5957a7c21554e1a33476f1c475162c92"
 
-shadow-cljs@^2.0.150:
-  version "2.0.150"
-  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.0.150.tgz#f0c70dbe5064ee58ed1d8638a1b6bb861102e347"
+shadow-cljs@^2.1.26:
+  version "2.1.26"
+  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.1.26.tgz#32f5c50b9d6d361265bac32158a2d8d8f290d3a5"
   dependencies:
     babel-core "^6.26.0"
     babel-preset-env "^1.6.0"
     mkdirp "^0.5.1"
     node-libs-browser "^2.0.0"
     readline-sync "^1.4.7"
-    shadow-cljs-jar "1.1.1"
+    shadow-cljs-jar "1.1.2"
     signal-exit "^3.0.2"
     source-map-support "^0.4.15"
     ws "^3.0.0"
@@ -1344,13 +1344,12 @@ ws@^3.0.0:
     safe-buffer "~5.1.0"
     ultron "~1.1.0"
 
-ws@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-4.0.0.tgz#bfe1da4c08eeb9780b986e0e4d10eccd7345999f"
+ws@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-4.1.0.tgz#a979b5d7d4da68bf54efe0408967c324869a7289"
   dependencies:
     async-limiter "~1.0.0"
     safe-buffer "~5.1.0"
-    ultron "~1.1.0"
 
 xtend@^4.0.0:
   version "4.0.1"

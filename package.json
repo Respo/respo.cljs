@@ -13,7 +13,6 @@
     "compile": "shadow-cljs compile app",
     "release": "shadow-cljs release app --debug",
     "serve-dist": "http-server dist/ -s -c-1",
-    "dev": "yarn html && yarn serve",
     "del": "rm -fr dist/*",
     "build": "yarn del && yarn html-dist && yarn release"
   },
@@ -30,8 +29,8 @@
   "dependencies": {},
   "devDependencies": {
     "http-server": "^0.11.1",
-    "shadow-cljs": "^2.0.150",
+    "shadow-cljs": "^2.1.26",
     "source-map-support": "^0.5.3",
-    "ws": "^4.0.0"
+    "ws": "^4.1.0"
   }
 }
