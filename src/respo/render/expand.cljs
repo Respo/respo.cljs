@@ -39,6 +39,7 @@
     (assoc markup :coord coord :children child-elements)))
 
 (defn render-component [markup coord cursor old-element]
+  (assert (map? markup) (str "component markup should be a map, but got: " (pr-str markup)))
   (if (and (some? old-element)
            (= (:name markup) (:name old-element))
            (=seq (:args markup) (:args old-element)))

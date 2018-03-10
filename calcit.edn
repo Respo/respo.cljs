@@ -1,7 +1,6 @@
 {
  :ir {
-  :package "respo", :extension ".cljc"
-  :root {:ns "app.core", :def "render-app!"}
+  :package "respo"
   :files {
    "respo.app.comp.container" {
     :ns {
@@ -11493,6 +11492,33 @@
          "v" {:type :leaf, :id "BksToGgutCK-", :text "old-element", :by "root", :at 1504774121421}
         }
        }
+       "t" {
+        :type :expr, :by "root", :at 1520658988373, :id "B1gEN9JWKz"
+        :data {
+         "T" {:type :leaf, :by "root", :at 1520658990530, :text "assert", :id "B1gEN9JWKzleaf"}
+         "j" {
+          :type :expr, :by "root", :at 1520658996408, :id "r1l2EcJWKG"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1520658997882, :text "map?", :id "BJ2VqyWYf"}
+           "j" {:type :leaf, :by "root", :at 1520659001447, :text "markup", :id "rJgC491-Ff"}
+          }
+         }
+         "r" {
+          :type :expr, :by "root", :at 1520659029092, :id "Ska8qy-YG"
+          :data {
+           "D" {:type :leaf, :by "root", :at 1520659032100, :text "str", :id "rkkwc1WYM"}
+           "T" {:type :leaf, :by "root", :at 1520659030273, :text "|component markup should be a map, but got: ", :id "H1mrq1-Ff"}
+           "j" {
+            :type :expr, :by "root", :at 1520659032986, :id "SJlZPcyWYf"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1520659033943, :text "pr-str", :id "S1bvcJ-KM"}
+             "j" {:type :leaf, :by "root", :at 1520659035169, :text "markup", :id "HJXzwcybtM"}
+            }
+           }
+          }
+         }
+        }
+       }
        "v" {
         :type :expr, :id "Sy2aiMeuFRK-", :by nil, :at 1504774121421
         :data {
@@ -18929,4 +18955,8 @@
  }
  :saved-files {}
  :configs {:storage-key "calcit.edn", :extension ".cljs", :output "src", :port 6001}
+ :repl {
+  :alive? false
+  :logs {}
+ }
 }

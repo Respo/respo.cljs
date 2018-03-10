@@ -4,13 +4,12 @@
 
 (set-env!
   :resource-paths #{"polyfill" "src"}
-  :dependencies '[[mvc-works/hsl        "0.1.2"   :scope "provided"]
-                  [mvc-works/polyfill   "0.1.1"]]
+  :dependencies '[]
   :repositories #(conj % ["clojars" {:url "https://clojars.org/repo/"
                                      :username "jiyinyiyong"
                                      :password (read-password "Clojars password: ")}]))
 
-(def +version+ "0.8.15")
+(def +version+ "0.8.16")
 
 (deftask deploy []
   (comp
