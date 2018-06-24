@@ -7,9 +7,9 @@
 (def mount-target (.querySelector js/document ".app"))
 
 (defn main! []
+  (handle-ssr! mount-target)
   (let [raw (.getItem js/window.localStorage "respo")]
     (if (some? raw) (swap! *store assoc :tasks (read-string raw)))
-    (handle-ssr! mount-target)
     (render-app! mount-target)
     (add-watch *store :rerender #(render-app! mount-target))
     (comment
