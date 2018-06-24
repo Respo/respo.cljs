@@ -6,11 +6,15 @@
   (comment .log js/console element)
   (let [virtual-name (name (:name vdom)), real-name (string/lower-case (.-tagName element))]
     (when (not= virtual-name real-name)
-      (.warn js/console "Names not matching:" (dissoc vdom :children) element)))
+      (.warn
+       js/console
+       "SSR checking: tag names do not match:"
+       (pr-str (dissoc vdom :children))
+       element)))
   (if (not= (count (:children vdom)) (.-length (.-children element)))
     (do
-     (.error js/console "Does not have same count of children:")
-     (.log js/console "virtual:" (:children vdom))
+     (.error js/console "SSR checking: children sizes do not match!")
+     (.log js/console "virtual:" (->> vdom :children vals (map :name) pr-str))
      (.log js/console "real:" (.-children element)))
     (let [real-children (.-children element)]
       (loop [acc 0, other-children (:children vdom)]

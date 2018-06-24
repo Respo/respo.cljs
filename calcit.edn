@@ -16965,13 +16965,19 @@
             :data {
              "T" {:type :leaf, :by "root", :at 1529830123608, :text ".warn", :id "ByxZlsA3WXleaf"}
              "j" {:type :leaf, :by "root", :at 1529830126262, :text "js/console", :id "Ske4liA2bX"}
-             "n" {:type :leaf, :by "root", :at 1529830170225, :text "\"Names not matching:", :id "ryf2MiChbQ"}
+             "n" {:type :leaf, :by "root", :at 1529832761307, :text "\"SSR checking: tag names do not match:", :id "ryf2MiChbQ"}
              "t" {
-              :type :expr, :by "root", :at 1529831819690, :id "HJE9-yp-m"
+              :type :expr, :by "root", :at 1529832830626, :id "BJvYHJTb7"
               :data {
-               "D" {:type :leaf, :by "root", :at 1529831821094, :text "dissoc", :id "SJeEc-y6Z7"}
-               "T" {:type :leaf, :by "root", :at 1529831818869, :text "vdom", :id "SkEmsRhbX"}
-               "j" {:type :leaf, :by "root", :at 1529831826495, :text ":children", :id "Bku5ZJ6Zm"}
+               "D" {:type :leaf, :by "root", :at 1529832832009, :text "pr-str", :id "HyxDKHkp-m"}
+               "T" {
+                :type :expr, :by "root", :at 1529831819690, :id "HJE9-yp-m"
+                :data {
+                 "D" {:type :leaf, :by "root", :at 1529831821094, :text "dissoc", :id "SJeEc-y6Z7"}
+                 "T" {:type :leaf, :by "root", :at 1529831818869, :text "vdom", :id "SkEmsRhbX"}
+                 "j" {:type :leaf, :by "root", :at 1529831826495, :text ":children", :id "Bku5ZJ6Zm"}
+                }
+               }
               }
              }
              "w" {:type :leaf, :by "root", :at 1529831830652, :text "element", :id "Hy-sqZkTZQ"}
@@ -17026,7 +17032,7 @@
             :data {
              "T" {:type :leaf, :by "root", :at 1529830202813, :text ".error", :id "SkcEsR2WX"}
              "j" {:type :leaf, :by "root", :at 1529830204739, :text "js/console", :id "B1MXrsCnbm"}
-             "r" {:type :leaf, :by "root", :at 1529830218074, :text "\"Does not have same count of children:", :id "rygBrsC3Z7"}
+             "r" {:type :leaf, :by "root", :at 1529832736857, :text "\"SSR checking: children sizes do not match!", :id "rygBrsC3Z7"}
             }
            }
            "j" {
@@ -17034,12 +17040,22 @@
             :data {
              "T" {:type :leaf, :by "root", :at 1529831908196, :text ".log", :id "ryAsgJ6ZQleaf"}
              "b" {:type :leaf, :by "root", :at 1529831910269, :text "js/console", :id "B1E3JzJTWX"}
-             "j" {:type :leaf, :by "root", :at 1529831597988, :text "\"virtual:", :id "rkEkney6bm"}
+             "j" {:type :leaf, :by "root", :at 1529833110265, :text "\"virtual:", :id "rkEkney6bm"}
              "r" {
-              :type :expr, :by "root", :at 1529831599418, :id "HJv3xk6bm"
+              :type :expr, :by "root", :at 1529832862971, :id "HklwsrJTb7"
               :data {
-               "T" {:type :leaf, :by "root", :at 1529831600676, :text ":children", :id "ryZUhx1pWX"}
-               "j" {:type :leaf, :by "root", :at 1529831601587, :text "vdom", :id "ByfK2xkpWm"}
+               "D" {:type :leaf, :by "root", :at 1529832864130, :text "->>", :id "H1bviSy6WX"}
+               "L" {:type :leaf, :by "root", :at 1529832865919, :text "vdom", :id "B1GuoB1pb7"}
+               "P" {:type :leaf, :by "root", :at 1529832970824, :text ":children", :id "Hkm9iS1TbX"}
+               "R" {:type :leaf, :by "root", :at 1529832870545, :text "vals", :id "HyRsrkTWX"}
+               "S" {
+                :type :expr, :by "root", :at 1529832872030, :id "BkxnrJ6b7"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1529832871319, :text "map", :id "BJlynr1pbQ"}
+                 "j" {:type :leaf, :by "root", :at 1529832873317, :text ":name", :id "HJllhHkaZ7"}
+                }
+               }
+               "q" {:type :leaf, :by "root", :at 1529833137299, :text "pr-str", :id "H1eu3UyT-Q"}
               }
              }
             }
