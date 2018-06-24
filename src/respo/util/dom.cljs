@@ -1,6 +1,10 @@
 
 (ns respo.util.dom )
 
+(defn compare-to-dom! [vdom element]
+  (println (:name vdom) (.-tagName element))
+  (println (count (:children vdom)) (.-length (.-children element))))
+
 (def shared-canvas-context
   (if (and (exists? js/window) (exists? js/document))
     (.getContext (.createElement js/document "canvas") "2d")

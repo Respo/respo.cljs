@@ -82,7 +82,7 @@
   (let [style-name (dashed->camel (name op))] (aset (.-style target) style-name nil)))
 
 (defn apply-dom-changes [changes mount-point listener-builder]
-  (let [root (.-firstChild mount-point)]
+  (let [root (.-firstElementChild mount-point)]
     (doseq [op changes]
       (let [[op-type coord op-data svg?] op, target (find-target root coord)]
         (comment println op-type target op-data)

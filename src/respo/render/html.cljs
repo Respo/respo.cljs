@@ -73,4 +73,4 @@
 
 (defn make-string [tree]
   (let [element (render-app tree nil)]
-    (element->string  (purify-element (mute-element element)))))
+    (element->string (purify-element (mute-element element)))))

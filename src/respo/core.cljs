@@ -8,6 +8,7 @@
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
             [respo.util.detect :refer [component?]]
+            [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]))
 
 (defonce *changes-logger (atom nil))
@@ -94,6 +95,7 @@
   (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? markup) "2nd argument should be a component")
   (let [element (render-element markup)]
+    (compare-to-dom! (purify-element element) (.-firstElementChild target))
     (reset! *global-element (mute-element element))
     (reset! *dom-element element)))
 
