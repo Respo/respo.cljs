@@ -8,6 +8,7 @@
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
             [respo.util.detect :refer [component?]]
+            [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]))
 
 (defonce *changes-logger (atom nil))
@@ -93,7 +94,9 @@
 (defn realize-ssr! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? markup) "2nd argument should be a component")
-  (let [element (render-element markup)]
+  (let [element (render-element markup), app-element (.-firstElementChild target)]
+    (if (nil? app-element) (throw (js/Error. "Detected no element from SSR!")))
+    (compare-to-dom! (purify-element element) app-element)
     (reset! *global-element (mute-element element))
     (reset! *dom-element element)))
 

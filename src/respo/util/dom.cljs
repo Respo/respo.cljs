@@ -1,5 +1,26 @@
 
-(ns respo.util.dom )
+(ns respo.util.dom (:require [clojure.string :as string]))
+
+(defn compare-to-dom! [vdom element]
+  (comment println "compare" (:name vdom) (map :name (vals (:children vdom))))
+  (comment .log js/console element)
+  (let [virtual-name (name (:name vdom)), real-name (string/lower-case (.-tagName element))]
+    (when (not= virtual-name real-name)
+      (.warn
+       js/console
+       "SSR checking: tag names do not match:"
+       (pr-str (dissoc vdom :children))
+       element)))
+  (if (not= (count (:children vdom)) (.-length (.-children element)))
+    (do
+     (.error js/console "SSR checking: children sizes do not match!")
+     (.log js/console "virtual:" (->> vdom :children vals (map :name) pr-str))
+     (.log js/console "real:" (.-children element)))
+    (let [real-children (.-children element)]
+      (loop [acc 0, other-children (:children vdom)]
+        (when (not (empty? other-children))
+          (compare-to-dom! (last (first other-children)) (aget real-children acc))
+          (recur (inc acc) (rest other-children)))))))
 
 (def shared-canvas-context
   (if (and (exists? js/window) (exists? js/document))

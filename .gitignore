@@ -4,3 +4,4 @@
 /dist/
 .shadow-cljs/
 .cpcache/
+.nrepl-port
