@@ -12,10 +12,14 @@
        (pr-str (dissoc vdom :children))
        element)))
   (if (not= (count (:children vdom)) (.-length (.-children element)))
-    (do
-     (.error js/console "SSR checking: children sizes do not match!")
-     (.log js/console "virtual:" (->> vdom :children vals (map :name) pr-str))
-     (.log js/console "real:" (.-children element)))
+    (let [maybe-html (:innerHTML (into {} (:attrs vdom)))]
+      (if (some? maybe-html)
+        (when (= maybe-html (.-innerHTML element))
+          (.warn js/console "SSR checking: noticed dom containing innerHTML:" element))
+        (do
+         (.error js/console "SSR checking: children sizes do not match!")
+         (.log js/console "virtual:" (->> vdom :children (map last) (map :name) pr-str))
+         (.log js/console "real:" (.-children element)))))
     (let [real-children (.-children element)]
       (loop [acc 0, other-children (:children vdom)]
         (when (not (empty? other-children))
