@@ -9,7 +9,7 @@
                                      :username "jiyinyiyong"
                                      :password (read-password "Clojars password: ")}]))
 
-(def +version+ "0.8.19")
+(def +version+ "0.8.20")
 
 (deftask deploy []
   (comp

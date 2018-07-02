@@ -54,12 +54,24 @@
 
 (defn ensure-string [x] (cond (string? x) x (keyword? x) (name x) :else (str x)))
 
+(defn map-keyboard-event [event]
+  {:key (.-key event),
+   :code (.-code event),
+   :ctrl? (.-ctrlKey event),
+   :meta? (.-metaKey event),
+   :alt? (.-altKey event),
+   :shift? (.-shiftKey event)})
+
 (defn event->edn [event]
   (comment .log js/console "simplify event:" event)
   (-> (case (.-type event)
         "click" {:type :click}
-        "keydown" {:type :keydown, :key-code (.-keyCode event), :keycode (.-keyCode event)}
-        "keyup" {:type :keyup, :key-code (.-keyCode event), :keycode (.-keyCode event)}
+        "keydown"
+          (merge
+           (map-keyboard-event event)
+           {:type :keydown, :key-code (.-keyCode event), :keycode (.-keyCode event)})
+        "keypress" (merge (map-keyboard-event event) {:type :keypress})
+        "keyup" (merge (map-keyboard-event event) {:type :keyup})
         "input" {:type :input, :value (aget (.-target event) "value")}
         "change" {:type :change, :value (aget (.-target event) "value")}
         "focus" {:type :focus}
