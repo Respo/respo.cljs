@@ -8,9 +8,9 @@
                 :target :browser
                 :modules {:main {:entries [respo.main]}}
                 :devtools {:after-load respo.main/reload!
-                           :preloads [shadow.cljs.devtools.client.hud]
                            :http-root "target"
-                           :http-port 7000}
+                           :http-port 7000
+                           :loader-mode :eval}
                 :release {:output-dir "dist/"}}
           :test {:target :node-script
                  :output-to "target/test.js"

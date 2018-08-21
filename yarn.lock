@@ -1194,20 +1194,15 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shadow-cljs-jar@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/shadow-cljs-jar/-/shadow-cljs-jar-1.1.2.tgz#88664fae5957a7c21554e1a33476f1c475162c92"
-
-shadow-cljs@^2.4.12:
-  version "2.4.12"
-  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.4.12.tgz#09bd2d31b0d140e27009cf42221018df8b8c6388"
+shadow-cljs@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/shadow-cljs/-/shadow-cljs-2.5.0.tgz#cd9e3724d8d4db949121ce47b9a4b3e662467ea7"
   dependencies:
     babel-core "^6.26.0"
     babel-preset-env "^1.6.0"
     mkdirp "^0.5.1"
     node-libs-browser "^2.0.0"
     readline-sync "^1.4.7"
-    shadow-cljs-jar "1.1.2"
     signal-exit "^3.0.2"
     source-map-support "^0.4.15"
     ws "^3.0.0"
@@ -1226,9 +1221,9 @@ source-map-support@^0.4.15:
   dependencies:
     source-map "^0.5.6"
 
-source-map-support@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.6.tgz#4435cee46b1aab62b8e8610ce60f788091c51c13"
+source-map-support@^0.5.8:
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.8.tgz#04f5581713a8a65612d0175fbf3a01f80a162613"
   dependencies:
     buffer-from "^1.0.0"
     source-map "^0.6.0"
@@ -1349,9 +1344,9 @@ ws@^3.0.0:
     safe-buffer "~5.1.0"
     ultron "~1.1.0"
 
-ws@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.1.tgz#37827a0ba772d072a843c3615b0ad38bcdb354eb"
+ws@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.0.0.tgz#eaa494aded00ac4289d455bac8d84c7c651cef35"
   dependencies:
     async-limiter "~1.0.0"
 
