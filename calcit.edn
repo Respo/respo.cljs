@@ -943,7 +943,7 @@
      "comp-task" {
       :type :expr, :id "By2GLMe_YAt-", :by nil, :at 1504774121421
       :data {
-       "T" {:type :leaf, :id "SyTGUMldYCFW", :text "defcomp", :by "root", :at 1504774121421}
+       "T" {:type :leaf, :id "SyTGUMldYCFW", :text "defcomp", :by "root", :at 1536679003089}
        "j" {:type :leaf, :id "rk0GIMeOtRK-", :text "comp-task", :by "root", :at 1504774121421}
        "r" {
         :type :expr, :id "HkJQIMx_tRYW", :by nil, :at 1504774121421
@@ -1660,7 +1660,7 @@
      "comp-todolist" {
       :type :expr, :id "ry3uNGxutRK-", :by nil, :at 1504774121421
       :data {
-       "T" {:type :leaf, :id "HkauEzeutRFZ", :text "defcomp", :by "root", :at 1504774121421}
+       "T" {:type :leaf, :id "HkauEzeutRFZ", :text "defcomp", :by "root", :at 1536678904198}
        "j" {:type :leaf, :id "S10dNGxdtAF-", :text "comp-todolist", :by "root", :at 1504774121421}
        "r" {
         :type :expr, :id "rJJY4GlutAKZ", :by nil, :at 1504774121421
@@ -11703,7 +11703,7 @@
            "j" {
             :type :expr, :id "H1Hk3GxOK0FZ", :by nil, :at 1504774121421
             :data {
-             "L" {:type :leaf, :by "root", :at 1517742858940, :text ";", :id "rkQGsP48M"}
+             "L" {:type :leaf, :by "root", :at 1536678833920, :text ";", :id "lsaw5sP8u"}
              "j" {:type :leaf, :id "ryD13Ge_KCF-", :text "println", :by "root", :at 1504774121421}
              "r" {:type :leaf, :id "rJuyhfgdtCY-", :text "|not changed", :by "root", :at 1504774121421}
              "t" {
@@ -11835,10 +11835,10 @@
               :data {
                "T" {:type :leaf, :id "B1Nm2fl_tRY-", :text "markup-tree", :by "root", :at 1504774121421}
                "j" {
-                :type :expr, :id "H1SQ3zgut0FW", :by nil, :at 1504774121421
+                :type :expr, :by "root", :at 1536678990655, :id "HpfBoHnqsG"
                 :data {
-                 "T" {:type :leaf, :id "HkIm2zgdFRtW", :text "half-render", :by "root", :at 1504774121421}
-                 "j" {:type :leaf, :id "SkvX3Ggut0t-", :text "new-cursor", :by "root", :at 1504774121421}
+                 "T" {:type :leaf, :by "root", :at 1536678990655, :text "half-render", :id "N1mXAhjrWH"}
+                 "j" {:type :leaf, :by "root", :at 1536678990655, :text "new-cursor", :id "13jxXtamBl"}
                 }
                }
               }
