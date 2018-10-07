@@ -10,8 +10,8 @@ Respo: A virtual DOM library in ClojureScript
 [respo "0.8.20"]
 ```
 
-* Home http://respo.site
-* [Bundled example](http://repo.respo.site/respo/)
+* Home http://respo-mvc.org
+* [Bundled example](http://repo.respo-mvc.org/respo/)
 * [Docs](https://github.com/Respo/respo/wiki)
 
 ### Usage
