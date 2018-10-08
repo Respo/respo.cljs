@@ -1,8 +1,6 @@
 
 (ns respo.comp.inspect
-  (:require [respo.macros :refer [defcomp pre <>]]
-            [hsl.core :refer [hsl]]
-            [respo.env :refer [data->native]]))
+  (:require [respo.macros :refer [defcomp pre <>]] [respo.env :refer [data->native]]))
 
 (defn grab-info [data]
   (cond
@@ -23,7 +21,7 @@
 
 (def style-data
   {:position :absolute,
-   :background-color (hsl 240 100 0),
+   :background-color "hsl(240,100%,0%)",
    :color :white,
    :opacity 0.2,
    :font-size "12px",

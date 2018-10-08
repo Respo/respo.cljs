@@ -1,0 +1,9 @@
+
+{:pom {:group-id "respo",
+       :artifact-id "respo",
+       :version "0.8.21",
+       :name "Respo: A virtual DOM library in ClojureScript."}
+ :packaging {:jar {:enabled true
+                   :remote-repository {:id "clojars"
+                                       :url "https://clojars.org/repo"}}}
+ :scm {:enabled true}}

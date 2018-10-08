@@ -1,7 +1,6 @@
 
 {:source-paths ["src" "polyfill"]
- :dependencies [[mvc-works/hsl        "0.1.2"]
-                [mvc-works/verbosely  "0.1.2"]]
+ :dependencies [[mvc-works/hsl        "0.1.2"]]
  :open-file-command ["subl" ["%s:%s:%s" :file :line :column]]
  :builds {:app {:output-dir "target/"
                 :asset-path "."

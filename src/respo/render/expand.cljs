@@ -3,8 +3,7 @@
   (:require [clojure.string :as string]
             [respo.util.detect :refer [component? element? =seq]]
             [respo.util.list :refer [filter-first pick-attrs]]
-            [respo.schema :as schema]
-            [verbosely.core :refer [log!]]))
+            [respo.schema :as schema]))
 
 (declare render-children)
 
