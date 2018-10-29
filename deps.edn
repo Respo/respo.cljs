@@ -1,2 +1,2 @@
 
-{:paths ["src" "polyfill"]}
+{:paths ["src" "macros"]}

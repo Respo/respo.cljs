@@ -4,14 +4,14 @@
   "description": "Virtual DOM library",
   "main": "index.js",
   "scripts": {
-    "tiye": "rsync -r dist/ repo.respo.site:repo/Respo/respo",
+    "upload": "rsync -r dist/ repo.respo-mvc.org:repo/Respo/respo",
     "html": "cp assets/* target/",
     "html-dist": "cp assets/* dist/",
     "watch": "shadow-cljs watch app",
     "watch-test": "shadow-cljs watch test",
     "compile-test": "shadow-cljs compile test",
     "compile": "shadow-cljs compile app",
-    "release": "shadow-cljs release app --debug",
+    "release": "shadow-cljs release app",
     "serve-dist": "http-server dist/ -s -c-1",
     "del": "rm -fr dist/*",
     "build": "yarn del && yarn html-dist && yarn release"
