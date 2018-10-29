@@ -7853,6 +7853,20 @@
          }
         }
        }
+       "x" {
+        :type :expr, :by "root", :at 1540829557612, :id "kzQ7ruM6xP"
+        :data {
+         "T" {:type :leaf, :by "root", :at 1540829557612, :text "set!", :id "LS2lj8lz4y"}
+         "j" {
+          :type :expr, :by "root", :at 1540829557612, :id "KraYoGompd"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1540829557612, :text ".-onbeforeunload", :id "4GrlJnU1MC"}
+           "j" {:type :leaf, :by "root", :at 1540829557612, :text "js/window", :id "mSyQ-JAlJ3"}
+          }
+         }
+         "r" {:type :leaf, :by "root", :at 1540829557612, :text "save-store!", :id "JyBTt4C7zn"}
+        }
+       }
       }
      }
      "mount-target" {
@@ -7937,36 +7951,7 @@
     }
     :proc {
      :type :expr, :id "HJQM0DdxG", :by "rJoDgvdeG", :at 1511714315065
-     :data {
-      "T" {
-       :type :expr, :id "BympWaPdxG", :by "rJoDgvdeG", :at 1511714053436
-       :data {
-        "T" {:type :leaf, :text "set!", :id "HyWSGCDdlz", :by "rJoDgvdeG", :at 1511714644321}
-        "j" {
-         :type :expr, :id "SkliM0w_xz", :by "rJoDgvdeG", :at 1511714323174
-         :data {
-          "T" {:type :leaf, :text ".-onload", :id "SkiGRwdef", :by "rJoDgvdeG", :at 1511714325797}
-          "j" {:type :leaf, :text "js/window", :id "H1XCz0POeM", :by "rJoDgvdeG", :at 1511714328098}
-         }
-        }
-        "r" {:type :leaf, :text "main!", :id "H1Gm0vugz", :by "rJoDgvdeG", :at 1511714331174}
-       }
-      }
-      "j" {
-       :type :expr, :id "S1eEXCPOxG", :by "rJoDgvdeG", :at 1511714332080
-       :data {
-        "T" {:type :leaf, :text "set!", :id "S1eEXCPOxGleaf", :by "rJoDgvdeG", :at 1511714647172}
-        "j" {
-         :type :expr, :id "rJyNAwOez", :by "rJoDgvdeG", :at 1511714343253
-         :data {
-          "D" {:type :leaf, :text ".-onbeforeunload", :id "B1GVCw_gz", :by "rJoDgvdeG", :at 1511714350051}
-          "T" {:type :leaf, :text "js/window", :id "HkjmCw_xf", :by "rJoDgvdeG", :at 1511714344947}
-         }
-        }
-        "r" {:type :leaf, :text "save-store!", :id "HyOVRPdxz", :by "rJoDgvdeG", :at 1511714354028}
-       }
-      }
-     }
+     :data {}
     }
    }
    "respo.render.diff" {

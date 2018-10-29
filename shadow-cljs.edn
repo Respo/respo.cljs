@@ -1,11 +1,11 @@
 
-{:source-paths ["src" "polyfill"]
+{:source-paths ["src" "macros"]
  :dependencies [[mvc-works/hsl        "0.1.2"]]
  :open-file-command ["subl" ["%s:%s:%s" :file :line :column]]
  :builds {:app {:output-dir "target/"
                 :asset-path "."
                 :target :browser
-                :modules {:main {:entries [respo.main]}}
+                :modules {:main {:init-fn respo.main/main!}}
                 :devtools {:after-load respo.main/reload!
                            :http-root "target"
                            :http-port 7000

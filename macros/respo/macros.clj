@@ -29,12 +29,19 @@
 (defmacro fe-offset' [props & children] `(respo.core/create-svg-element :feOffset ~props ~@children))
 (defmacro style' [props & children] `(respo.core/create-svg-element :style ~props ~@children))
 
+(defn helper-create-el [el props children]
+  `(respo.core/create-element ~(keyword el) ~props ~@children))
+
+(defn helper-create-el [el props children]
+  `(respo.core/create-svg-element ~(keyword el) ~props ~@children))
+
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
-    `(respo.core/create-element ~(keyword '~el) ~~'props ~@~'children)))
+    (helper-create-el '~el ~'props ~'children)))
+
 (defn gen-svg-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
-    `(respo.core/create-svg-element ~(keyword '~el) ~~'props ~@~'children)))
+    (helper-create-el '~el ~'props ~'children)))
 
 (defmacro define-element-macro []
   `(do ~@(clojure.core/map gen-dom-macro support-elements)))
