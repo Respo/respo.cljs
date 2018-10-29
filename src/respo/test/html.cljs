@@ -1,9 +1,7 @@
 
 (ns respo.test.html
   (:require [cljs.test :refer [deftest is testing run-tests]]
-            [respo.macros
-             :refer
-             [html head title script style meta' div link body textarea]]
+            [respo.core :refer [html head title script style meta' div link body textarea]]
             [respo.test.comp.todolist :refer [comp-todolist]]
             [respo.render.html :refer [make-string]]
             ["fs" :as fs]))

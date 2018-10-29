@@ -1,6 +1,6 @@
 
 (ns respo.comp.inspect
-  (:require [respo.macros :refer [defcomp pre <>]] [respo.env :refer [data->native]]))
+  (:require [respo.core :refer [defcomp pre <>]] [respo.env :refer [data->native]]))
 
 (defn grab-info [data]
   (cond

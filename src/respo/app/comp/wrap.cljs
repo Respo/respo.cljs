@@ -1,4 +1,4 @@
 
-(ns respo.app.comp.wrap (:require [respo.macros :refer [defcomp div]]))
+(ns respo.app.comp.wrap (:require [respo.core :refer [defcomp div]]))
 
 (defcomp comp-wrap (x) (div {} x))

@@ -9,7 +9,8 @@
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
             [respo.util.detect :refer [component?]]
             [respo.util.dom :refer [compare-to-dom!]]
-            [respo.schema :as schema]))
+            [respo.schema :as schema])
+  (:require-macros [respo.core]))
 
 (defonce *changes-logger (atom nil))
 

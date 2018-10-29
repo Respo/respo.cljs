@@ -1,6 +1,6 @@
 
 (ns respo.app.comp.svg-example
-  (:require [respo.macros
+  (:require [respo.core
              :refer
              [defcomp
               div

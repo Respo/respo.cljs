@@ -1,5 +1,5 @@
 
-(ns respo.macros)
+(ns respo.core)
 
 (defmacro defcomp [comp-name params & body]
   (assert (symbol? comp-name) "1st argument should be a symbol")
