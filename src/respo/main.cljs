@@ -9,7 +9,7 @@
 (defn save-store! [] (.setItem js/window.localStorage "respo" (pr-str (:tasks @*store))))
 
 (defn main! []
-  (handle-ssr! mount-target)
+  (comment handle-ssr! mount-target)
   (let [raw (.getItem js/window.localStorage "respo")]
     (if (some? raw) (swap! *store assoc :tasks (read-string raw)))
     (render-app! mount-target)
