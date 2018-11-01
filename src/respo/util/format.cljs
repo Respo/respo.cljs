@@ -2,43 +2,6 @@
 (ns respo.util.format
   (:require [clojure.string :as string] [respo.util.detect :refer [component? element?]]))
 
-(def path-data-dict
-  {:M 2,
-   :m 2,
-   :L 2,
-   :l 2,
-   :T 2,
-   :t 2,
-   :H 1,
-   :h 1,
-   :V 1,
-   :v 1,
-   :C 6,
-   :c 6,
-   :A 7,
-   :a 7,
-   :S 4,
-   :s 4,
-   :Q 4,
-   :q 4,
-   :Z 0,
-   :z 0})
-
-(defn concat-path-data [acc xs]
-  (if (empty? xs)
-    acc
-    (let [cursor (first xs), following (rest xs), len (get path-data-dict cursor)]
-      (if (nil? len) (throw (js/Error. (str "Unknown command: " cursor))))
-      (let [params (take len following), next-xs (drop len following)]
-        (assert
-         (and (= len (count params)) (every? number? params))
-         (str cursor " takes " len " numbers"))
-        (if (not (empty? next-xs))
-          (assert
-           (keyword? (first next-xs))
-           (str "extra param " (first next-xs) " after " cursor)))
-        (recur (str acc " " (name cursor) (string/join "," params)) next-xs)))))
-
 (defn dashed->camel
   ([x] (dashed->camel "" x false))
   ([acc piece promoted?]
@@ -92,8 +55,6 @@
          :children
          (fn [children]
            (->> children (map (fn [entry] [(first entry) (mute-element (last entry))]))))))))
-
-(defn path-data [& xs] (subs (concat-path-data "" xs) 1))
 
 (defn prop->attr [x]
   (case x "class-name" "class" "tab-index" "tabindex" "read-only" "readonly" x))
