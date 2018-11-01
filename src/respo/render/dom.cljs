@@ -3,27 +3,17 @@
   (:require [clojure.string :as string]
             [respo.util.format :refer [dashed->camel event->prop ensure-string]]))
 
-(def svg-ns "http://www.w3.org/2000/svg")
-
 (defn make-element [virtual-element listener-builder]
   (let [tag-name (name (:name virtual-element))
-        svg? (:svg? virtual-element)
         attrs (:attrs virtual-element)
         style (:style virtual-element)
         children (:children virtual-element)
-        element (if svg?
-                  (.createElementNS js/document svg-ns tag-name)
-                  (.createElement js/document tag-name))
+        element (.createElement js/document tag-name)
         child-elements (->> children
                             (map (fn [entry] (make-element (last entry) listener-builder))))]
     (doseq [entry attrs]
-      (let [k (dashed->camel (name (first entry)))
-            svg-k (name (first entry))
-            v (last entry)]
-        (if (some? v)
-          (if (and svg? (not= k "innerHTML"))
-            (.setAttribute element svg-k v)
-            (aset element k v)))))
+      (let [k (dashed->camel (name (first entry))), v (last entry)]
+        (if (some? v) (aset element k v))))
     (doseq [entry style]
       (let [k (dashed->camel (name (first entry))), v (last entry)]
         (aset (aget element "style") k (if (keyword? v) (name v) v))))

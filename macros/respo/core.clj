@@ -16,40 +16,19 @@
                         option p pre script section select span style textarea title
                         ul])
 
-(def svg-elements '[svg animate circle defs ellipse font font font-face g
-                    image line marker mask path pattern polygon polyline rect stop
-                    text tspan view])
-
 (defmacro meta' [props & children] `(respo.core/create-element :meta ~props ~@children))
-
-(defmacro a' [props & children] `(respo.core/create-svg-element :a ~props ~@children))
-(defmacro clip-path' [props & children] `(respo.core/create-svg-element :clipPath ~props ~@children))
-(defmacro filter' [props & children] `(respo.core/create-svg-element :filter ~props ~@children))
-(defmacro fe-blend [props & children] `(respo.core/create-svg-element :feBlend ~props ~@children))
-(defmacro fe-offset' [props & children] `(respo.core/create-svg-element :feOffset ~props ~@children))
-(defmacro style' [props & children] `(respo.core/create-svg-element :style ~props ~@children))
 
 (defn helper-create-el [el props children]
   `(respo.core/create-element ~(keyword el) ~props ~@children))
-
-(defn helper-create-svg-el [el props children]
-  `(respo.core/create-svg-element ~(keyword el) ~props ~@children))
 
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
     (helper-create-el '~el ~'props ~'children)))
 
-(defn gen-svg-macro [el]
-  `(defmacro ~el [~'props ~'& ~'children]
-    (helper-create-svg-el '~el ~'props ~'children)))
-
 (defmacro define-element-macro []
   `(do ~@(clojure.core/map gen-dom-macro support-elements)))
-(defmacro define-svg-element-macro []
-  `(do ~@(clojure.core/map gen-svg-macro svg-elements)))
 
 (define-element-macro)
-(define-svg-element-macro)
 
 (defmacro <>
   ([content] `(respo.core/create-element :span {:inner-text ~content}))
@@ -65,13 +44,6 @@
   ([tag props children]
     (assert (keyword? tag) "tag in list-> should be keyword")
     `(respo.core/create-list-element ~tag ~props ~children)))
-
-(defmacro svg-list->
-  ([props children]
-    `(respo.core/create-svg-list :g ~props ~children))
-  ([tag props children]
-    (assert (keyword? tag) "tag in list-> should be keyword")
-    `(respo.core/create-svg-list ~tag ~props ~children)))
 
 (defmacro action-> [op op-data]
   `(fn [~'%e d!# m!#]

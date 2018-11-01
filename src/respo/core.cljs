@@ -37,8 +37,7 @@
      :attrs attrs,
      :style styles,
      :event event,
-     :children children,
-     :svg? false}))
+     :children children}))
 
 (defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
@@ -49,36 +48,7 @@
      :attrs attrs,
      :style styles,
      :event event,
-     :children child-map,
-     :svg? false}))
-
-(defn create-svg-element [tag-name props & children]
-  (assert
-   (not (some sequential? children))
-   (str "For rendering lists, please use list-> , got: " (pr-str children)))
-  (let [attrs (pick-attrs props)
-        styles (if (contains? props :style) (sort-by first (:style props)) (list))
-        event (pick-event props)
-        children (->> (map-indexed vector children) (filter val-exists?))]
-    {:name tag-name,
-     :coord nil,
-     :attrs attrs,
-     :style styles,
-     :event event,
-     :children children,
-     :svg? true}))
-
-(defn create-svg-list [tag-name props child-map]
-  (let [attrs (pick-attrs props)
-        styles (if (contains? props :style) (sort-by first (:style props)) (list))
-        event (pick-event props)]
-    {:name tag-name,
-     :coord nil,
-     :attrs attrs,
-     :style styles,
-     :event event,
-     :children child-map,
-     :svg? true}))
+     :children child-map}))
 
 (defn render-element [markup] (render-app markup @*dom-element))
 
@@ -106,7 +76,7 @@
         deliver-event (build-deliver-event *global-element dispatch!)
         *changes (atom [])
         collect! (fn [x]
-                   (assert (= 4 (count x)) "change op should has length 4")
+                   (assert (= 3 (count x)) "change op should has length 3")
                    (swap! *changes conj x))]
     (comment println @*global-element)
     (comment println "Changes:" (pr-str (mapv (partial take 2) @*changes)))

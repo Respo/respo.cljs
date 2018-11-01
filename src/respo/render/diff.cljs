@@ -10,7 +10,7 @@
 
 (declare find-element-diffs)
 
-(defn find-props-diffs [collect! coord old-props new-props svg?]
+(defn find-props-diffs [collect! coord old-props new-props]
   (comment
    .log
    js/console
@@ -25,12 +25,12 @@
       (and was-empty? now-empty?) nil
       (and was-empty? (not now-empty?))
         (do
-         (collect! [op/add-prop coord (first new-props) svg?])
-         (recur collect! coord old-props (rest new-props) svg?))
+         (collect! [op/add-prop coord (first new-props)])
+         (recur collect! coord old-props (rest new-props)))
       (and (not was-empty?) now-empty?)
         (do
-         (collect! [op/rm-prop coord (key (first old-props)) svg?])
-         (recur collect! coord (rest old-props) new-props svg?))
+         (collect! [op/rm-prop coord (key (first old-props))])
+         (recur collect! coord (rest old-props) new-props))
       :else
         (let [old-entry (first old-props)
               new-entry (first new-props)
@@ -42,17 +42,17 @@
           (case (compare old-k new-k)
             -1
               (do
-               (collect! [op/rm-prop coord old-k svg?])
-               (recur collect! coord old-follows new-props svg?))
+               (collect! [op/rm-prop coord old-k])
+               (recur collect! coord old-follows new-props))
             1
               (do
-               (collect! [op/add-prop coord new-entry svg?])
-               (recur collect! coord old-props new-follows svg?))
+               (collect! [op/add-prop coord new-entry])
+               (recur collect! coord old-props new-follows))
             (do
-             (if (not= old-v new-v) (collect! [op/replace-prop coord new-entry svg?]))
-             (recur collect! coord old-follows new-follows svg?)))))))
+             (if (not= old-v new-v) (collect! [op/replace-prop coord new-entry]))
+             (recur collect! coord old-follows new-follows)))))))
 
-(defn find-style-diffs [collect! coord old-style new-style svg?]
+(defn find-style-diffs [collect! coord old-style new-style]
   (let [was-empty? (empty? old-style), now-empty? (empty? new-style)]
     (if (identical? old-style new-style)
       nil
@@ -60,12 +60,12 @@
         (and was-empty? now-empty?) nil
         (and was-empty? (not now-empty?))
           (let [entry (first new-style), follows (rest new-style)]
-            (collect! [op/add-style coord entry svg?])
-            (recur collect! coord old-style follows svg?))
+            (collect! [op/add-style coord entry])
+            (recur collect! coord old-style follows))
         (and (not was-empty?) now-empty?)
           (let [entry (first old-style), follows (rest old-style)]
-            (collect! [op/rm-style coord (key entry) svg?])
-            (recur collect! coord follows new-style svg?))
+            (collect! [op/rm-style coord (key entry)])
+            (recur collect! coord follows new-style))
         :else
           (let [old-entry (first old-style)
                 new-entry (first new-style)
@@ -74,16 +74,16 @@
             (case (compare (key old-entry) (key new-entry))
               -1
                 (do
-                 (collect! [op/rm-style coord (key old-entry) svg?])
-                 (recur collect! coord old-follows new-style svg?))
+                 (collect! [op/rm-style coord (key old-entry)])
+                 (recur collect! coord old-follows new-style))
               1
                 (do
-                 (collect! [op/add-style coord new-entry svg?])
-                 (recur collect! coord old-style new-follows svg?))
+                 (collect! [op/add-style coord new-entry])
+                 (recur collect! coord old-style new-follows))
               (do
                (if (not (identical? (val old-entry) (val new-entry)))
-                 (collect! [op/replace-style coord new-entry svg?]))
-               (recur collect! coord old-follows new-follows svg?))))))))
+                 (collect! [op/replace-style coord new-entry]))
+               (recur collect! coord old-follows new-follows))))))))
 
 (defn find-element-diffs [collect! n-coord old-tree new-tree]
   (comment .log js/console "element diffing:" n-coord old-tree new-tree)
@@ -93,26 +93,24 @@
       (component? old-tree) (recur collect! n-coord (get old-tree :tree) new-tree)
       (component? new-tree) (recur collect! n-coord old-tree (get new-tree :tree))
       :else
-        (let [old-children (:children old-tree)
-              new-children (:children new-tree)
-              svg? (:svg? old-tree)]
+        (let [old-children (:children old-tree), new-children (:children new-tree)]
           (if (or (not= (:coord old-tree) (:coord new-tree))
                   (not= (:name old-tree) (:name new-tree))
                   (not= (:c-name old-tree) (:c-name new-tree)))
-            (do (collect! [op/replace-element n-coord (purify-element new-tree) svg?]) nil)
+            (do (collect! [op/replace-element n-coord (purify-element new-tree)]) nil)
             (do
-             (find-props-diffs collect! n-coord (:attrs old-tree) (:attrs new-tree) svg?)
+             (find-props-diffs collect! n-coord (:attrs old-tree) (:attrs new-tree))
              (let [old-style (:style old-tree), new-style (:style new-tree)]
                (if (not (identical? old-style new-style))
-                 (find-style-diffs collect! n-coord old-style new-style svg?)))
+                 (find-style-diffs collect! n-coord old-style new-style)))
              (let [old-events (into #{} (keys (:event old-tree)))
                    new-events (into #{} (keys (:event new-tree)))
                    added-events (difference new-events old-events)
                    removed-events (difference old-events new-events)]
                (doseq [event-name added-events]
-                 (collect! [op/set-event n-coord [event-name (:coord new-tree)] svg?]))
+                 (collect! [op/set-event n-coord [event-name (:coord new-tree)]]))
                (doseq [event-name removed-events]
-                 (collect! [op/rm-event n-coord event-name svg?])))
+                 (collect! [op/rm-event n-coord event-name])))
              (find-children-diffs collect! n-coord 0 old-children new-children)))))))
 
 (defn find-children-diffs [collect! n-coord index old-children new-children]
@@ -122,11 +120,11 @@
       (and was-empty? now-empty?) nil
       (and was-empty? (not now-empty?))
         (let [element (last (first new-children))]
-          (collect! [op/append-element n-coord (purify-element element) (:svg? element)])
+          (collect! [op/append-element n-coord (purify-element element)])
           (recur collect! n-coord (inc index) [] (rest new-children)))
       (and (not was-empty?) now-empty?)
         (do
-         (collect! [op/rm-element (conj n-coord index) nil false])
+         (collect! [op/rm-element (conj n-coord index) nil])
          (recur collect! n-coord index (rest old-children) []))
       :else
         (let [old-keys (map first (take 16 old-children))
@@ -150,14 +148,11 @@
               (do
                (collect!
                 (let [element (last (first new-children))]
-                  [op/add-element
-                   (conj n-coord index)
-                   (purify-element element)
-                   (:svg? element)]))
+                  [op/add-element (conj n-coord index) (purify-element element)]))
                (recur collect! n-coord (inc index) old-children new-follows))
             (and (not x1-remains?) y1-existed?)
               (do
-               (collect! [op/rm-element (conj n-coord index) nil false])
+               (collect! [op/rm-element (conj n-coord index) nil])
                (recur collect! n-coord index old-follows new-children))
             :else
               (let [xi (.indexOf new-keys x1)
@@ -168,11 +163,8 @@
                 (if (<= xi yi)
                   (let [new-element (last (first new-children))]
                     (collect!
-                     [op/add-element
-                      (conj n-coord index)
-                      (purify-element new-element)
-                      (:svg? new-element)])
+                     [op/add-element (conj n-coord index) (purify-element new-element)])
                     (recur collect! n-coord (inc index) old-children new-follows))
                   (do
-                   (collect! [op/rm-element (conj n-coord index) nil false])
+                   (collect! [op/rm-element (conj n-coord index) nil])
                    (recur collect! n-coord index old-follows new-children)))))))))
