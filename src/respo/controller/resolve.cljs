@@ -21,7 +21,7 @@
 (defn find-event-target [element coord event-name]
   (let [target-element (get-markup-at element coord), element-exists? (some? target-element)]
     (comment println "target element:" (pr-str event-name))
-    (if (and element-exists? (contains? (:event target-element) event-name))
+    (if (and element-exists? (some? (get (:event target-element) event-name)))
       target-element
       (if (= coord [])
         nil

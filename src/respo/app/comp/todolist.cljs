@@ -71,7 +71,9 @@
        :on-input (mutation-> (assoc state :draft (:value %e))),
        :on-focus on-focus})
      (=< 8 nil)
-     (span {:style widget/button, :on-click (handle-add state)} (<> "Add"))
+     (span
+      {:style widget/button, :on-click (handle-add state)}
+      (span {:on-click nil, :inner-text "Add"}))
      (=< 8 nil)
      (span {:inner-text "Clear", :style widget/button, :on-click (action-> :clear nil)})
      (=< 8 nil)
