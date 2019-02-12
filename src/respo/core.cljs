@@ -44,7 +44,7 @@
 (defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style)
-                 (sort-by (fn [x y] (compare-values x y)) (:style props))
+                 (sort (fn [x y] (compare-values x y)) (:style props))
                  (list))
         event (pick-event props)]
     {:name tag-name,
