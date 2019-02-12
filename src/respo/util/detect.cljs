@@ -8,9 +8,7 @@
       (if (or a-empty? b-empty?)
         false
         (let [x0 (first xs), y0 (first ys)]
-          (if (= (type x0) (type y0))
-            (if (or (fn? x0) (= x0 y0)) (recur (rest xs) (rest ys)) false)
-            false))))))
+          (if (= (type x0) (type y0)) (if (= x0 y0) (recur (rest xs) (rest ys)) false) false))))))
 
 (defn compare-values [x y]
   (if (= (type x) (type y)) (compare x y) (compare (str (type x)) (str (type y)))))
