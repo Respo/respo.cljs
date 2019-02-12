@@ -42,7 +42,7 @@
   {:color :black,
    :background-color (hsl 120 20 98),
    :line-height "24px",
-   :font-size 16,
+   "font-size" 16,
    :padding 10,
    :font-family "\"微软雅黑\", Verdana"})
 

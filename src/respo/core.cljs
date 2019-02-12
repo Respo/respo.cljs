@@ -7,7 +7,7 @@
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
-            [respo.util.detect :refer [component?]]
+            [respo.util.detect :refer [component? compare-values]]
             [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema])
   (:require-macros [respo.core]))
@@ -29,7 +29,9 @@
    (not (some sequential? children))
    (str "For rendering lists, please use list-> , got: " (pr-str children)))
   (let [attrs (pick-attrs props)
-        styles (if (contains? props :style) (sort-by first (:style props)) (list))
+        styles (if (contains? props :style)
+                 (sort (fn [x y] (compare-values (first x) (first y))) (:style props))
+                 (list))
         event (pick-event props)
         children (->> (map-indexed vector children) (filter val-exists?))]
     {:name tag-name,

@@ -12,6 +12,9 @@
             (if (or (fn? x0) (= x0 y0)) (recur (rest xs) (rest ys)) false)
             false))))))
 
+(defn compare-values [x y]
+  (if (= (type x) (type y)) (compare x y) (compare (str (type x)) (str (type y)))))
+
 (defn component? [x] (and (map? x) (contains? x :tree) (contains? x :render)))
 
 (defn element? [x] (and (map? x) (contains? x :attrs) (contains? x :style)))

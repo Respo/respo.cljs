@@ -4,7 +4,8 @@
             [respo.util.format :refer [purify-element]]
             [respo.util.detect :refer [component?]]
             [clojure.set :refer [difference]]
-            [respo.schema.op :as op]))
+            [respo.schema.op :as op]
+            [respo.util.detect :refer [compare-values]]))
 
 (declare find-children-diffs)
 
@@ -71,7 +72,7 @@
                 new-entry (first new-style)
                 old-follows (rest old-style)
                 new-follows (rest new-style)]
-            (case (compare (key old-entry) (key new-entry))
+            (case (compare-values (key old-entry) (key new-entry))
               -1
                 (do
                  (collect! [op/rm-style coord (key old-entry)])

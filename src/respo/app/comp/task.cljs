@@ -26,7 +26,7 @@
     (button
      {:style (merge
               style-done
-              {:background-color (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
+              {"background-color" (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
       :on-click (action-> :toggle (:id task))})
     (=< 8 nil)
     (input {:value (:text task), :style widget/input, :on-input (on-text-change task)})
