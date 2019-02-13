@@ -5,3 +5,4 @@
 .shadow-cljs/
 .cpcache/
 .nrepl-port
+*.xml
