@@ -5,7 +5,7 @@
             [respo.util.detect :refer [component?]]
             [clojure.set :refer [difference]]
             [respo.schema.op :as op]
-            [respo.util.detect :refer [compare-values]]))
+            [respo.util.comparator :refer [compare-xy]]))
 
 (declare find-children-diffs)
 
@@ -40,7 +40,7 @@
               old-follows (rest old-props)
               new-follows (rest new-props)]
           (comment .log js/console old-k new-k old-v new-v)
-          (case (compare old-k new-k)
+          (case (compare-xy old-k new-k)
             -1
               (do
                (collect! [op/rm-prop coord old-k])
@@ -72,7 +72,7 @@
                 new-entry (first new-style)
                 old-follows (rest old-style)
                 new-follows (rest new-style)]
-            (case (compare-values (key old-entry) (key new-entry))
+            (case (compare-xy (key old-entry) (key new-entry))
               -1
                 (do
                  (collect! [op/rm-style coord (key old-entry)])
@@ -102,7 +102,7 @@
             (do
              (find-props-diffs collect! n-coord (:attrs old-tree) (:attrs new-tree))
              (let [old-style (:style old-tree), new-style (:style new-tree)]
-               (if (not (identical? old-style new-style))
+               (if (not= old-style new-style)
                  (find-style-diffs collect! n-coord old-style new-style)))
              (let [old-events (into #{} (keys (:event old-tree)))
                    new-events (into #{} (keys (:event new-tree)))

@@ -7,9 +7,10 @@
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
-            [respo.util.detect :refer [component? compare-values]]
+            [respo.util.detect :refer [component?]]
             [respo.util.dom :refer [compare-to-dom!]]
-            [respo.schema :as schema])
+            [respo.schema :as schema]
+            [respo.util.comparator :refer [compare-xy]])
   (:require-macros [respo.core]))
 
 (defonce *changes-logger (atom nil))
@@ -30,7 +31,7 @@
    (str "For rendering lists, please use list-> , got: " (pr-str children)))
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style)
-                 (sort (fn [x y] (compare-values (first x) (first y))) (:style props))
+                 (sort (fn [x y] (compare-xy (first x) (first y))) (:style props))
                  (list))
         event (pick-event props)
         children (->> (map-indexed vector children) (filter val-exists?))]
@@ -44,7 +45,7 @@
 (defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style)
-                 (sort (fn [x y] (compare-values (first x) (first y))) (:style props))
+                 (sort (fn [x y] (compare-xy (first x) (first y))) (:style props))
                  (list))
         event (pick-event props)]
     {:name tag-name,
