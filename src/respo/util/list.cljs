@@ -1,5 +1,7 @@
 
-(ns respo.util.list (:require [respo.util.detect :refer [component? element?]]))
+(ns respo.util.list
+  (:require [respo.util.detect :refer [component? element?]]
+            [respo.util.comparator :refer [compare-xy]]))
 
 (defn filter-first [f xs] (reduce (fn [acc x] (when (f x) (reduced x))) nil xs))
 
@@ -18,7 +20,7 @@
     (list)
     (->> (-> props (dissoc :on) (dissoc :event) (dissoc :style))
          (filter (fn [[k v]] (not (re-matches (re-pattern "on-\\w+") (name k)))))
-         (sort-by first))))
+         (sort (fn [x y] (compare-xy (first x) (first y)))))))
 
 (defn pick-event [props]
   (merge
