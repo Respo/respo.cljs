@@ -52,10 +52,12 @@
                     ([next-state] (dispatch! :states [this-cursor next-state]))
                     ([cursor next-state] (dispatch! :states [cursor next-state])))]
       (if (= :input (:name target-element))
-        (let [virtual-value (->> target-element :attrs (into {}) :value)
-              actual-value (.. (:event simple-event) -target -value)]
-          (if (not= virtual-value actual-value)
-            (set! (.. (:event simple-event) -target -value) virtual-value))))
+        (let [virtual-attrs (->> target-element :attrs (into {}))
+              target-element (.. (:event simple-event) -target)]
+          (if (not= (:value virtual-attrs) (.-value target-element))
+            (set! (.-value target-element) (:value virtual-attrs)))
+          (if (not= (:checked virtual-attrs) (.-checked target-element))
+            (set! (.-checked target-element) (:checked virtual-attrs)))))
       (if (some? target-listener)
         (do
          (comment println "listener found:" coord event-name)
