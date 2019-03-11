@@ -35,7 +35,10 @@
            {:type :keydown, :key-code (.-keyCode event), :keycode (.-keyCode event)})
         "keypress" (merge (map-keyboard-event event) {:type :keypress})
         "keyup" (merge (map-keyboard-event event) {:type :keyup})
-        "input" {:type :input, :value (aget (.-target event) "value")}
+        "input"
+          {:type :input,
+           :value (aget (.-target event) "value"),
+           :checked (.. event -target -checked)}
         "change" {:type :change, :value (aget (.-target event) "value")}
         "focus" {:type :focus}
         {:type (.-type event), :msg (str "Unhandled event: " (.-type event))})
