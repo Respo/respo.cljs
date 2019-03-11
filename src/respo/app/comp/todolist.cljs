@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [respo.core
              :refer
-             [defcomp div span input <> cursor-> list-> action-> mutation->]]
+             [defcomp div span input textarea <> cursor-> list-> action-> mutation->]]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
             [respo.comp.space :refer [=<]]
