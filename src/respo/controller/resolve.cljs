@@ -51,14 +51,6 @@
           mutate! (fn
                     ([next-state] (dispatch! :states [this-cursor next-state]))
                     ([cursor next-state] (dispatch! :states [cursor next-state])))]
-      (if (or (= :input (:name target-element)) (= :textarea (:name target-element)))
-        (let [virtual-attrs (->> target-element :attrs (into {}))
-              target-element (.. (:event simple-event) -target)]
-          (if (not= (:value virtual-attrs) (.-value target-element))
-            (set! (.-value target-element) (:value virtual-attrs)))
-          (if (and (= :input (:name target-element))
-                   (not= (:checked virtual-attrs) (.-checked target-element)))
-            (set! (.-checked target-element) (:checked virtual-attrs)))))
       (if (some? target-listener)
         (do
          (comment println "listener found:" coord event-name)
