@@ -41,6 +41,7 @@
   (assert (map? markup) (str "component markup should be a map, but got: " (pr-str markup)))
   (if (and (some? old-element)
            (= (:name markup) (:name old-element))
+           (= (:cursor markup) (:cursor old-element))
            (=seq (:args markup) (:args old-element)))
     (do (comment println "not changed" (:name markup) (:args markup)) old-element)
     (let [begin-time (.valueOf (js/Date.))

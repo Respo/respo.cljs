@@ -10598,6 +10598,26 @@
              }
             }
            }
+           "o" {
+            :type :expr, :by "root", :at 1517742979770, :id "RbZIehwCF"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1517742981457, :text "=", :id "Bk3YiP4IMleaf"}
+             "j" {
+              :type :expr, :by "root", :at 1517742983263, :id "BJxycsPV8z"
+              :data {
+               "T" {:type :leaf, :by "rJoDgvdeG", :at 1554635156060, :text ":cursor", :id "r1CKowELM"}
+               "j" {:type :leaf, :by "root", :at 1517742985709, :text "markup", :id "B1xb5jvELM"}
+              }
+             }
+             "r" {
+              :type :expr, :by "root", :at 1517742986542, :id "SJXqiPNLf"
+              :data {
+               "T" {:type :leaf, :by "rJoDgvdeG", :at 1554635158165, :text ":cursor", :id "rkzGqiv48M"}
+               "j" {:type :leaf, :by "root", :at 1517742991074, :text "old-element", :id "H1XE5oDEUz"}
+              }
+             }
+            }
+           }
            "r" {
             :type :expr, :by "root", :at 1517742434052, :id "Sk9PtD4If"
             :data {
