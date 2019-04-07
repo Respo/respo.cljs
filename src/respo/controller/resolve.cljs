@@ -51,6 +51,7 @@
           mutate! (fn
                     ([next-state] (dispatch! :states [this-cursor next-state]))
                     ([cursor next-state] (dispatch! :states [cursor next-state])))]
+      (if (nil? target-component) (println "Found no component for:" coord))
       (if (some? target-listener)
         (do
          (comment println "listener found:" coord event-name)
