@@ -1,7 +1,6 @@
 
 (ns respo.core
-  (:require [respo.env :refer [element-type]]
-            [respo.render.expand :refer [render-app]]
+  (:require [respo.render.expand :refer [render-app]]
             [respo.controller.resolve :refer [build-deliver-event]]
             [respo.render.diff :refer [find-element-diffs]]
             [respo.util.format :refer [purify-element mute-element]]
@@ -54,6 +53,8 @@
      :style styles,
      :event event,
      :children child-map}))
+
+(def element-type (if (exists? js/Element) js/Element js/Error))
 
 (defn render-element [markup] (render-app markup @*dom-element))
 

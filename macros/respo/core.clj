@@ -12,7 +12,7 @@
        :render (fn [~@params] (fn [~'%cursor] ~@body))})))
 
 (def support-elements '[a body br button canvas code div footer
-                        h1 h2 head header html hr i img input li link
+                        h1 h2 head header html hr i img input li link video audio
                         option p pre script section select span style textarea title
                         ul])
 
