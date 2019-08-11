@@ -1,6 +1,5 @@
 
-(ns respo.comp.inspect
-  (:require [respo.core :refer [defcomp pre <>]] [respo.env :refer [data->native]]))
+(ns respo.comp.inspect (:require [respo.core :refer [defcomp pre <>]]))
 
 (defn grab-info [data]
   (cond
@@ -17,7 +16,7 @@
 (defn on-click [data]
   (fn [e dispatch!]
     (let [raw (pr-str data)]
-      (if (> (count raw) 60) (.log js/console (data->native data)) (.log js/console raw)))))
+      (if (> (count raw) 60) (.log js/console (clj->js data)) (.log js/console raw)))))
 
 (def style-data
   {:position :absolute,
