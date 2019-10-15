@@ -17359,7 +17359,7 @@
            "j" {:type :leaf, :by "root", :at 1517740396135, :text "f", :id "rJgE_WD4Lf"}
           }
          }
-         "r" {:type :leaf, :by "root", :at 1517740569597, :text "|expects function", :id "SkeSdWvNLG"}
+         "r" {:type :leaf, :by "rJoDgvdeG", :at 1571156591101, :text "\"expects f to be a function", :id "SkeSdWvNLG"}
         }
        }
        "t" {
@@ -17384,9 +17384,16 @@
              "j" {:type :leaf, :by "root", :at 1517740681143, :text "xs", :id "S1-cMP4Iz"}
             }
            }
+           "v" {
+            :type :expr, :by "rJoDgvdeG", :at 1571156578913, :id "mGQmzovpc4"
+            :data {
+             "T" {:type :leaf, :by "rJoDgvdeG", :at 1571156579212, :text "nil?", :id "Fz--V0Uerq"}
+             "j" {:type :leaf, :by "rJoDgvdeG", :at 1571156579850, :text "xs", :id "6zmqHtcnCZ"}
+            }
+           }
           }
          }
-         "r" {:type :leaf, :by "root", :at 1517740692335, :text "|expects key/value pairs", :id "HJm9MvELf"}
+         "r" {:type :leaf, :by "rJoDgvdeG", :at 1571156604553, :text "\"expects xs to be a collection", :id "HJm9MvELf"}
         }
        }
        "v" {

@@ -6,8 +6,8 @@
 (defn filter-first [f xs] (reduce (fn [acc x] (when (f x) (reduced x))) nil xs))
 
 (defn map-val [f xs]
-  (assert (fn? f) "expects function")
-  (assert (or (map? xs) (sequential? xs)) "expects key/value pairs")
+  (assert (fn? f) "expects f to be a function")
+  (assert (or (map? xs) (sequential? xs) (nil? xs)) "expects xs to be a collection")
   (map (fn [[k v]] [k (f v)]) xs))
 
 (defn map-with-idx [f xs]
