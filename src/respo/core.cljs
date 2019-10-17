@@ -58,6 +58,8 @@
 
 (defn render-element [markup] (render-app markup @*dom-element))
 
+(defn traverse-effects! [element old-element] (println "TODO"))
+
 (defn mount-app! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? markup) "2nd argument should be a component")
@@ -65,6 +67,7 @@
         deliver-event (build-deliver-event *global-element dispatch!)]
     (comment println "mount app")
     (activate-instance! (purify-element element) target deliver-event)
+    (traverse-effects! element nil)
     (reset! *global-element element)
     (reset! *dom-element element)))
 
@@ -90,6 +93,7 @@
     (let [logger @*changes-logger]
       (if (some? logger) (logger @*global-element element @*changes)))
     (patch-instance! @*changes target deliver-event)
+    (traverse-effects! element @*global-element)
     (reset! *global-element element)
     (reset! *dom-element element)))
 
