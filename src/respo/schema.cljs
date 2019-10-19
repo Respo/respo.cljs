@@ -3,7 +3,7 @@
 
 (def component
   {:name nil,
-   :kind :component,
+   :respo-node :component,
    :coord nil,
    :args [],
    :render nil,
@@ -11,7 +11,19 @@
    :cost nil,
    :cursor nil})
 
-(def effect {:name nil, :kind :effect, :coord [], :args [], :old-args [], :method (fn [] )})
+(def effect
+  {:name nil,
+   :respo-node :effect,
+   :coord [],
+   :args [],
+   :old-args [],
+   :method (fn [args old-args params] )})
 
 (def element
-  {:name :div, :kind :element, :coord nil, :attrs nil, :style nil, :event nil, :children {}})
+  {:name :div,
+   :respo-node :element,
+   :coord nil,
+   :attrs nil,
+   :style nil,
+   :event nil,
+   :children {}})
