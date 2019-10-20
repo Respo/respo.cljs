@@ -23,4 +23,6 @@
 
 (def rm-style 22)
 
+(def run-effect 40)
+
 (def set-event 30)

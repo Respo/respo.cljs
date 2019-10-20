@@ -7,9 +7,17 @@
    :coord nil,
    :args [],
    :render nil,
+   :effects [],
    :tree nil,
    :cost nil,
    :cursor nil})
+
+(def effect
+  {:name nil,
+   :respo-node :effect,
+   :coord [],
+   :args [],
+   :method (fn [args old-args [action parent]] )})
 
 (def element
   {:name :div,

@@ -3,6 +3,7 @@
   (:require [respo.render.expand :refer [render-app]]
             [respo.controller.resolve :refer [build-deliver-event]]
             [respo.render.diff :refer [find-element-diffs]]
+            [respo.render.effect :refer [collect-mounting]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
@@ -66,9 +67,15 @@
   (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? markup) "2nd argument should be a component")
   (let [element (render-element markup)
-        deliver-event (build-deliver-event *global-element dispatch!)]
+        deliver-event (build-deliver-event *global-element dispatch!)
+        *changes (atom [])
+        collect! (fn [x]
+                   (assert (= 3 (count x)) "change op should has length 3")
+                   (swap! *changes conj x))]
     (comment println "mount app")
     (activate-instance! (purify-element element) target deliver-event)
+    (collect-mounting collect! [] element)
+    (patch-instance! @*changes target deliver-event)
     (reset! *global-element element)
     (reset! *dom-element element)))
 

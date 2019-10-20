@@ -37,3 +37,5 @@
      (set! (.-font shared-canvas-context) (str font-size "px " font-family))
      (.-width (.measureText shared-canvas-context content)))
     nil))
+
+(defn time! [] (.valueOf (js/Date.)))

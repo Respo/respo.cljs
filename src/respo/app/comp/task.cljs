@@ -1,10 +1,19 @@
 
 (ns respo.app.comp.task
-  (:require [respo.core :refer [defcomp div input span button <> action-> mutation->]]
+  (:require [respo.core
+             :refer
+             [defcomp div input span button <> action-> mutation-> defeffect]]
             [hsl.core :refer [hsl]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.style.widget :as widget]))
+
+(defeffect
+ effect-log
+ (task)
+ (task')
+ (action parent)
+ (js/console.log "Task effect" task task' action parent))
 
 (defn on-text-change [task]
   (fn [event dispatch! mutate!]
@@ -20,21 +29,22 @@
  comp-task
  (states task)
  (let [state (or (:data states) "")]
-   (div
-    {:style style-task}
-    (comp-inspect "Task" task {:left 200})
-    (button
-     {:style (merge
-              style-done
-              {"background-color" (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
-      :on-click (action-> :toggle (:id task))})
-    (=< 8 nil)
-    (input {:value (:text task), :style widget/input, :on-input (on-text-change task)})
-    (=< 8 nil)
-    (input {:value state, :style widget/input, :on-input (mutation-> (:value %e))})
-    (=< 8 nil)
-    (div {:style widget/button, :on-click (action-> :remove (:id task))} (<> "Remove"))
-    (=< 8 nil)
-    (div {} (<> state)))))
+   [(effect-log task)
+    (div
+     {:style style-task}
+     (comp-inspect "Task" task {:left 200})
+     (button
+      {:style (merge
+               style-done
+               {"background-color" (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
+       :on-click (action-> :toggle (:id task))})
+     (=< 8 nil)
+     (input {:value (:text task), :style widget/input, :on-input (on-text-change task)})
+     (=< 8 nil)
+     (input {:value state, :style widget/input, :on-input (mutation-> (:value %e))})
+     (=< 8 nil)
+     (div {:style widget/button, :on-click (action-> :remove (:id task))} (<> "Remove"))
+     (=< 8 nil)
+     (div {} (<> state)))]))
 
 (defn on-click [props state] (fn [event dispatch!] (println "clicked.")))
