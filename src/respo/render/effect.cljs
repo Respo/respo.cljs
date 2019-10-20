@@ -25,14 +25,14 @@
   (cond
     (component? tree)
       (let [effects (:effects tree)]
+        (collect-unmounting collect! n-coord (:tree tree))
         (when-not (empty? effects)
           (doseq [effect effects]
             (let [method (:method effect)]
               (collect!
                [op/run-effect
                 n-coord
-                (fn [target] (method nil (:args effect) [:unmount target]))]))))
-        (recur collect! n-coord (:tree tree)))
+                (fn [target] (method nil (:args effect) [:unmount target]))])))))
     (element? tree)
       (loop [children (:children tree), idx 0]
         (when-not (empty? children)
@@ -43,7 +43,7 @@
 (defn collect-updating [collect! n-coord old-tree new-tree]
   (let [effects (:effects new-tree)]
     (when (not (empty? effects))
-      (comment js/console.log "TODO, collect update" n-coord (:effects new-tree))
+      (comment js/console.log "collect update" n-coord (:effects new-tree))
       (doseq [idx (range (count effects))]
         (let [old-effect (get-in old-tree [:effects idx])
               new-effect (get effects idx)

@@ -12,7 +12,7 @@
         child-elements (->> children
                             (map
                              (fn [[k child]]
-                               (if (nil? child) nil (make-element child listener-builder)))))]
+                               (when (some? child) (make-element child listener-builder)))))]
     (doseq [entry attrs]
       (let [k (dashed->camel (name (first entry))), v (last entry)]
         (if (some? v) (aset element k v))))

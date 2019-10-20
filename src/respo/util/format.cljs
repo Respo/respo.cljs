@@ -75,8 +75,7 @@
            (update :event purify-events)
            (update
             :children
-            (fn [children]
-              (->> children (map (fn [entry] [(first entry) (purify-element (last entry))])))))))
+            (fn [children] (->> children (map (fn [[k child]] [k (purify-element child)])))))))
     :else (do (js/console.warn "Unknown markup during purify:" markup) nil)))
 
 (defn text->html [x]

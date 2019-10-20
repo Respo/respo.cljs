@@ -106,9 +106,7 @@
       (do
        (find-element-diffs collect! n-coord old-tree (:tree new-tree))
        (collect-mounting collect! n-coord new-tree))
-    (component? old-tree) (recur collect! n-coord (get old-tree :tree) new-tree)
-    (component? new-tree) (recur collect! n-coord old-tree (get new-tree :tree))
-    :else
+    (and (element? old-tree) (element? new-tree))
       (let [old-children (:children old-tree), new-children (:children new-tree)]
         (if (or (not= (:coord old-tree) (:coord new-tree))
                 (not= (:name old-tree) (:name new-tree))
@@ -126,7 +124,8 @@
              (doseq [event-name added-events]
                (collect! [op/set-event n-coord [event-name (:coord new-tree)]]))
              (doseq [event-name removed-events] (collect! [op/rm-event n-coord event-name])))
-           (find-children-diffs collect! n-coord 0 old-children new-children))))))
+           (find-children-diffs collect! n-coord 0 old-children new-children))))
+    :else (js/console.warn "Diffing unknown params" old-tree new-tree)))
 
 (defn find-children-diffs [collect! n-coord index old-children new-children]
   (comment .log js/console "diff children:" n-coord index old-children new-children)
