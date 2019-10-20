@@ -3,6 +3,7 @@
   (:require [respo.render.expand :refer [render-app]]
             [respo.controller.resolve :refer [build-deliver-event]]
             [respo.render.diff :refer [find-element-diffs]]
+            [respo.render.effect :refer [collect-mounting]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
@@ -34,12 +35,14 @@
                  (list))
         event (pick-event props)
         children (->> (map-indexed vector children) (filter val-exists?))]
-    {:name tag-name,
-     :coord nil,
-     :attrs attrs,
-     :style styles,
-     :event event,
-     :children children}))
+    (merge
+     schema/element
+     {:name tag-name,
+      :coord nil,
+      :attrs attrs,
+      :style styles,
+      :event event,
+      :children children})))
 
 (defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
@@ -47,12 +50,14 @@
                  (sort (fn [x y] (compare-xy (first x) (first y))) (:style props))
                  (list))
         event (pick-event props)]
-    {:name tag-name,
-     :coord nil,
-     :attrs attrs,
-     :style styles,
-     :event event,
-     :children child-map}))
+    (merge
+     schema/element
+     {:name tag-name,
+      :coord nil,
+      :attrs attrs,
+      :style styles,
+      :event event,
+      :children child-map})))
 
 (def element-type (if (exists? js/Element) js/Element js/Error))
 
@@ -62,9 +67,15 @@
   (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? markup) "2nd argument should be a component")
   (let [element (render-element markup)
-        deliver-event (build-deliver-event *global-element dispatch!)]
+        deliver-event (build-deliver-event *global-element dispatch!)
+        *changes (atom [])
+        collect! (fn [x]
+                   (assert (= 3 (count x)) "change op should has length 3")
+                   (swap! *changes conj x))]
     (comment println "mount app")
     (activate-instance! (purify-element element) target deliver-event)
+    (collect-mounting collect! [] element)
+    (patch-instance! @*changes target deliver-event)
     (reset! *global-element element)
     (reset! *dom-element element)))
 

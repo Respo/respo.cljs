@@ -2,10 +2,13 @@
 (ns respo.render.diff
   (:require [clojure.string :as string]
             [respo.util.format :refer [purify-element]]
-            [respo.util.detect :refer [component?]]
+            [respo.util.detect :refer [component? element?]]
             [clojure.set :refer [difference]]
             [respo.schema.op :as op]
-            [respo.util.comparator :refer [compare-xy]]))
+            [respo.util.comparator :refer [compare-xy]]
+            [respo.render.effect
+             :refer
+             [collect-mounting collect-updating collect-unmounting]]))
 
 (declare find-children-diffs)
 
@@ -88,31 +91,41 @@
 
 (defn find-element-diffs [collect! n-coord old-tree new-tree]
   (comment .log js/console "element diffing:" n-coord old-tree new-tree)
-  (if (identical? old-tree new-tree)
-    nil
-    (cond
-      (component? old-tree) (recur collect! n-coord (get old-tree :tree) new-tree)
-      (component? new-tree) (recur collect! n-coord old-tree (get new-tree :tree))
-      :else
-        (let [old-children (:children old-tree), new-children (:children new-tree)]
-          (if (or (not= (:coord old-tree) (:coord new-tree))
-                  (not= (:name old-tree) (:name new-tree))
-                  (not= (:c-name old-tree) (:c-name new-tree)))
-            (do (collect! [op/replace-element n-coord (purify-element new-tree)]) nil)
-            (do
-             (find-props-diffs collect! n-coord (:attrs old-tree) (:attrs new-tree))
-             (let [old-style (:style old-tree), new-style (:style new-tree)]
-               (if (not= old-style new-style)
-                 (find-style-diffs collect! n-coord old-style new-style)))
-             (let [old-events (into #{} (keys (:event old-tree)))
-                   new-events (into #{} (keys (:event new-tree)))
-                   added-events (difference new-events old-events)
-                   removed-events (difference old-events new-events)]
-               (doseq [event-name added-events]
-                 (collect! [op/set-event n-coord [event-name (:coord new-tree)]]))
-               (doseq [event-name removed-events]
-                 (collect! [op/rm-event n-coord event-name])))
-             (find-children-diffs collect! n-coord 0 old-children new-children)))))))
+  (cond
+    (identical? old-tree new-tree) nil
+    (and (component? old-tree) (component? new-tree))
+      (if (= (:name old-tree) (:name new-tree))
+        (do
+         (find-element-diffs collect! n-coord (:tree old-tree) (:tree new-tree))
+         (collect-updating collect! n-coord old-tree new-tree)))
+    (and (component? old-tree) (element? new-tree))
+      (do
+       (collect-unmounting collect! n-coord old-tree)
+       (recur collect! n-coord (:tree old-tree) new-tree))
+    (and (element? old-tree) (component? new-tree))
+      (do
+       (find-element-diffs collect! n-coord old-tree (:tree new-tree))
+       (collect-mounting collect! n-coord new-tree))
+    (and (element? old-tree) (element? new-tree))
+      (let [old-children (:children old-tree), new-children (:children new-tree)]
+        (if (or (not= (:coord old-tree) (:coord new-tree))
+                (not= (:name old-tree) (:name new-tree))
+                (not= (:c-name old-tree) (:c-name new-tree)))
+          (do (collect! [op/replace-element n-coord (purify-element new-tree)]) nil)
+          (do
+           (find-props-diffs collect! n-coord (:attrs old-tree) (:attrs new-tree))
+           (let [old-style (:style old-tree), new-style (:style new-tree)]
+             (if (not= old-style new-style)
+               (find-style-diffs collect! n-coord old-style new-style)))
+           (let [old-events (into #{} (keys (:event old-tree)))
+                 new-events (into #{} (keys (:event new-tree)))
+                 added-events (difference new-events old-events)
+                 removed-events (difference old-events new-events)]
+             (doseq [event-name added-events]
+               (collect! [op/set-event n-coord [event-name (:coord new-tree)]]))
+             (doseq [event-name removed-events] (collect! [op/rm-event n-coord event-name])))
+           (find-children-diffs collect! n-coord 0 old-children new-children))))
+    :else (js/console.warn "Diffing unknown params" old-tree new-tree)))
 
 (defn find-children-diffs [collect! n-coord index old-children new-children]
   (comment .log js/console "diff children:" n-coord index old-children new-children)
@@ -122,9 +135,11 @@
       (and was-empty? (not now-empty?))
         (let [element (last (first new-children))]
           (collect! [op/append-element n-coord (purify-element element)])
+          (collect-mounting collect! n-coord element)
           (recur collect! n-coord (inc index) [] (rest new-children)))
       (and (not was-empty?) now-empty?)
         (do
+         (collect-unmounting collect! n-coord (last (first old-children)))
          (collect! [op/rm-element (conj n-coord index) nil])
          (recur collect! n-coord index (rest old-children) []))
       :else
@@ -150,9 +165,11 @@
                (collect!
                 (let [element (last (first new-children))]
                   [op/add-element (conj n-coord index) (purify-element element)]))
+               (collect-mounting collect! n-coord (last (first new-children)))
                (recur collect! n-coord (inc index) old-children new-follows))
             (and (not x1-remains?) y1-existed?)
               (do
+               (collect-unmounting collect! n-coord (last (first old-children)))
                (collect! [op/rm-element (conj n-coord index) nil])
                (recur collect! n-coord index old-follows new-children))
             :else
@@ -165,7 +182,9 @@
                   (let [new-element (last (first new-children))]
                     (collect!
                      [op/add-element (conj n-coord index) (purify-element new-element)])
+                    (collect-mounting collect! n-coord (last (first new-element)))
                     (recur collect! n-coord (inc index) old-children new-follows))
                   (do
+                   (collect-unmounting collect! n-coord (last (first old-children)))
                    (collect! [op/rm-element (conj n-coord index) nil])
                    (recur collect! n-coord index old-follows new-children)))))))))

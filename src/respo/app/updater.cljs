@@ -1,6 +1,5 @@
 
-(ns respo.app.updater.core
-  (:require [clojure.string :as string] [respo.cursor :refer [mutate]]))
+(ns respo.app.updater (:require [clojure.string :as string] [respo.cursor :refer [mutate]]))
 
 (defn updater [store op-type op-data op-id]
   (comment println (pr-str store) (pr-str op-type) (pr-str op-data))

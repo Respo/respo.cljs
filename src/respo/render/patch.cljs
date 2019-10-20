@@ -65,6 +65,8 @@
 (defn rm-style [target op]
   (let [style-name (dashed->camel (name op))] (aset (.-style target) style-name nil)))
 
+(defn run-effect [target op-data] (op-data target))
+
 (defn apply-dom-changes [changes mount-point listener-builder]
   (let [root (.-firstElementChild mount-point)]
     (doseq [op changes]
@@ -83,4 +85,5 @@
           (= op-type op/rm-element) (rm-element target op-data)
           (= op-type op/replace-element) (replace-element target op-data listener-builder)
           (= op-type op/append-element) (append-element target op-data listener-builder)
-          :else (println "not implemented:" op-type))))))
+          (= op-type op/run-effect) (run-effect target op-data)
+          :else (println "not implemented:" op-type coord op-data))))))

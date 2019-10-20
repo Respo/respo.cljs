@@ -3,7 +3,7 @@
   (:require [respo.app.comp.container :refer [comp-container]]
             [respo.core :refer [render! realize-ssr!]]
             [respo.app.schema :as schema]
-            [respo.app.updater.core :refer [updater]]
+            [respo.app.updater :refer [updater]]
             [respo.util.id :refer [get-id!]]
             [respo.render.html :refer [make-string]]))
 

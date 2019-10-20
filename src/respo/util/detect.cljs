@@ -10,6 +10,8 @@
         (let [x0 (first xs), y0 (first ys)]
           (if (= (type x0) (type y0)) (if (= x0 y0) (recur (rest xs) (rest ys)) false) false))))))
 
-(defn component? [x] (and (map? x) (contains? x :tree) (contains? x :render)))
+(defn component? [x] (= :component (:respo-node x)))
 
-(defn element? [x] (and (map? x) (contains? x :attrs) (contains? x :style)))
+(defn effect? [x] (= :effect (:respo-node x)))
+
+(defn element? [x] (= :element (:respo-node x)))
