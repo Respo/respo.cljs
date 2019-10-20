@@ -11,14 +11,6 @@
    :cost nil,
    :cursor nil})
 
-(def effect
-  {:name nil,
-   :respo-node :effect,
-   :coord [],
-   :args [],
-   :old-args [],
-   :method (fn [args old-args params] )})
-
 (def element
   {:name :div,
    :respo-node :element,

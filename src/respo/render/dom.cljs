@@ -10,7 +10,9 @@
         children (:children virtual-element)
         element (.createElement js/document tag-name)
         child-elements (->> children
-                            (map (fn [entry] (make-element (last entry) listener-builder))))]
+                            (map
+                             (fn [[k child]]
+                               (if (nil? child) nil (make-element child listener-builder)))))]
     (doseq [entry attrs]
       (let [k (dashed->camel (name (first entry))), v (last entry)]
         (if (some? v) (aset element k v))))

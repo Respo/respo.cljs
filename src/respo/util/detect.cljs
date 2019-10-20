@@ -12,6 +12,4 @@
 
 (defn component? [x] (= :component (:respo-node x)))
 
-(defn effect? [x] (= :effect (:respo-node x)))
-
 (defn element? [x] (= :element (:respo-node x)))

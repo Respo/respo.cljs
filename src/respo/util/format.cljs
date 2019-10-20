@@ -65,10 +65,10 @@
 (defn purify-events [events] (->> events keys (into #{})))
 
 (defn purify-element [markup]
-  (if (nil? markup)
-    nil
-    (if (component? markup)
-      (recur (:tree markup))
+  (cond
+    (nil? markup) nil
+    (component? markup) (recur (:tree markup))
+    (element? markup)
       (into
        {}
        (-> markup
@@ -76,7 +76,8 @@
            (update
             :children
             (fn [children]
-              (->> children (map (fn [entry] [(first entry) (purify-element (last entry))]))))))))))
+              (->> children (map (fn [entry] [(first entry) (purify-element (last entry))])))))))
+    :else (do (js/console.warn "Unknown markup during purify:" markup) nil)))
 
 (defn text->html [x]
   (if (some? x)

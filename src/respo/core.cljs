@@ -34,12 +34,14 @@
                  (list))
         event (pick-event props)
         children (->> (map-indexed vector children) (filter val-exists?))]
-    {:name tag-name,
-     :coord nil,
-     :attrs attrs,
-     :style styles,
-     :event event,
-     :children children}))
+    (merge
+     schema/element
+     {:name tag-name,
+      :coord nil,
+      :attrs attrs,
+      :style styles,
+      :event event,
+      :children children})))
 
 (defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
@@ -47,18 +49,18 @@
                  (sort (fn [x y] (compare-xy (first x) (first y))) (:style props))
                  (list))
         event (pick-event props)]
-    {:name tag-name,
-     :coord nil,
-     :attrs attrs,
-     :style styles,
-     :event event,
-     :children child-map}))
+    (merge
+     schema/element
+     {:name tag-name,
+      :coord nil,
+      :attrs attrs,
+      :style styles,
+      :event event,
+      :children child-map})))
 
 (def element-type (if (exists? js/Element) js/Element js/Error))
 
 (defn render-element [markup] (render-app markup @*dom-element))
-
-(defn traverse-effects! [element old-element] (println "TODO"))
 
 (defn mount-app! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
@@ -67,7 +69,6 @@
         deliver-event (build-deliver-event *global-element dispatch!)]
     (comment println "mount app")
     (activate-instance! (purify-element element) target deliver-event)
-    (traverse-effects! element nil)
     (reset! *global-element element)
     (reset! *dom-element element)))
 
@@ -93,7 +94,6 @@
     (let [logger @*changes-logger]
       (if (some? logger) (logger @*global-element element @*changes)))
     (patch-instance! @*changes target deliver-event)
-    (traverse-effects! element @*global-element)
     (reset! *global-element element)
     (reset! *dom-element element)))
 
