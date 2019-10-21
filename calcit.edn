@@ -8581,6 +8581,52 @@
                }
               }
              }
+             "v" {
+              :type :expr, :by "root", :at 1571645905707, :id "PAY3ddg8D"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1571645906812, :text "do", :id "PAY3ddg8Dleaf"}
+               "b" {
+                :type :expr, :by "root", :at 1571645922814, :id "ErDAComs9Z"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1571645922814, :text "collect-unmounting", :id "BkqHrVfknw"}
+                 "j" {:type :leaf, :by "root", :at 1571645922814, :text "collect!", :id "tsvLxbN5oo"}
+                 "r" {:type :leaf, :by "root", :at 1571645922814, :text "n-coord", :id "sCXKWM2dGQ"}
+                 "v" {:type :leaf, :by "root", :at 1571645922814, :text "old-tree", :id "m4vZVGE9gV"}
+                }
+               }
+               "f" {
+                :type :expr, :by "root", :at 1571645935128, :id "kXfjTOpe-s"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1571645935128, :text "find-element-diffs", :id "J0oekiXGLJ"}
+                 "j" {:type :leaf, :by "root", :at 1571645935128, :text "collect!", :id "h9WHl7Ca78"}
+                 "r" {:type :leaf, :by "root", :at 1571645935128, :text "n-coord", :id "aR_hc7b73T"}
+                 "v" {
+                  :type :expr, :by "root", :at 1571645935128, :id "n1aHiLo0eG"
+                  :data {
+                   "T" {:type :leaf, :by "root", :at 1571645935128, :text ":tree", :id "MDAs5bSNgd"}
+                   "j" {:type :leaf, :by "root", :at 1571645935128, :text "old-tree", :id "ac_LASg-IN"}
+                  }
+                 }
+                 "x" {
+                  :type :expr, :by "root", :at 1571645935128, :id "s7DzzBsm9-"
+                  :data {
+                   "T" {:type :leaf, :by "root", :at 1571645935128, :text ":tree", :id "qAz0Z29kqC"}
+                   "j" {:type :leaf, :by "root", :at 1571645935128, :text "new-tree", :id "18Jay2rtmh"}
+                  }
+                 }
+                }
+               }
+               "j" {
+                :type :expr, :by "root", :at 1571645912685, :id "LnLQH1VpBG"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1571645912685, :text "collect-mounting", :id "Q3UOcRagCT"}
+                 "j" {:type :leaf, :by "root", :at 1571645912685, :text "collect!", :id "pORSjEbiOl"}
+                 "r" {:type :leaf, :by "root", :at 1571645912685, :text "n-coord", :id "cFQHKS8Fy4"}
+                 "v" {:type :leaf, :by "root", :at 1571645912685, :text "new-tree", :id "skourFt5q1"}
+                }
+               }
+              }
+             }
             }
            }
           }

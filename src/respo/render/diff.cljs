@@ -97,7 +97,11 @@
       (if (= (:name old-tree) (:name new-tree))
         (do
          (find-element-diffs collect! n-coord (:tree old-tree) (:tree new-tree))
-         (collect-updating collect! n-coord old-tree new-tree)))
+         (collect-updating collect! n-coord old-tree new-tree))
+        (do
+         (collect-unmounting collect! n-coord old-tree)
+         (find-element-diffs collect! n-coord (:tree old-tree) (:tree new-tree))
+         (collect-mounting collect! n-coord new-tree)))
     (and (component? old-tree) (element? new-tree))
       (do
        (collect-unmounting collect! n-coord old-tree)
