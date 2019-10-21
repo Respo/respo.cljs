@@ -62,4 +62,4 @@
      {:name ~(keyword effect-name)
       :args [~@args]
       :coord []
-      :method (fn [[~@args] [~@old-args] [~'action ~'parent]] ~@body)})))
+      :method (fn [[~@args] [~@old-args] [~@params]] ~@body)})))
