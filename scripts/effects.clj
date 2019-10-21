@@ -8,8 +8,16 @@
      {:name ~(keyword effect-name)
       :args ~args
       :coord []
-      :method (fn [[~@args] [~@old-args] [~'action ~'parent]] ~@body)})))
+      :method (fn [[~@args] [~@old-args] [~@params]] ~@body)})))
 
-(println
-  (macroexpand-1
-    '(defeffect effect-a [a b] [a' b'] [action parent] (println a b action))))
+; (println
+;   (macroexpand-1
+;     '(defeffect effect-a [a b] [a' b'] [action parent] (println a b action))))
+
+
+(println (macroexpand-1 '(defeffect
+ effect-focus
+ ()
+ ()
+ (action el)
+ (when (= action :update) (js/console.log "mount")))))
