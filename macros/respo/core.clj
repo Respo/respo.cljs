@@ -62,4 +62,7 @@
      {:name ~(keyword effect-name)
       :args [~@args]
       :coord []
-      :method (fn [[~@args] [~@old-args] [~@params]] ~@body)})))
+      :method (fn [[~@args] [~@old-args] [~@params]]
+                ~@(if (empty? body)
+                  `((js/console.warn (str "WARNING: " '~effect-name " has no code for handling effects!")))
+                  body))})))

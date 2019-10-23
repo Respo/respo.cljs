@@ -8,16 +8,24 @@
      {:name ~(keyword effect-name)
       :args ~args
       :coord []
-      :method (fn [[~@args] [~@old-args] [~@params]] ~@body)})))
+      :method (fn [[~@args] [~@old-args] [~@params]]
+                ~@(if (empty? body)
+                  `((js/console.warn (str "WARNING: " '~effect-name " has no code for handling effects!")))
+                  body))})))
 
 ; (println
 ;   (macroexpand-1
 ;     '(defeffect effect-a [a b] [a' b'] [action parent] (println a b action))))
 
 
-(println (macroexpand-1 '(defeffect
- effect-focus
- ()
- ()
- (action el)
- (when (= action :update) (js/console.log "mount")))))
+; (println (macroexpand-1 '(defeffect
+;  effect-focus
+;  ()
+;  ()
+;  (action el)
+;  (when (= action :update) (js/console.log "mount")))))
+
+(println
+  (macroexpand-1
+    '(defeffect effect-a [a b] [a' b'] [action parent])))
+
