@@ -186,7 +186,7 @@
                   (let [new-element (last (first new-children))]
                     (collect!
                      [op/add-element (conj n-coord index) (purify-element new-element)])
-                    (collect-mounting collect! n-coord (last (first new-element)))
+                    (collect-mounting collect! n-coord (last (first new-children)))
                     (recur collect! n-coord (inc index) old-children new-follows))
                   (do
                    (collect-unmounting collect! n-coord (last (first old-children)))

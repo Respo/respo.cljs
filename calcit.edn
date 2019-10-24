@@ -8422,7 +8422,7 @@
                               :type :expr, :by "rJoDgvdeG", :at 1571582942352, :id "sgruaA_2te"
                               :data {
                                "D" {:type :leaf, :by "rJoDgvdeG", :at 1571582944095, :text "first", :id "Tge0a-EIg"}
-                               "T" {:type :leaf, :by "rJoDgvdeG", :at 1571582845126, :text "new-element", :id "bK2jYHeXwc"}
+                               "T" {:type :leaf, :by "root", :at 1571907726206, :text "new-children", :id "bK2jYHeXwc"}
                               }
                              }
                             }
