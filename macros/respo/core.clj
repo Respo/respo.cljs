@@ -16,10 +16,14 @@
                         option p pre script section select span style textarea title
                         ul])
 
-(defmacro meta' [props & children] `(respo.core/create-element :meta ~props ~@children))
+(defn confirm-item [x]
+  `(respo.core/confirm-child ~x))
+
+(defmacro meta' [props & children]
+  `(respo.core/create-element :meta ~props ~@(map confirm-item children)))
 
 (defn helper-create-el [el props children]
-  `(respo.core/create-element ~(keyword el) ~props ~@children))
+  `(respo.core/create-element ~(keyword el) ~props ~@(map confirm-item children)))
 
 (defn gen-dom-macro [el]
   `(defmacro ~el [~'props ~'& ~'children]
@@ -62,4 +66,7 @@
      {:name ~(keyword effect-name)
       :args [~@args]
       :coord []
-      :method (fn [[~@args] [~@old-args] [~@params]] ~@body)})))
+      :method (fn [[~@args] [~@old-args] [~@params]]
+                ~@(if (empty? body)
+                  `((js/console.warn (str "WARNING: " '~effect-name " has no code for handling effects!")))
+                  body))})))

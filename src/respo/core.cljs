@@ -7,7 +7,7 @@
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
             [respo.util.list :refer [pick-attrs pick-event val-exists?]]
-            [respo.util.detect :refer [component?]]
+            [respo.util.detect :refer [component? element?]]
             [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]
             [respo.util.comparator :refer [compare-xy]])
@@ -20,6 +20,11 @@
 (defonce *global-element (atom nil))
 
 (defn clear-cache! [] (reset! *dom-element nil))
+
+(defn confirm-child [x]
+  (when-not (or (nil? x) (element? x) (component? x))
+    (throw (js/Error. (str "Invalid data in elements tree: " (pr-str x)))))
+  x)
 
 (defn create-comp [comp-name render]
   (comment println "create component:" comp-name)
