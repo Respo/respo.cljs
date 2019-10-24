@@ -20,7 +20,7 @@
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.comp.zero :refer [comp-zero]]
             [respo.app.comp.wrap :refer [comp-wrap]]
-            [respo.util.dom :refer [text-width]]
+            [respo.util.dom :refer [text-width time!]]
             [respo.app.style.widget :as widget]))
 
 (defeffect
@@ -28,7 +28,7 @@
  ()
  ()
  [action parent]
- (js/console.log "todolist effect:" action parent))
+ (comment js/console.log "todolist effect:" action))
 
 (defn handle-add [state]
   (fn [e dispatch! mutate!] (dispatch! :add (:draft state)) (mutate! (assoc state :draft ""))))
@@ -38,13 +38,13 @@
 (defn on-focus [e dispatch!] (println "Just focused~"))
 
 (defn run-test! [dispatch! acc]
-  (let [started (.valueOf (js/Date.))]
+  (let [started (time!)]
     (dispatch! :clear nil)
     (loop [x 200] (dispatch! :add "empty") (if (> x 0) (recur (dec x))))
     (loop [x 20] (dispatch! :hit-first (rand)) (if (> x 0) (recur (dec x))))
     (dispatch! :clear nil)
     (loop [x 10] (dispatch! :add "only 10 items") (if (> x 0) (recur (dec x))))
-    (let [cost (- (.valueOf (js/Date.)) started)]
+    (let [cost (- (time!) started)]
       (if (< (count acc) 40)
         (js/setTimeout (fn [] (run-test! dispatch! (conj acc cost))) 0)
         (println "result:" (vec (sort acc)))))))

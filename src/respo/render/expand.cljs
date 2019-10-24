@@ -3,8 +3,7 @@
   (:require [clojure.string :as string]
             [respo.util.detect :refer [component? element? effect? =seq]]
             [respo.util.list :refer [filter-first pick-attrs filter-first]]
-            [respo.schema :as schema]
-            [respo.util.dom :refer [time!]]))
+            [respo.schema :as schema]))
 
 (declare render-children)
 
@@ -41,14 +40,12 @@
            (= (:cursor markup) (:cursor old-element))
            (=seq (:args markup) (:args old-element)))
     (do (comment println "not changed" (:name markup) (:args markup)) old-element)
-    (let [begin-time (time!)
-          args (:args markup)
+    (let [args (:args markup)
           new-coord (conj coord (:name markup))
           new-cursor (or (:cursor markup) cursor)
           render (:render markup)
           half-render (apply render args)
-          markup-tree (half-render new-cursor)
-          cost (- time! begin-time)]
+          markup-tree (half-render new-cursor)]
       (comment js/console.log "markup tree:" markup-tree)
       (comment println "no cache:" coord)
       (cond
@@ -62,7 +59,6 @@
                    new-coord
                    new-cursor
                    (:tree old-element)),
-            :cost cost,
             :cursor new-cursor})
         (sequential? markup-tree)
           (let [node-tree (filter-first (fn [x] (or (component? x) (element? x))) markup-tree)
@@ -76,13 +72,12 @@
                      new-coord
                      new-cursor
                      (:tree old-element)),
-              :cost cost,
               :cursor new-cursor,
               :effects effects-list}))
         :else
           (do
            (js/console.warn "Unknown component:" markup)
-           (merge markup {:coord coord, :tree nil, :cost cost, :cursor new-cursor}))))))
+           (merge markup {:coord coord, :tree nil, :cursor new-cursor}))))))
 
 (defn render-children [children coord comp-coord cursor old-children]
   (comment println "render children:" children)
@@ -90,7 +85,7 @@
     (doall
      (->> children
           (map
-           (fn [[k child-element]]
+           (defn render-child [[k child-element]]
              (let [old-child (get mapped-cache k)]
                (comment
                 if
