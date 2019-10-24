@@ -16,10 +16,13 @@
 
 (defn render-markup [markup coord comp-coord cursor old-element]
   (comment println "render markup:" markup)
-  (assert (map? markup) (str "expects component or element, but got: " (pr-str markup)))
-  (if (component? markup)
-    (render-component markup coord cursor old-element)
-    (render-element markup coord comp-coord cursor old-element)))
+  (cond
+    (component? markup) (render-component markup coord cursor old-element)
+    (element? markup) (render-element markup coord comp-coord cursor old-element)
+    :else
+      (do
+       (js/console.log "Markup:" markup)
+       (throw (js/Error. (str "expects component or element!"))))))
 
 (defn render-element [markup coord comp-coord cursor old-element]
   (let [children (:children markup)
@@ -29,17 +32,10 @@
                         comp-coord
                         cursor
                         (:children old-element))]
-    (comment
-     .log
-     js/console
-     "children should have order:"
-     (pr-str children)
-     (pr-str child-elements)
-     (pr-str markup))
+    (comment js/console.log "children should have order:" children child-elements markup)
     (assoc markup :coord coord :children child-elements)))
 
 (defn render-component [markup coord cursor old-element]
-  (assert (map? markup) (str "component markup should be a map, but got: " (pr-str markup)))
   (if (and (some? old-element)
            (= (:name markup) (:name old-element))
            (= (:cursor markup) (:cursor old-element))
