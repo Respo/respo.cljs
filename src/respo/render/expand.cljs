@@ -37,7 +37,8 @@
 (defn render-component [markup coord cursor old-element]
   (if (and (some? old-element)
            (= (:name markup) (:name old-element))
-           (= (:cursor markup) (:cursor old-element))
+           (or (and (empty? (:cursor markup)) (empty? (:cursor old-element)))
+               (= (:cursor markup) (:cursor old-element)))
            (=seq (:args markup) (:args old-element)))
     (do (comment println "not changed" (:name markup) (:args markup)) old-element)
     (let [args (:args markup)
