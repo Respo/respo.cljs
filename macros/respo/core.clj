@@ -9,7 +9,8 @@
     (merge respo.schema/component
       {:args (list ~@params) ,
        :name ~(keyword comp-name),
-       :render (fn [~@params] (fn [~'%cursor] ~@body))})))
+       :render (fn [~@params]
+                 (defn ~(symbol (str "call-" comp-name)) [~'%cursor] ~@body))})))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr i img input li link video audio

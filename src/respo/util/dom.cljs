@@ -38,4 +38,4 @@
      (.-width (.measureText shared-canvas-context content)))
     nil))
 
-(defn time! [] (.valueOf (js/Date.)))
+(defn time! [] (.now js/Date))

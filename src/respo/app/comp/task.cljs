@@ -13,7 +13,7 @@
  (task)
  (task')
  (action parent)
- (js/console.log "Task effect" task task' action parent))
+ (comment js/console.log "Task effect" action))
 
 (defn on-text-change [task]
   (fn [event dispatch! mutate!]
