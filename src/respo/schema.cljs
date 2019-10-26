@@ -12,11 +12,7 @@
    :cursor nil})
 
 (def effect
-  {:name nil,
-   :respo-node :effect,
-   :coord [],
-   :args [],
-   :method (fn [args old-args [action parent]] )})
+  {:name nil, :respo-node :effect, :coord [], :args [], :method (fn [args [action parent]] )})
 
 (def element
   {:name :div,

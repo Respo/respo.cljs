@@ -8,12 +8,7 @@
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.app.style.widget :as widget]))
 
-(defeffect
- effect-log
- (task)
- (task')
- (action parent)
- (comment js/console.log "Task effect" action))
+(defeffect effect-log (task) (action parent) (js/console.log "Task effect" action))
 
 (defn on-text-change [task]
   (fn [event dispatch! mutate!]
