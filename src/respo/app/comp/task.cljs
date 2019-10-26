@@ -11,9 +11,13 @@
 (defeffect
  effect-log
  (task)
- (task')
- (action parent)
- (comment js/console.log "Task effect" action))
+ (action parent *local)
+ (js/console.log "Task effect" action)
+ (case action
+   :mount (let [x0 (js/Math.random)] (swap! *local assoc :data x0) (println "Stored" x0))
+   :update (println "read" (get @*local :data))
+   :unmount (println "read" (get @*local :data))
+   (do)))
 
 (defn on-text-change [task]
   (fn [event dispatch! mutate!]

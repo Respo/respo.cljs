@@ -14,10 +14,15 @@
 (declare render-markup)
 
 (defn render-markup [markup coord comp-coord cursor old-element]
-  (comment println "render markup:" markup)
   (cond
-    (component? markup) (render-component markup coord cursor old-element)
-    (element? markup) (render-element markup coord comp-coord cursor old-element)
+    (and (component? markup) (component? old-element))
+      (render-component markup coord cursor old-element)
+    (and (component? markup) (or (element? old-element) (nil? old-element)))
+      (render-component markup coord cursor nil)
+    (and (element? markup) (element? old-element))
+      (render-element markup coord comp-coord cursor old-element)
+    (and (element? markup) (or (component? old-element) (nil? old-element)))
+      (render-element markup coord comp-coord cursor nil)
     :else
       (do
        (js/console.log "Markup:" markup)
@@ -46,8 +51,13 @@
           new-cursor (or (:cursor markup) cursor)
           render (:render markup)
           half-render (apply render args)
-          markup-tree (half-render new-cursor)]
-      (comment js/console.log "markup tree:" markup-tree)
+          markup-tree (half-render new-cursor)
+          local (if (sequential? markup-tree)
+                  (or (:local old-element)
+                      (do (println (:name markup) "create local") (atom {})))
+                  nil)]
+      (comment println "render component" (:name markup) (:name old-element))
+      (comment js/console.log markup old-element)
       (comment println "no cache:" coord)
       (cond
         (or (component? markup-tree) (element? markup-tree))
@@ -60,7 +70,8 @@
                    new-coord
                    new-cursor
                    (:tree old-element)),
-            :cursor new-cursor})
+            :cursor new-cursor,
+            :local local})
         (sequential? markup-tree)
           (let [node-tree (filter-first (fn [x] (or (component? x) (element? x))) markup-tree)
                 effects-list (->> markup-tree (filter effect?) (vec))]
@@ -74,11 +85,9 @@
                      new-cursor
                      (:tree old-element)),
               :cursor new-cursor,
-              :effects effects-list}))
-        :else
-          (do
-           (js/console.warn "Unknown component:" markup)
-           (merge markup {:coord coord, :tree nil, :cursor new-cursor}))))))
+              :effects effects-list,
+              :local local}))
+        :else (do (js/console.warn "Unknown markup:" markup) nil)))))
 
 (defn render-children [children coord comp-coord cursor old-children]
   (comment println "render children:" children)
