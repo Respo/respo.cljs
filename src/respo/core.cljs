@@ -26,10 +26,6 @@
     (throw (js/Error. (str "Invalid data in elements tree: " (pr-str x)))))
   x)
 
-(defn create-comp [comp-name render]
-  (comment println "create component:" comp-name)
-  (fn [& args] (merge schema/component {:args args, :name comp-name, :render render})))
-
 (defn create-element [tag-name props & children]
   (assert
    (not (some sequential? children))
