@@ -74,8 +74,10 @@ Reset virtual DOM caching during hot code swapping, and rerender:
 Adding effects to component:
 
 ```clojure
-(defeffect effect-a [text] [action parent-element]
-  (println action)) ; action could be :mount :update :amount
+(defeffect effect-a [text] [action parent-element *local]
+  (println action) ; action could be :mount :update :amount
+  (when (= :mount action)
+    (swap! *local assoc :data "data")))
 
 (defcomp comp-a [text]
   [(effect-a text) (div {})])

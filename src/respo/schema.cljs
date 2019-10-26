@@ -9,10 +9,15 @@
    :render nil,
    :effects [],
    :tree nil,
-   :cursor nil})
+   :cursor nil,
+   :local nil})
 
 (def effect
-  {:name nil, :respo-node :effect, :coord [], :args [], :method (fn [args [action parent]] )})
+  {:name nil,
+   :respo-node :effect,
+   :coord [],
+   :args [],
+   :method (fn [args [action parent *local]] )})
 
 (def element
   {:name :div,

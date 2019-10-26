@@ -23,7 +23,11 @@
             [respo.util.dom :refer [text-width time!]]
             [respo.app.style.widget :as widget]))
 
-(defeffect effect-focus () [action parent] (js/console.log "todolist effect:" action))
+(defeffect
+ effect-focus
+ ()
+ [action parent *local]
+ (js/console.log "todolist effect:" action))
 
 (defn handle-add [state]
   (fn [e dispatch! mutate!] (dispatch! :add (:draft state)) (mutate! (assoc state :draft ""))))

@@ -60,7 +60,7 @@
 
 (defmacro defeffect [effect-name args params & body]
   (assert (and (sequential? args) (every? symbol? args)) "args should be simple sequence")
-  (assert (and (sequential? params) (every? symbol? params) (= 2 (count params))) "params 2 args")
+  (assert (and (sequential? params) (every? symbol? params)) "params supported to be [action el *local]")
   `(defn ~effect-name [~@args]
     (merge respo.schema/effect
      {:name ~(keyword effect-name)
