@@ -30,7 +30,10 @@
   `(defmacro ~el [~'props ~'& ~'children]
     (helper-create-el '~el ~'props ~'children)))
 
-(map gen-dom-macro support-elements)
+(defmacro define-element-macro []
+  `(do ~@(clojure.core/map gen-dom-macro support-elements)))
+
+(define-element-macro)
 
 (defmacro <>
   ([content] `(respo.core/create-element :span {:inner-text ~content}))
