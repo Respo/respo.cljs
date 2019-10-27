@@ -1,16 +1,34 @@
 
 (ns respo.core)
 
+(defn generate-component [comp-name params body]
+  ; (println "inside" (pr-str comp-name) (pr-str params) (pr-str body))
+  `(merge respo.schema/component
+    {:name ~(keyword comp-name),
+     :render (fn [~@params]
+               (defn ~(symbol (str "call-" comp-name)) [~'%cursor] ~@body))}))
+
 (defmacro defcomp [comp-name params & body]
+  ; (println "comp" (pr-str comp-name) (pr-str params) (pr-str body))
   (assert (symbol? comp-name) "1st argument should be a symbol")
   (assert (coll? params) "2nd argument should be a collection")
   (assert (some? (last body)) "defcomp should return a component")
-  `(defn ~comp-name [~@params]
-    (merge respo.schema/component
-      {:args (list ~@params) ,
-       :name ~(keyword comp-name),
-       :render (fn [~@params]
-                 (defn ~(symbol (str "call-" comp-name)) [~'%cursor] ~@body))})))
+  (let [result (generate-component comp-name params body)]
+   (println "got params in JVM" (pr-str params))
+   `(defmacro ~comp-name [~@params]
+      (js/console.log "get tags" ~@params)
+      (assoc ~result :args [~@params]))))
+
+; (defmacro defcomp [comp-name params & body]
+;   (assert (symbol? comp-name) "1st argument should be a symbol")
+;   (assert (coll? params) "2nd argument should be a collection")
+;   (assert (some? (last body)) "defcomp should return a component")
+;   `(defn ~comp-name [~@params]
+;     (merge respo.schema/component
+;       {:args (list ~@params) ,
+;        :name ~(keyword comp-name),
+;        :render (fn [~@params]
+;                  (defn ~(symbol (str "call-" comp-name)) [~'%cursor] ~@body))})))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr i img input li link video audio
