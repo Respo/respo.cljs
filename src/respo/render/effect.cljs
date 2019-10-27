@@ -40,7 +40,7 @@
           (recur (rest children) (inc idx))))
     :else (js/console.warn "Unknown entry for unmounting:" tree)))
 
-(defn collect-updating [collect! n-coord old-tree new-tree]
+(defn collect-updating [collect! action n-coord old-tree new-tree]
   (let [effects (:effects new-tree)]
     (when (not (empty? effects))
       (comment js/console.log "collect update" n-coord (:effects new-tree))
@@ -53,4 +53,4 @@
             (collect!
              [op/run-effect
               n-coord
-              (fn [target] (method (:args new-effect) [:update target (:local new-tree)]))])))))))
+              (fn [target] (method (:args new-effect) [action target (:local new-tree)]))])))))))
