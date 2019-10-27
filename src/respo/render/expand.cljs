@@ -54,7 +54,7 @@
           markup-tree (half-render new-cursor)
           local (if (sequential? markup-tree)
                   (or (:local old-element)
-                      (do (println (:name markup) "create local") (atom {})))
+                      (do (comment println (:name markup) "create local") (atom {})))
                   nil)]
       (comment println "render component" (:name markup) (:name old-element))
       (comment js/console.log markup old-element)
