@@ -83,9 +83,17 @@
 (defn realize-ssr! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
   (assert (component? markup) "2nd argument should be a component")
-  (let [element (render-element markup), app-element (.-firstElementChild target)]
+  (let [element (render-element markup)
+        app-element (.-firstElementChild target)
+        *changes (atom [])
+        collect! (fn [x]
+                   (assert (= 3 (count x)) "change op should has length 3")
+                   (swap! *changes conj x))
+        deliver-event (build-deliver-event *global-element dispatch!)]
     (if (nil? app-element) (throw (js/Error. "Detected no element from SSR!")))
     (compare-to-dom! (purify-element element) app-element)
+    (collect-mounting collect! [] element)
+    (patch-instance! @*changes target deliver-event)
     (reset! *global-element (mute-element element))
     (reset! *dom-element element)))
 
