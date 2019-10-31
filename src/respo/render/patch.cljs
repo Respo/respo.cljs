@@ -31,10 +31,11 @@
   (let [new-element (make-element op listener-builder)] (.appendChild target new-element)))
 
 (defn find-target [root coord]
-  (if (empty? coord)
-    root
-    (let [index (first coord), child (aget (.-children root) index)]
-      (recur child (rest coord)))))
+  (cond
+    (empty? coord) root
+    :else
+      (let [index (first coord), child (aget (.-children root) index)]
+        (if (some? child) (recur child (rest coord)) nil))))
 
 (defn replace-element [target op listener-builder]
   (let [new-element (make-element op listener-builder)
@@ -65,7 +66,10 @@
 (defn rm-style [target op]
   (let [style-name (dashed->camel (name op))] (aset (.-style target) style-name nil)))
 
-(defn run-effect [target op-data] (op-data target))
+(defn run-effect [target op-data coord]
+  (if (some? target)
+    (op-data target)
+    (js/console.warn "Unknown effects target:" (pr-str coord))))
 
 (defn apply-dom-changes [changes mount-point listener-builder]
   (let [root (.-firstElementChild mount-point)]
@@ -85,5 +89,5 @@
           (= op-type op/rm-element) (rm-element target op-data)
           (= op-type op/replace-element) (replace-element target op-data listener-builder)
           (= op-type op/append-element) (append-element target op-data listener-builder)
-          (= op-type op/run-effect) (run-effect target op-data)
+          (= op-type op/run-effect) (run-effect target op-data coord)
           :else (println "not implemented:" op-type coord op-data))))))
