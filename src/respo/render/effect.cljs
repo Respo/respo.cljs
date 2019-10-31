@@ -10,7 +10,7 @@
           (doseq [effect effects]
             (let [method (:method effect)]
               (collect!
-               [op/run-effect
+               [op/effect-mount
                 n-coord
                 (fn [target] (method (:args effect) [:mount target (:local tree)]))]))))
         (recur collect! n-coord (:tree tree)))
@@ -30,7 +30,7 @@
           (doseq [effect effects]
             (let [method (:method effect)]
               (collect!
-               [op/run-effect
+               [op/effect-unmount
                 n-coord
                 (fn [target] (method (:args effect) [:unmount target (:local tree)]))])))))
     (element? tree)
@@ -51,6 +51,6 @@
           (comment println old-effect new-effect)
           (when-not (=seq (:args new-effect) (:args old-effect))
             (collect!
-             [op/run-effect
+             [(if (= :update action) op/effect-update op/effect-before-update)
               n-coord
               (fn [target] (method (:args new-effect) [action target (:local new-tree)]))])))))))

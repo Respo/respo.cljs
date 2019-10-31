@@ -9,6 +9,14 @@
 
 (def append-element 3)
 
+(def effect-before-update 42)
+
+(def effect-mount 41)
+
+(def effect-unmount 44)
+
+(def effect-update 43)
+
 (def replace-element 1)
 
 (def replace-prop 11)
@@ -22,7 +30,5 @@
 (def rm-prop 12)
 
 (def rm-style 22)
-
-(def run-effect 40)
 
 (def set-event 30)
