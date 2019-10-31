@@ -42,7 +42,7 @@
 
 (defn collect-updating [collect! action n-coord old-tree new-tree]
   (let [effects (:effects new-tree)]
-    (when (not (empty? effects))
+    (when-not (empty? effects)
       (comment js/console.log "collect update" n-coord (:effects new-tree))
       (doseq [idx (range (count effects))]
         (let [old-effect (get-in old-tree [:effects idx])
