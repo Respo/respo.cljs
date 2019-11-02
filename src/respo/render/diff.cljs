@@ -140,11 +140,11 @@
       (and was-empty? (not now-empty?))
         (let [element (last (first new-children))]
           (collect! [op/append-element n-coord (purify-element element)])
-          (collect-mounting collect! n-coord element)
+          (collect-mounting collect! (conj n-coord index) element)
           (recur collect! n-coord (inc index) [] (rest new-children)))
       (and (not was-empty?) now-empty?)
         (do
-         (collect-unmounting collect! n-coord (last (first old-children)))
+         (collect-unmounting collect! (conj n-coord index) (last (first old-children)))
          (collect! [op/rm-element (conj n-coord index) nil])
          (recur collect! n-coord index (rest old-children) []))
       :else
