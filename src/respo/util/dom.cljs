@@ -1,5 +1,6 @@
 
-(ns respo.util.dom (:require [clojure.string :as string]))
+(ns respo.util.dom
+  (:require [clojure.string :as string] [respo.util.list :refer [val-of-first]]))
 
 (defn compare-to-dom! [vdom element]
   (comment println "compare" (:name vdom) (map :name (vals (:children vdom))))
@@ -23,7 +24,7 @@
     (let [real-children (.-children element)]
       (loop [acc 0, other-children (:children vdom)]
         (when (not (empty? other-children))
-          (compare-to-dom! (last (first other-children)) (aget real-children acc))
+          (compare-to-dom! (val-of-first other-children) (aget real-children acc))
           (recur (inc acc) (rest other-children)))))))
 
 (def shared-canvas-context

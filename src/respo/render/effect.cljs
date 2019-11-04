@@ -1,6 +1,8 @@
 
 (ns respo.render.effect
-  (:require [respo.schema.op :as op] [respo.util.detect :refer [component? element? =seq]]))
+  (:require [respo.schema.op :as op]
+            [respo.util.detect :refer [component? element? =seq]]
+            [respo.util.list :refer [val-of-first]]))
 
 (defn collect-mounting [collect! n-coord tree at-place?]
   (cond
@@ -18,7 +20,7 @@
     (element? tree)
       (loop [children (:children tree), idx 0]
         (when-not (empty? children)
-          (collect-mounting collect! (conj n-coord idx) (last (first children)) false)
+          (collect-mounting collect! (conj n-coord idx) (val-of-first children) false)
           (recur (rest children) (inc idx))))
     :else (js/console.warn "Unknown entry for mounting:" tree)))
 
@@ -38,7 +40,7 @@
     (element? tree)
       (loop [children (:children tree), idx 0]
         (when-not (empty? children)
-          (collect-unmounting collect! (conj n-coord idx) (last (first children)) false)
+          (collect-unmounting collect! (conj n-coord idx) (val-of-first children) false)
           (recur (rest children) (inc idx))))
     :else (js/console.warn "Unknown entry for unmounting:" tree)))
 
