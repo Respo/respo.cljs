@@ -75,7 +75,7 @@
                    (swap! *changes conj x))]
     (comment println "mount app")
     (activate-instance! (purify-element element) target deliver-event)
-    (collect-mounting collect! [] element)
+    (collect-mounting collect! [] element true)
     (patch-instance! @*changes target deliver-event)
     (reset! *global-element element)
     (reset! *dom-element element)))
@@ -92,7 +92,7 @@
         deliver-event (build-deliver-event *global-element dispatch!)]
     (if (nil? app-element) (throw (js/Error. "Detected no element from SSR!")))
     (compare-to-dom! (purify-element element) app-element)
-    (collect-mounting collect! [] element)
+    (collect-mounting collect! [] element true)
     (patch-instance! @*changes target deliver-event)
     (reset! *global-element (mute-element element))
     (reset! *dom-element element)))

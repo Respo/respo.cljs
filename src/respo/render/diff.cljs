@@ -100,17 +100,17 @@
          (find-element-diffs collect! n-coord (:tree old-tree) (:tree new-tree))
          (collect-updating collect! :update n-coord old-tree new-tree))
         (do
-         (collect-unmounting collect! n-coord old-tree)
+         (collect-unmounting collect! n-coord old-tree true)
          (find-element-diffs collect! n-coord (:tree old-tree) (:tree new-tree))
-         (collect-mounting collect! n-coord new-tree)))
+         (collect-mounting collect! n-coord new-tree true)))
     (and (component? old-tree) (element? new-tree))
       (do
-       (collect-unmounting collect! n-coord old-tree)
+       (collect-unmounting collect! n-coord old-tree true)
        (recur collect! n-coord (:tree old-tree) new-tree))
     (and (element? old-tree) (component? new-tree))
       (do
        (find-element-diffs collect! n-coord old-tree (:tree new-tree))
-       (collect-mounting collect! n-coord new-tree))
+       (collect-mounting collect! n-coord new-tree true))
     (and (element? old-tree) (element? new-tree))
       (let [old-children (:children old-tree), new-children (:children new-tree)]
         (if (or (not= (:coord old-tree) (:coord new-tree))
@@ -140,11 +140,11 @@
       (and was-empty? (not now-empty?))
         (let [element (last (first new-children))]
           (collect! [op/append-element n-coord (purify-element element)])
-          (collect-mounting collect! (conj n-coord index) element)
+          (collect-mounting collect! (conj n-coord index) element true)
           (recur collect! n-coord (inc index) [] (rest new-children)))
       (and (not was-empty?) now-empty?)
         (do
-         (collect-unmounting collect! (conj n-coord index) (last (first old-children)))
+         (collect-unmounting collect! (conj n-coord index) (last (first old-children)) true)
          (collect! [op/rm-element (conj n-coord index) nil])
          (recur collect! n-coord index (rest old-children) []))
       :else
@@ -170,14 +170,19 @@
                (collect!
                 (let [element (last (first new-children))]
                   [op/add-element (conj n-coord index) (purify-element element)]))
-               (collect-mounting collect! (conj n-coord index) (last (first new-children)))
+               (collect-mounting
+                collect!
+                (conj n-coord index)
+                (last (first new-children))
+                true)
                (recur collect! n-coord (inc index) old-children new-follows))
             (and (not x1-remains?) y1-existed?)
               (do
                (collect-unmounting
                 collect!
                 (conj n-coord index)
-                (last (first old-children)))
+                (last (first old-children))
+                true)
                (collect! [op/rm-element (conj n-coord index) nil])
                (recur collect! n-coord index old-follows new-children))
             :else
@@ -193,12 +198,14 @@
                     (collect-mounting
                      collect!
                      (conj n-coord index)
-                     (last (first new-children)))
+                     (last (first new-children))
+                     true)
                     (recur collect! n-coord (inc index) old-children new-follows))
                   (do
                    (collect-unmounting
                     collect!
                     (conj n-coord index)
-                    (last (first old-children)))
+                    (last (first old-children))
+                    true)
                    (collect! [op/rm-element (conj n-coord index) nil])
                    (recur collect! n-coord index old-follows new-children)))))))))

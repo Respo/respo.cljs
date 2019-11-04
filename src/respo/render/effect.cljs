@@ -2,7 +2,7 @@
 (ns respo.render.effect
   (:require [respo.schema.op :as op] [respo.util.detect :refer [component? element? =seq]]))
 
-(defn collect-mounting [collect! n-coord tree]
+(defn collect-mounting [collect! n-coord tree at-place?]
   (cond
     (component? tree)
       (let [effects (:effects tree)]
@@ -12,31 +12,33 @@
               (collect!
                [op/effect-mount
                 n-coord
-                (fn [target] (method (:args effect) [:mount target (:local tree)]))]))))
-        (recur collect! n-coord (:tree tree)))
+                (fn [target]
+                  (method (:args effect) [:mount target (:local tree) at-place?]))]))))
+        (recur collect! n-coord (:tree tree) false))
     (element? tree)
       (loop [children (:children tree), idx 0]
         (when-not (empty? children)
-          (collect-mounting collect! (conj n-coord idx) (last (first children)))
+          (collect-mounting collect! (conj n-coord idx) (last (first children)) false)
           (recur (rest children) (inc idx))))
     :else (js/console.warn "Unknown entry for mounting:" tree)))
 
-(defn collect-unmounting [collect! n-coord tree]
+(defn collect-unmounting [collect! n-coord tree at-place?]
   (cond
     (component? tree)
       (let [effects (:effects tree)]
-        (collect-unmounting collect! n-coord (:tree tree))
+        (collect-unmounting collect! n-coord (:tree tree) false)
         (when-not (empty? effects)
           (doseq [effect effects]
             (let [method (:method effect)]
               (collect!
                [op/effect-unmount
                 n-coord
-                (fn [target] (method (:args effect) [:unmount target (:local tree)]))])))))
+                (fn [target]
+                  (method (:args effect) [:unmount target (:local tree) at-place?]))])))))
     (element? tree)
       (loop [children (:children tree), idx 0]
         (when-not (empty? children)
-          (collect-unmounting collect! (conj n-coord idx) (last (first children)))
+          (collect-unmounting collect! (conj n-coord idx) (last (first children)) false)
           (recur (rest children) (inc idx))))
     :else (js/console.warn "Unknown entry for unmounting:" tree)))
 
