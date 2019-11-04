@@ -170,11 +170,14 @@
                (collect!
                 (let [element (last (first new-children))]
                   [op/add-element (conj n-coord index) (purify-element element)]))
-               (collect-mounting collect! n-coord (last (first new-children)))
+               (collect-mounting collect! (conj n-coord index) (last (first new-children)))
                (recur collect! n-coord (inc index) old-children new-follows))
             (and (not x1-remains?) y1-existed?)
               (do
-               (collect-unmounting collect! n-coord (last (first old-children)))
+               (collect-unmounting
+                collect!
+                (conj n-coord index)
+                (last (first old-children)))
                (collect! [op/rm-element (conj n-coord index) nil])
                (recur collect! n-coord index old-follows new-children))
             :else
@@ -187,9 +190,15 @@
                   (let [new-element (last (first new-children))]
                     (collect!
                      [op/add-element (conj n-coord index) (purify-element new-element)])
-                    (collect-mounting collect! n-coord (last (first new-children)))
+                    (collect-mounting
+                     collect!
+                     (conj n-coord index)
+                     (last (first new-children)))
                     (recur collect! n-coord (inc index) old-children new-follows))
                   (do
-                   (collect-unmounting collect! n-coord (last (first old-children)))
+                   (collect-unmounting
+                    collect!
+                    (conj n-coord index)
+                    (last (first old-children)))
                    (collect! [op/rm-element (conj n-coord index) nil])
                    (recur collect! n-coord index old-follows new-children)))))))))
