@@ -11,8 +11,8 @@
 (defeffect
  effect-log
  (task)
- (action parent *local)
- (js/console.log "Task effect" action)
+ (action parent *local at-place?)
+ (js/console.log "Task effect" action at-place?)
  (case action
    :mount (let [x0 (js/Math.random)] (swap! *local assoc :data x0) (println "Stored" x0))
    :update (println "read" (get @*local :data))

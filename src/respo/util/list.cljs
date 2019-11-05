@@ -31,3 +31,5 @@
         (into {}))))
 
 (defn val-exists? [pair] (some? (last pair)))
+
+(defn val-of-first [x] (last (first x)))

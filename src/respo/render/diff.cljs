@@ -8,7 +8,8 @@
             [respo.util.comparator :refer [compare-xy]]
             [respo.render.effect
              :refer
-             [collect-mounting collect-updating collect-unmounting]]))
+             [collect-mounting collect-updating collect-unmounting]]
+            [respo.util.list :refer [val-of-first]]))
 
 (declare find-children-diffs)
 
@@ -100,17 +101,17 @@
          (find-element-diffs collect! n-coord (:tree old-tree) (:tree new-tree))
          (collect-updating collect! :update n-coord old-tree new-tree))
         (do
-         (collect-unmounting collect! n-coord old-tree)
+         (collect-unmounting collect! n-coord old-tree true)
          (find-element-diffs collect! n-coord (:tree old-tree) (:tree new-tree))
-         (collect-mounting collect! n-coord new-tree)))
+         (collect-mounting collect! n-coord new-tree true)))
     (and (component? old-tree) (element? new-tree))
       (do
-       (collect-unmounting collect! n-coord old-tree)
+       (collect-unmounting collect! n-coord old-tree true)
        (recur collect! n-coord (:tree old-tree) new-tree))
     (and (element? old-tree) (component? new-tree))
       (do
        (find-element-diffs collect! n-coord old-tree (:tree new-tree))
-       (collect-mounting collect! n-coord new-tree))
+       (collect-mounting collect! n-coord new-tree true))
     (and (element? old-tree) (element? new-tree))
       (let [old-children (:children old-tree), new-children (:children new-tree)]
         (if (or (not= (:coord old-tree) (:coord new-tree))
@@ -138,13 +139,13 @@
     (cond
       (and was-empty? now-empty?) nil
       (and was-empty? (not now-empty?))
-        (let [element (last (first new-children))]
+        (let [element (val-of-first new-children)]
           (collect! [op/append-element n-coord (purify-element element)])
-          (collect-mounting collect! (conj n-coord index) element)
+          (collect-mounting collect! (conj n-coord index) element true)
           (recur collect! n-coord (inc index) [] (rest new-children)))
       (and (not was-empty?) now-empty?)
         (do
-         (collect-unmounting collect! (conj n-coord index) (last (first old-children)))
+         (collect-unmounting collect! (conj n-coord index) (val-of-first old-children) true)
          (collect! [op/rm-element (conj n-coord index) nil])
          (recur collect! n-coord index (rest old-children) []))
       :else
@@ -161,23 +162,28 @@
           (comment println "compare:" x1 new-keys x1-remains? y1 y1-existed? old-keys)
           (cond
             (= x1 y1)
-              (let [old-element (last (first old-children))
-                    new-element (last (first new-children))]
+              (let [old-element (val-of-first old-children)
+                    new-element (val-of-first new-children)]
                 (find-element-diffs collect! (conj n-coord index) old-element new-element)
                 (recur collect! n-coord (inc index) old-follows new-follows))
             (and x1-remains? (not y1-existed?))
               (do
                (collect!
-                (let [element (last (first new-children))]
+                (let [element (val-of-first new-children)]
                   [op/add-element (conj n-coord index) (purify-element element)]))
-               (collect-mounting collect! (conj n-coord index) (last (first new-children)))
+               (collect-mounting
+                collect!
+                (conj n-coord index)
+                (val-of-first new-children)
+                true)
                (recur collect! n-coord (inc index) old-children new-follows))
             (and (not x1-remains?) y1-existed?)
               (do
                (collect-unmounting
                 collect!
                 (conj n-coord index)
-                (last (first old-children)))
+                (val-of-first old-children)
+                true)
                (collect! [op/rm-element (conj n-coord index) nil])
                (recur collect! n-coord index old-follows new-children))
             :else
@@ -187,18 +193,20 @@
                     first-new-entry (first new-children)]
                 (comment println "index:" xi yi)
                 (if (<= xi yi)
-                  (let [new-element (last (first new-children))]
+                  (let [new-element (val-of-first new-children)]
                     (collect!
                      [op/add-element (conj n-coord index) (purify-element new-element)])
                     (collect-mounting
                      collect!
                      (conj n-coord index)
-                     (last (first new-children)))
+                     (val-of-first new-children)
+                     true)
                     (recur collect! n-coord (inc index) old-children new-follows))
                   (do
                    (collect-unmounting
                     collect!
                     (conj n-coord index)
-                    (last (first old-children)))
+                    (val-of-first old-children)
+                    true)
                    (collect! [op/rm-element (conj n-coord index) nil])
                    (recur collect! n-coord index old-follows new-children)))))))))
