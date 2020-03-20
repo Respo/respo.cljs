@@ -39,7 +39,9 @@ jobs:
             ${{ runner.os }}-clojars
 
       - name: run tests
-        run: 'yarn && yarn shadow-cljs compile client'
+        run: 'yarn && yarn shadow-cljs compile app test'
+
+      - run: node target/test.js
 
       - run: echo Working on ${{ github.ref }}
 
