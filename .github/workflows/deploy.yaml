@@ -1,0 +1,47 @@
+
+name: Deploy package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    name: Deploy
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: curl -O https://download.clojure.org/install/linux-install-1.10.1.507.sh && chmod +x linux-install-1.10.1.507.sh && sudo ./linux-install-1.10.1.507.sh
+
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        name: Cache node modules of yarn
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache Clojars
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-clojars
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('shadow-cljs.edn') }}
+          restore-keys: |
+            ${{ runner.os }}-clojars
+
+      - name: run tests
+        run: 'yarn && yarn shadow-cljs compile client'
+
+      - run: echo Working on ${{ github.ref }}
+
+      - name: deploy to clojars
+        run: env CLOJARS_USERNAME=jiyinyiyong CLOJARS_PASSWORD=${{ secrets.CLOJARS_PASSWORD }} clojure -A:release

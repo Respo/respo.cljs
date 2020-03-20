@@ -9,7 +9,6 @@
    :render nil,
    :effects [],
    :tree nil,
-   :cursor nil,
    :local nil})
 
 (def effect

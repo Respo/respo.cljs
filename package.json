@@ -4,6 +4,8 @@
   "description": "Virtual DOM library",
   "main": "index.js",
   "scripts": {
+    "deploy": "clj -A:release",
+    "m2": "clj -A:release install",
     "upload": "rsync -r dist/ repo.respo-mvc.org:repo/Respo/respo",
     "html": "cp assets/* target/",
     "html-dist": "cp assets/* dist/",
@@ -28,9 +30,9 @@
   "homepage": "https://github.com/Respo/respo#readme",
   "dependencies": {},
   "devDependencies": {
-    "http-server": "^0.11.1",
-    "shadow-cljs": "^2.8.69",
+    "http-server": "^0.12.1",
+    "shadow-cljs": "^2.8.93",
     "source-map-support": "^0.5.16",
-    "ws": "^7.2.0"
+    "ws": "^7.2.3"
   }
 }

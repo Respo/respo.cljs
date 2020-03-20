@@ -1,6 +1,6 @@
 
 (ns respo.app.comp.container
-  (:require [respo.core :refer [defcomp div span <> cursor->]]
+  (:require [respo.core :refer [defcomp div span <> >>]]
             [respo.app.comp.todolist :refer [comp-todolist]]))
 
 (def style-global {:font-family "Avenir,Verdana"})
@@ -10,8 +10,8 @@
 (defcomp
  comp-container
  (store)
- (let [state (:states store)]
+ (let [states (:states store)]
    (div
     {:style style-global}
-    (cursor-> :todolist comp-todolist state (:tasks store))
+    (comp-todolist (>> states :todolist) (:tasks store))
     (div {:style style-states} (<> (str "states: " (pr-str (:states store))))))))

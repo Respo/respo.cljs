@@ -4,8 +4,7 @@
     `(merge respo.schema/component
       {:args (list ~@~params) ,
        :name ~(keyword comp-name),
-       :render (fn [~@~params]
-                 (defn ~~(symbol (str "call-" comp-name)) [~~'%cursor] ~@~body))})))
+       :render (fn [~@~params] ~@~body)})))
 
 (defcomp comp-a [a] (div {}))
 

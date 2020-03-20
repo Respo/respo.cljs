@@ -29,31 +29,12 @@
           (recur element (subvec coord 0 (- (count coord) 1)) event-name)
           nil)))))
 
-(defn get-component-at
-  ([markup coord] (get-component-at nil markup coord))
-  ([acc markup coord]
-   (if (empty? coord)
-     acc
-     (let [coord-head (first coord)]
-       (if (component? markup)
-         (if (= (:name markup) coord-head) (recur markup (:tree markup) (rest coord)) nil)
-         (let [child-pair (filter-first
-                           (fn [child-entry] (= (get child-entry 0) coord-head))
-                           (:children markup))]
-           (if (some? child-pair) (recur acc (last child-pair) (rest coord)) nil)))))))
-
 (defn build-deliver-event [*global-element dispatch!]
   (fn [coord event-name simple-event]
     (let [target-element (find-event-target @*global-element coord event-name)
-          target-component (get-component-at @*global-element coord)
-          this-cursor (:cursor target-component)
-          target-listener (get (:event target-element) event-name)
-          mutate! (fn
-                    ([next-state] (dispatch! :states [this-cursor next-state]))
-                    ([cursor next-state] (dispatch! :states [cursor next-state])))]
-      (if (nil? target-component) (println "Found no component for:" coord))
+          target-listener (get (:event target-element) event-name)]
       (if (some? target-listener)
         (do
          (comment println "listener found:" coord event-name)
-         (target-listener simple-event dispatch! mutate!))
+         (target-listener simple-event dispatch!))
         (comment println "found no listener:" coord event-name)))))

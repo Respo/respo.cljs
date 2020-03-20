@@ -10,8 +10,10 @@
 (defonce *store (atom schema/store))
 
 (defn dispatch! [op op-data]
-  (comment println op)
-  (let [op-id (get-id!), store (updater @*store op op-data op-id)] (reset! *store store)))
+  (comment println op op-data)
+  (if (vector? op)
+    (recur :states [op op-data])
+    (let [op-id (get-id!), store (updater @*store op op-data op-id)] (reset! *store store))))
 
 (defn handle-ssr! [mount-target]
   (realize-ssr! mount-target (comp-container @*store) dispatch!))
