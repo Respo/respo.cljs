@@ -1,8 +1,6 @@
 
 (ns respo.app.comp.task
-  (:require [respo.core
-             :refer
-             [defcomp div input span button <> action-> mutation-> defeffect]]
+  (:require [respo.core :refer [defcomp div input span button <> defeffect]]
             [hsl.core :refer [hsl]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
@@ -12,17 +10,13 @@
  effect-log
  (task)
  (action parent *local at-place?)
- (js/console.log "Task effect" action at-place?)
+ (comment js/console.log "Task effect" action at-place?)
  (case action
-   :mount (let [x0 (js/Math.random)] (swap! *local assoc :data x0) (println "Stored" x0))
-   :update (println "read" (get @*local :data))
-   :unmount (println "read" (get @*local :data))
+   :mount
+     (let [x0 (js/Math.random)] (swap! *local assoc :data x0) (comment println "Stored" x0))
+   :update (comment println "read" (get @*local :data))
+   :unmount (comment println "read" (get @*local :data))
    (do)))
-
-(defn on-text-change [task]
-  (fn [event dispatch! mutate!]
-    (let [task-id (:id task), text (:value event)]
-      (dispatch! :update {:id task-id, :text text}))))
 
 (def style-done
   {:width 32, :height 32, :outline :none, :border :none, :vertical-align :middle})
@@ -32,7 +26,7 @@
 (defcomp
  comp-task
  (states task)
- (let [state (or (:data states) "")]
+ (let [cursor (:cursor states), state (or (:data states) "")]
    [(effect-log task)
     (div
      {:style style-task}
@@ -41,13 +35,20 @@
       {:style (merge
                style-done
                {"background-color" (if (:done? task) (hsl 200 20 80) (hsl 200 80 70))}),
-       :on-click (action-> :toggle (:id task))})
+       :on-click (fn [e d!] (d! :toggle (:id task)))})
      (=< 8 nil)
-     (input {:value (:text task), :style widget/input, :on-input (on-text-change task)})
+     (input
+      {:value (:text task),
+       :style widget/input,
+       :on-input (fn [e d!]
+         (let [task-id (:id task), text (:value e)] (d! :update {:id task-id, :text text})))})
      (=< 8 nil)
-     (input {:value state, :style widget/input, :on-input (mutation-> (:value %e))})
+     (input
+      {:value state, :style widget/input, :on-input (fn [e d!] (d! cursor (:value e)))})
      (=< 8 nil)
-     (div {:style widget/button, :on-click (action-> :remove (:id task))} (<> "Remove"))
+     (div
+      {:style widget/button, :on-click (fn [e d!] (d! :remove (:id task)))}
+      (<> "Remove"))
      (=< 8 nil)
      (div {} (<> state)))]))
 

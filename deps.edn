@@ -1,2 +1,12 @@
 
-{:paths ["src" "macros"]}
+{
+  :paths ["src" "macros"]
+  :aliases {
+    :release {
+      :extra-deps {
+        appliedscience/deps-library {:mvn/version "0.3.4"}
+      }
+      :main-opts ["-m" "deps-library.release"]
+    }
+  }
+}

@@ -19,6 +19,10 @@
 
 (defonce *global-element (atom nil))
 
+(defn >> [states k]
+  (let [parent-cursor (or (:cursor states) []), branch (get states k)]
+    (assoc branch :cursor (conj parent-cursor k))))
+
 (defn clear-cache! [] (reset! *dom-element nil))
 
 (defn confirm-child [x]

@@ -1,19 +1,7 @@
 
 (ns respo.app.comp.todolist
   (:require [clojure.string :as string]
-            [respo.core
-             :refer
-             [defcomp
-              div
-              span
-              input
-              textarea
-              <>
-              cursor->
-              list->
-              action->
-              mutation->
-              defeffect]]
+            [respo.core :refer [defcomp div span input textarea <> list-> defeffect >>]]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
             [respo.comp.space :refer [=<]]
@@ -28,9 +16,6 @@
  ()
  [action parent *local]
  (js/console.log "todolist effect:" action))
-
-(defn handle-add [state]
-  (fn [e dispatch! mutate!] (dispatch! :add (:draft state)) (mutate! (assoc state :draft ""))))
 
 (def initial-state {:draft "", :locked? false})
 
@@ -72,7 +57,7 @@
 (defcomp
  comp-todolist
  (states tasks)
- (let [state (or (:data states) initial-state)]
+ (let [cursor (:cursor states), state (or (:data states) initial-state)]
    [(effect-focus)
     (div
      {:style style-root}
@@ -85,14 +70,16 @@
         :style (merge
                 widget/input
                 {:width (max 200 (+ 24 (text-width (:draft state) 16 "BlinkMacSystemFont")))}),
-        :on-input (mutation-> (assoc state :draft (:value %e))),
+        :on-input (fn [e d!] (d! cursor (assoc state :draft (:value e)))),
         :on-focus on-focus})
       (=< 8 nil)
       (span
-       {:style widget/button, :on-click (handle-add state)}
+       {:style widget/button,
+        :on-click (fn [e d!] (d! :add (:draft state)) (d! cursor (assoc state :draft "")))}
        (span {:on-click nil, :inner-text "Add"}))
       (=< 8 nil)
-      (span {:inner-text "Clear", :style widget/button, :on-click (action-> :clear nil)})
+      (span
+       {:inner-text "Clear", :style widget/button, :on-click (fn [e d!] (d! :clear nil))})
       (=< 8 nil)
       (div {} (div {:style widget/button, :on-click on-test} (<> "heavy tasks"))))
      (list->
@@ -101,16 +88,17 @@
            (reverse)
            (map
             (fn [task]
-              (let [task-id (:id task)] [task-id (cursor-> task-id comp-task states task)])))))
+              (let [task-id (:id task)] [task-id (comp-task (>> states task-id) task)])))))
      (if (> (count tasks) 0)
        (div
         {:spell-check true, :style style-toolbar}
         (div
-         {:style widget/button, :on (if (:locked? state) {} {:click (action-> :clear nil)})}
+         {:style widget/button, :on-click (if (:locked? state) (fn [e d!] (d! :clear nil)))}
          (<> "Clear2"))
         (=< 8 nil)
         (div
-         {:style widget/button, :on-click (mutation-> (update state :locked? not))}
+         {:style widget/button,
+          :on-click (fn [e d!] (d! cursor (update state :locked? not)))}
          (<> (str "Lock?" (:locked? state))))
         (=< 8 nil)
         (comp-wrap (comp-zero))))

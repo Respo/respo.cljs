@@ -13,45 +13,36 @@
 
 (declare render-markup)
 
-(defn render-markup [markup coord comp-coord cursor old-element]
+(defn render-markup [markup coord comp-coord old-element]
   (cond
     (and (component? markup) (component? old-element))
-      (render-component markup coord cursor old-element)
+      (render-component markup coord old-element)
     (and (component? markup) (or (element? old-element) (nil? old-element)))
-      (render-component markup coord cursor nil)
+      (render-component markup coord nil)
     (and (element? markup) (element? old-element))
-      (render-element markup coord comp-coord cursor old-element)
+      (render-element markup coord comp-coord old-element)
     (and (element? markup) (or (component? old-element) (nil? old-element)))
-      (render-element markup coord comp-coord cursor nil)
+      (render-element markup coord comp-coord nil)
     :else
       (do
        (js/console.log "Markup:" markup)
        (throw (js/Error. (str "expects component or element!"))))))
 
-(defn render-element [markup coord comp-coord cursor old-element]
+(defn render-element [markup coord comp-coord old-element]
   (let [children (:children markup)
-        child-elements (render-children
-                        children
-                        coord
-                        comp-coord
-                        cursor
-                        (:children old-element))]
+        child-elements (render-children children coord comp-coord (:children old-element))]
     (comment js/console.log "children should have order:" children child-elements markup)
     (assoc markup :coord coord :children child-elements)))
 
-(defn render-component [markup coord cursor old-element]
+(defn render-component [markup coord old-element]
   (if (and (some? old-element)
            (= (:name markup) (:name old-element))
-           (or (and (empty? (:cursor markup)) (empty? (:cursor old-element)))
-               (= (:cursor markup) (:cursor old-element)))
            (=seq (:args markup) (:args old-element)))
     (do (comment println "not changed" (:name markup) (:args markup)) old-element)
     (let [args (:args markup)
           new-coord (conj coord (:name markup))
-          new-cursor (or (:cursor markup) cursor)
           render (:render markup)
-          half-render (apply render args)
-          markup-tree (half-render new-cursor)
+          markup-tree (apply render args)
           local (if (sequential? markup-tree)
                   (or (:local old-element)
                       (do (comment println (:name markup) "create local") (atom {})))
@@ -64,13 +55,7 @@
           (merge
            markup
            {:coord coord,
-            :tree (render-markup
-                   markup-tree
-                   new-coord
-                   new-coord
-                   new-cursor
-                   (:tree old-element)),
-            :cursor new-cursor,
+            :tree (render-markup markup-tree new-coord new-coord (:tree old-element)),
             :local local})
         (sequential? markup-tree)
           (let [node-tree (filter-first (fn [x] (or (component? x) (element? x))) markup-tree)
@@ -78,18 +63,12 @@
             (merge
              markup
              {:coord coord,
-              :tree (render-markup
-                     node-tree
-                     new-coord
-                     new-coord
-                     new-cursor
-                     (:tree old-element)),
-              :cursor new-cursor,
+              :tree (render-markup node-tree new-coord new-coord (:tree old-element)),
               :effects effects-list,
               :local local}))
         :else (do (js/console.warn "Unknown markup:" markup) nil)))))
 
-(defn render-children [children coord comp-coord cursor old-children]
+(defn render-children [children coord comp-coord old-children]
   (comment println "render children:" children)
   (let [mapped-cache (into {} old-children)]
     (doall
@@ -103,7 +82,7 @@
                 (do (println "old child:" coord (some? old-child))))
                [k
                 (if (some? child-element)
-                  (render-markup child-element (conj coord k) comp-coord cursor old-child)
+                  (render-markup child-element (conj coord k) comp-coord old-child)
                   nil)])))))))
 
-(defn render-app [markup old-element] (render-markup markup [] [] [] old-element))
+(defn render-app [markup old-element] (render-markup markup [] [] old-element))

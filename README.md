@@ -7,7 +7,7 @@ Respo: A virtual DOM library in ClojureScript
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.11.5"]
+[respo "0.12.0-a1"]
 ```
 
 * Home http://respo-mvc.org
@@ -21,7 +21,7 @@ DOM syntax
 ```clojure
 (div {:class-name "demo-container"
       :style {:color :red}
-      :on-click (fn [event dispatch! mutate!])}
+      :on-click (fn [event dispatch!])}
       (div {}))
 ```
 
