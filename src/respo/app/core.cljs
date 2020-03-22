@@ -11,9 +11,7 @@
 
 (defn dispatch! [op op-data]
   (comment println op op-data)
-  (if (vector? op)
-    (recur :states [op op-data])
-    (let [op-id (get-id!), store (updater @*store op op-data op-id)] (reset! *store store))))
+  (let [store (updater @*store op op-data (get-id!))] (reset! *store store)))
 
 (defn handle-ssr! [mount-target]
   (realize-ssr! mount-target (comp-container @*store) dispatch!))

@@ -13,5 +13,5 @@
  (let [states (:states store)]
    (div
     {:style style-global}
-    (comp-todolist (>> states :todolist) (:tasks store))
+    (comp-todolist states (:tasks store))
     (div {:style style-states} (<> (str "states: " (pr-str (:states store))))))))

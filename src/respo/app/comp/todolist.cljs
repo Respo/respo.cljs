@@ -57,7 +57,7 @@
 (defcomp
  comp-todolist
  (states tasks)
- (let [cursor (:cursor states), state (or (:data states) initial-state)]
+ (let [cursor (or (:cursor states) []), state (or (:data states) initial-state)]
    [(effect-focus)
     (div
      {:style style-root}

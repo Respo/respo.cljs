@@ -1,12 +1,11 @@
 
-(ns respo.app.updater (:require [clojure.string :as string]))
+(ns respo.app.updater
+  (:require [clojure.string :as string] [respo.cursor :refer [updater-states]]))
 
 (defn updater [store op-type op-data op-id]
   (comment println (pr-str store) (pr-str op-type) (pr-str op-data))
   (case op-type
-    :states
-      (let [[cursor new-state] op-data]
-        (assoc-in store (concat [:states] cursor [:data]) new-state))
+    :states (updater-states store op-data)
     :add
       (update store :tasks (fn [tasks] (conj tasks {:text op-data, :id op-id, :done? false})))
     :remove
