@@ -32,9 +32,13 @@
 (defn build-deliver-event [*global-element dispatch!]
   (fn [coord event-name simple-event]
     (let [target-element (find-event-target @*global-element coord event-name)
-          target-listener (get (:event target-element) event-name)]
+          target-listener (get (:event target-element) event-name)
+          dispatch-wrap (fn [op data]
+                          (cond
+                            (vector? op) (dispatch! :states [op data])
+                            :else (dispatch! op data)))]
       (if (some? target-listener)
         (do
          (comment println "listener found:" coord event-name)
-         (target-listener simple-event dispatch!))
+         (target-listener simple-event dispatch-wrap))
         (comment println "found no listener:" coord event-name)))))
