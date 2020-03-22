@@ -1,16 +1,25 @@
-
-{:source-paths ["src" "macros"]
- :dependencies [[mvc-works/hsl        "0.1.2"]]
- :open-file-command ["subl" ["%s:%s:%s" :file :line :column]]
- :dev-http {7000 "target/"}
- :builds {:app {:output-dir "target/"
-                :asset-path "."
-                :target :browser
-                :modules {:main {:init-fn respo.main/main!}}
-                :devtools {:after-load respo.main/reload!
-                           :loader-mode :script}
-                :release {:output-dir "dist/"}}
-          :test {:target :node-script
-                 :output-to "target/test.js"
-                 :main respo.test.main/main!
-                 :devtools {:after-load respo.test.main/reload!}}}}
+{
+  :source-paths ["src" "macros"]
+  :dependencies [
+    [mvc-works/hsl "0.1.2"]
+  ]
+  :open-file-command [
+    "subl"
+    ["%s:%s:%s" :file :line :column]
+  ]
+  :dev-http {7000 "target/"}
+  :builds {
+    :app {
+      :output-dir "target/", :asset-path ".", :target :browser
+      :modules {
+        :main {:init-fn respo.main/main!}
+      }
+      :devtools {:after-load respo.main/reload!, :loader-mode :script}
+      :release {:output-dir "dist/"}
+    }
+    :test {
+      :target :node-script, :output-to "target/test.js", :main respo.test.main/main!
+      :devtools {:after-load respo.test.main/reload!}
+    }
+  }
+}
