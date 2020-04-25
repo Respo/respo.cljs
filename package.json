@@ -14,7 +14,6 @@
     "compile-test": "shadow-cljs compile test",
     "compile": "shadow-cljs compile app",
     "release": "shadow-cljs release app",
-    "serve-dist": "http-server dist/ -s -c-1",
     "del": "rm -fr dist/*",
     "build": "yarn del && yarn html-dist && yarn release"
   },
@@ -30,9 +29,8 @@
   "homepage": "https://github.com/Respo/respo#readme",
   "dependencies": {},
   "devDependencies": {
-    "http-server": "^0.12.1",
-    "shadow-cljs": "^2.8.93",
-    "source-map-support": "^0.5.16",
-    "ws": "^7.2.3"
+    "shadow-cljs": "^2.8.102",
+    "source-map-support": "^0.5.19",
+    "ws": "^7.2.5"
   }
 }
