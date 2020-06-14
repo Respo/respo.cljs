@@ -1,6 +1,8 @@
 
 (ns respo.schema )
 
+(def cache-info {:value nil, :initial-loop nil, :last-hit nil, :hit-times 0})
+
 (def component
   {:name nil,
    :respo-node :component,
