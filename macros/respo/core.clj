@@ -58,3 +58,12 @@
                 ~@(if (empty? body)
                   `((js/console.warn (str "WARNING: " '~effect-name " has no code for handling effects!")))
                   body))})))
+
+(defmacro defplugin [x params & body]
+  (assert (symbol? x) "1st argument should be a symbol")
+  (assert (coll? params) "2nd argument should be a collection")
+  (assert (some? (last body)) "defplugin should return something")
+  (let [plugin-name (gensym "plugin-")]
+    `(do
+       (defn ~plugin-name [~@params] ~@body)
+       (defn ~x [~@params] (respo.core/call-plugin-func ~plugin-name [~@params])))))

@@ -10,7 +10,8 @@
             [respo.util.detect :refer [component? element?]]
             [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]
-            [respo.util.comparator :refer [compare-xy]])
+            [respo.util.comparator :refer [compare-xy]]
+            [respo.caches :as caches])
   (:require-macros [respo.core]))
 
 (defonce *changes-logger (atom nil))
@@ -23,7 +24,13 @@
   (let [parent-cursor (or (:cursor states) []), branch (get states k)]
     (assoc branch :cursor (conj parent-cursor k))))
 
-(defn clear-cache! [] (reset! *dom-element nil))
+(defn call-plugin-func [f params]
+  (if (some fn? params)
+    (apply f params)
+    (let [xs (concat [f] params), v (caches/access-cache xs)]
+      (if (some? v) v (let [result (apply f params)] (caches/write-cache! xs result) result)))))
+
+(defn clear-cache! [] (reset! *dom-element nil) (caches/reset-caches!))
 
 (defn confirm-child [x]
   (when-not (or (nil? x) (element? x) (component? x))
@@ -102,6 +109,7 @@
     (reset! *dom-element element)))
 
 (defn rerender-app! [target markup dispatch!]
+  (caches/new-loop!)
   (let [element (render-element markup)
         deliver-event (build-deliver-event *global-element dispatch!)
         *changes (atom [])
