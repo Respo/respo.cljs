@@ -6,7 +6,7 @@
             [respo.render.effect :refer [collect-mounting]]
             [respo.util.format :refer [purify-element mute-element]]
             [respo.controller.client :refer [activate-instance! patch-instance!]]
-            [respo.util.list :refer [pick-attrs pick-event val-exists?]]
+            [respo.util.list :refer [pick-attrs pick-event val-exists? detect-func-in-map?]]
             [respo.util.detect :refer [component? element?]]
             [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]
@@ -25,7 +25,7 @@
     (assoc branch :cursor (conj parent-cursor k))))
 
 (defn call-plugin-func [f params]
-  (if (some fn? params)
+  (if (or (some fn? params) (some detect-func-in-map? params))
     (apply f params)
     (let [xs (concat [f] params), v (caches/access-cache xs)]
       (if (some? v) v (let [result (apply f params)] (caches/write-cache! xs result) result)))))
