@@ -69,3 +69,12 @@
           caches
           params
           {:value value, :initial-loop the-loop, :last-hit the-loop, :hit-times 0}))))))
+
+(defn user-scripts []
+  (show-summary!)
+  (write-cache! [1 2 3 4] 10)
+  (write-cache! [1 2 3] 6)
+  (access-cache [1 2 3 4])
+  (new-loop!)
+  (println @*cache-states)
+  (js/console.clear))

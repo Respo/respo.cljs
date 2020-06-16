@@ -1,6 +1,7 @@
-{:version "0.12.2-a2"
- :group-id "respo"
- :artifact-id "respo"
- :skip-tag true
- :description "Respo: A virtual DOM library in ClojureScript."
+{:version "0.12.2",
+ :group-id "respo",
+ :artifact-id "respo",
+ :skip-tag true,
+ :description "Respo: A virtual DOM library in ClojureScript.",
  :scm-url "https://github.com/Respo/respo"}
+
