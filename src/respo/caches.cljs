@@ -1,5 +1,5 @@
 
-(ns respo.caches )
+(ns respo.caches (:require [clojure.string :as string]))
 
 (defonce *cache-states
   (atom {:loop 0, :caches {}, :gc {:cold-duration 400, :trigger-loop 100, :elapse-loop 50}}))
@@ -44,6 +44,12 @@
       (perform-gc!))))
 
 (defn reset-caches! [] (swap! *cache-states assoc :loop 0 :caches {}))
+
+(defn show-summary! []
+  (println "Caches summary:")
+  (doseq [[params info] (@*cache-states :caches)]
+    (println "PARAMS:" params)
+    (println "INFO:" (assoc info :value 'VALUE))))
 
 (defn write-cache! [params value]
   (let [the-loop (@*cache-states :loop)]
