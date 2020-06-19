@@ -10,7 +10,7 @@
   :dev-http {7000 "target/"}
   :builds {
     :app {
-      :output-dir "target/", :asset-path ".", :target :browser
+      :output-dir "target/", :asset-path ".", :target :esm
       :modules {
         :main {:init-fn respo.main/main!}
       }
