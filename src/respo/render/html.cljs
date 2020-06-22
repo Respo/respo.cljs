@@ -40,8 +40,7 @@
 (defn props->string [props]
   (->> props
        (filter
-        (fn [entry]
-          (let [k (first entry)] (not (re-matches (re-pattern "^:on-.+") (str k))))))
+        (fn [[k v]] (and (some? v) (not (re-matches (re-pattern "^:on-.+") (str k))))))
        (map entry->string)
        (string/join " ")))
 
