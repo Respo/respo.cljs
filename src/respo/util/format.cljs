@@ -60,6 +60,7 @@
            (->> children (map (fn [entry] [(first entry) (mute-element (last entry))]))))))))
 
 (defn prop->attr [x]
+  (when (string/includes? x "?") (println "[Respo] warning: property contains `?` in" x))
   (case x "class-name" "class" "tab-index" "tabindex" "read-only" "readonly" x))
 
 (defn purify-events [events] (->> events keys (into #{})))

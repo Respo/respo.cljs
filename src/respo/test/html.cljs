@@ -25,6 +25,13 @@
     (is (= (slurp "test/examples/demo.html") (make-string todo-demo))))))
 
 (deftest
+ nil-prop-test
+ (let [piece (script {:src "a.js", :defer? nil})]
+   (testing
+    "test generate script with nil"
+    (is (= "<script src=\"a.js\"></script>" (make-string piece))))))
+
+(deftest
  simple-html-test
  (let [tree-demo (html
                   {}
