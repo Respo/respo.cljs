@@ -14,8 +14,7 @@
               (collect!
                [op/effect-mount
                 n-coord
-                (fn [target]
-                  (method (:args effect) [:mount target (:local tree) at-place?]))]))))
+                (fn [target] (method (:args effect) [:mount target at-place?]))]))))
         (recur collect! n-coord (:tree tree) false))
     (element? tree)
       (loop [children (:children tree), idx 0]
@@ -35,8 +34,7 @@
               (collect!
                [op/effect-unmount
                 n-coord
-                (fn [target]
-                  (method (:args effect) [:unmount target (:local tree) at-place?]))])))))
+                (fn [target] (method (:args effect) [:unmount target at-place?]))])))))
     (element? tree)
       (loop [children (:children tree), idx 0]
         (when-not (empty? children)
@@ -57,4 +55,4 @@
             (collect!
              [(if (= :update action) op/effect-update op/effect-before-update)
               n-coord
-              (fn [target] (method (:args new-effect) [action target (:local new-tree)]))])))))))
+              (fn [target] (method (:args new-effect) [action target]))])))))))

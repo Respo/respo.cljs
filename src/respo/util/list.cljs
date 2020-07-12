@@ -4,7 +4,7 @@
             [respo.util.comparator :refer [compare-xy]]))
 
 (defn detect-func-in-map? [params]
-  (if (empty? params)
+  (if (or (not (map? params)) (empty? params))
     false
     (let [p0 (first params)]
       (if (and (map? p0) (some (fn [[k v]] (fn? v)) p0)) true (recur (rest params))))))

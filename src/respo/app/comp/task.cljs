@@ -9,13 +9,12 @@
 (defeffect
  effect-log
  (task)
- (action parent *local at-place?)
+ (action parent at-place?)
  (comment js/console.log "Task effect" action at-place?)
  (case action
-   :mount
-     (let [x0 (js/Math.random)] (swap! *local assoc :data x0) (comment println "Stored" x0))
-   :update (comment println "read" (get @*local :data))
-   :unmount (comment println "read" (get @*local :data))
+   :mount (let [x0 (js/Math.random)] (comment println "Stored" x0))
+   :update (comment println "read")
+   :unmount (comment println "read")
    (do)))
 
 (def style-done

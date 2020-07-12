@@ -11,16 +11,13 @@
             [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]
             [respo.util.comparator :refer [compare-xy]]
-            [memof.core :as memof])
+            [memof.core :as memof]
+            [respo.caches :refer [*memof-caches]])
   (:require-macros [respo.core]))
 
 (defonce *changes-logger (atom nil))
 
-(defonce *dom-element (atom nil))
-
 (defonce *global-element (atom nil))
-
-(defonce *memof-caches (atom (memof/new-states {})))
 
 (defn >> [states k]
   (let [parent-cursor (or (:cursor states) []), branch (get states k)]
@@ -36,7 +33,7 @@
           (memof/write-record! *memof-caches f params result)
           result)))))
 
-(defn clear-cache! [] (reset! *dom-element nil) (memof/reset-entries! *memof-caches))
+(defn clear-cache! [] (memof/reset-entries! *memof-caches))
 
 (defn confirm-child [x]
   (when-not (or (nil? x) (element? x) (component? x))
@@ -79,7 +76,7 @@
 
 (def element-type (if (exists? js/Element) js/Element js/Error))
 
-(defn render-element [markup] (render-app markup @*dom-element))
+(defn render-element [markup] (render-app markup))
 
 (defn mount-app! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
@@ -94,8 +91,7 @@
     (activate-instance! (purify-element element) target deliver-event)
     (collect-mounting collect! [] element true)
     (patch-instance! @*changes target deliver-event)
-    (reset! *global-element element)
-    (reset! *dom-element element)))
+    (reset! *global-element element)))
 
 (defn realize-ssr! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
@@ -111,8 +107,7 @@
     (compare-to-dom! (purify-element element) app-element)
     (collect-mounting collect! [] element true)
     (patch-instance! @*changes target deliver-event)
-    (reset! *global-element (mute-element element))
-    (reset! *dom-element element)))
+    (reset! *global-element (mute-element element))))
 
 (defn rerender-app! [target markup dispatch!]
   (memof/new-loop! *memof-caches)
@@ -128,8 +123,7 @@
     (let [logger @*changes-logger]
       (if (some? logger) (logger @*global-element element @*changes)))
     (patch-instance! @*changes target deliver-event)
-    (reset! *global-element element)
-    (reset! *dom-element element)))
+    (reset! *global-element element)))
 
 (defn render! [target markup dispatch!]
   (if (some? @*global-element)

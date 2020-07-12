@@ -7,7 +7,7 @@ Respo: A virtual DOM library in ClojureScript
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.12.1"]
+[respo "0.13.0-a1"]
 ```
 
 * Home http://respo-mvc.org
@@ -74,10 +74,10 @@ Reset virtual DOM caching during hot code swapping, and rerender:
 Adding effects to component:
 
 ```clojure
-(defeffect effect-a [text] [action parent-element *local at-place?]
+(defeffect effect-a [text] [action parent-element at-place?]
   (println action) ; action could be :mount :update :amount
   (when (= :mount action)
-    (swap! *local assoc :data "data")))
+    (do)))
 
 (defcomp comp-a [text]
   [(effect-a text) (div {})])

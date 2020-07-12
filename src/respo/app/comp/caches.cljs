@@ -1,6 +1,7 @@
 
 (ns respo.app.comp.caches
-  (:require [respo.core :refer [defcomp defplugin div button span >> *memof-caches]]
+  (:require [respo.core :refer [defcomp defplugin div button span >>]]
+            [respo.caches :refer [*memof-caches]]
             [respo.comp.space :refer [=<]]
             [respo.app.style.widget :as widget]
             [memof.core :as memof]))
