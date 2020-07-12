@@ -11,7 +11,7 @@
             [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]
             [respo.util.comparator :refer [compare-xy]]
-            [respo.caches :as caches])
+            [memof.core :as memof])
   (:require-macros [respo.core]))
 
 (defonce *changes-logger (atom nil))
@@ -20,6 +20,8 @@
 
 (defonce *global-element (atom nil))
 
+(defonce *memof-caches (atom (memof/new-states {})))
+
 (defn >> [states k]
   (let [parent-cursor (or (:cursor states) []), branch (get states k)]
     (assoc branch :cursor (conj parent-cursor k))))
@@ -27,10 +29,14 @@
 (defn call-plugin-func [f params]
   (if (or (some fn? params) (some detect-func-in-map? params))
     (apply f params)
-    (let [xs (concat [f] params), v (caches/access-cache xs)]
-      (if (some? v) v (let [result (apply f params)] (caches/write-cache! xs result) result)))))
+    (let [v (memof/access-record *memof-caches f params)]
+      (if (some? v)
+        v
+        (let [result (apply f params)]
+          (memof/write-record! *memof-caches f params result)
+          result)))))
 
-(defn clear-cache! [] (reset! *dom-element nil) (caches/reset-caches!))
+(defn clear-cache! [] (reset! *dom-element nil) (memof/reset-entries! *memof-caches))
 
 (defn confirm-child [x]
   (when-not (or (nil? x) (element? x) (component? x))
@@ -109,7 +115,7 @@
     (reset! *dom-element element)))
 
 (defn rerender-app! [target markup dispatch!]
-  (caches/new-loop!)
+  (memof/new-loop! *memof-caches)
   (let [element (render-element markup)
         deliver-event (build-deliver-event *global-element dispatch!)
         *changes (atom [])
