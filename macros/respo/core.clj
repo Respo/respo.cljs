@@ -7,6 +7,7 @@
   (assert (some? (last body)) "defcomp should return a component")
   (let [renderer-name (gensym "renderer-")]
   `(do
+    (declare ~comp-name) ; handle self recursion...
     (defn ~renderer-name [~@params] ~@body)
     (defn ~comp-name [~@params]
       (merge respo.schema/component
