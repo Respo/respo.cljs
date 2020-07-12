@@ -5,11 +5,14 @@
   (assert (symbol? comp-name) "1st argument should be a symbol")
   (assert (coll? params) "2nd argument should be a collection")
   (assert (some? (last body)) "defcomp should return a component")
-  `(defn ~comp-name [~@params]
-    (merge respo.schema/component
-      {:args (list ~@params) ,
-       :name ~(keyword comp-name),
-       :render (fn [~@params] ~@body)})))
+  (let [renderer-name (gensym "renderer-")]
+  `(do
+    (defn ~renderer-name [~@params] ~@body)
+    (defn ~comp-name [~@params]
+      (merge respo.schema/component
+        {:args (list ~@params) ,
+         :name ~(keyword comp-name),
+         :render ~renderer-name})))))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr i img input li link video audio
@@ -48,7 +51,7 @@
 
 (defmacro defeffect [effect-name args params & body]
   (assert (and (sequential? args) (every? symbol? args)) "args should be simple sequence")
-  (assert (and (sequential? params) (every? symbol? params)) "params supported to be [action el *local]")
+  (assert (and (sequential? params) (every? symbol? params)) "params supported to be [action el at-place?]")
   `(defn ~effect-name [~@args]
     (merge respo.schema/effect
      {:name ~(keyword effect-name)

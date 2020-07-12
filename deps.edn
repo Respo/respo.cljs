@@ -1,6 +1,9 @@
 
 {
   :paths ["src" "macros"]
+  :deps {
+    cumulo/memof {:mvn/version "0.2.0-a3"}
+  }
   :aliases {
     :release {
       :extra-deps {

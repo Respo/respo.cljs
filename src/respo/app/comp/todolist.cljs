@@ -14,7 +14,7 @@
 (defeffect
  effect-focus
  ()
- [action parent *local]
+ [action parent at-place?]
  (js/console.log "todolist effect:" action))
 
 (def initial-state {:draft "", :locked? false})
@@ -24,7 +24,7 @@
 (defn run-test! [dispatch! acc]
   (let [started (time!)]
     (dispatch! :clear nil)
-    (loop [x 200] (dispatch! :add "empty") (if (> x 0) (recur (dec x))))
+    (loop [x 20] (dispatch! :add "empty") (if (> x 0) (recur (dec x))))
     (loop [x 20] (dispatch! :hit-first (rand)) (if (> x 0) (recur (dec x))))
     (dispatch! :clear nil)
     (loop [x 10] (dispatch! :add "only 10 items") (if (> x 0) (recur (dec x))))

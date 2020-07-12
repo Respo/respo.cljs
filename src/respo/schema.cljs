@@ -10,15 +10,14 @@
    :args [],
    :render nil,
    :effects [],
-   :tree nil,
-   :local nil})
+   :tree nil})
 
 (def effect
   {:name nil,
    :respo-node :effect,
    :coord [],
    :args [],
-   :method (fn [args [action parent *local]] )})
+   :method (fn [args [action parent at-place?]] )})
 
 (def element
   {:name :div,

@@ -11,12 +11,11 @@
             [respo.util.dom :refer [compare-to-dom!]]
             [respo.schema :as schema]
             [respo.util.comparator :refer [compare-xy]]
-            [respo.caches :as caches])
+            [memof.core :as memof]
+            [respo.caches :refer [*memof-caches]])
   (:require-macros [respo.core]))
 
 (defonce *changes-logger (atom nil))
-
-(defonce *dom-element (atom nil))
 
 (defonce *global-element (atom nil))
 
@@ -27,10 +26,14 @@
 (defn call-plugin-func [f params]
   (if (or (some fn? params) (some detect-func-in-map? params))
     (apply f params)
-    (let [xs (concat [f] params), v (caches/access-cache xs)]
-      (if (some? v) v (let [result (apply f params)] (caches/write-cache! xs result) result)))))
+    (let [v (memof/access-record *memof-caches f params)]
+      (if (some? v)
+        v
+        (let [result (apply f params)]
+          (memof/write-record! *memof-caches f params result)
+          result)))))
 
-(defn clear-cache! [] (reset! *dom-element nil) (caches/reset-caches!))
+(defn clear-cache! [] (memof/reset-entries! *memof-caches))
 
 (defn confirm-child [x]
   (when-not (or (nil? x) (element? x) (component? x))
@@ -73,7 +76,7 @@
 
 (def element-type (if (exists? js/Element) js/Element js/Error))
 
-(defn render-element [markup] (render-app markup @*dom-element))
+(defn render-element [markup] (render-app markup))
 
 (defn mount-app! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
@@ -88,8 +91,7 @@
     (activate-instance! (purify-element element) target deliver-event)
     (collect-mounting collect! [] element true)
     (patch-instance! @*changes target deliver-event)
-    (reset! *global-element element)
-    (reset! *dom-element element)))
+    (reset! *global-element element)))
 
 (defn realize-ssr! [target markup dispatch!]
   (assert (instance? element-type target) "1st argument should be an element")
@@ -105,11 +107,10 @@
     (compare-to-dom! (purify-element element) app-element)
     (collect-mounting collect! [] element true)
     (patch-instance! @*changes target deliver-event)
-    (reset! *global-element (mute-element element))
-    (reset! *dom-element element)))
+    (reset! *global-element (mute-element element))))
 
 (defn rerender-app! [target markup dispatch!]
-  (caches/new-loop!)
+  (memof/new-loop! *memof-caches)
   (let [element (render-element markup)
         deliver-event (build-deliver-event *global-element dispatch!)
         *changes (atom [])
@@ -122,8 +123,7 @@
     (let [logger @*changes-logger]
       (if (some? logger) (logger @*global-element element @*changes)))
     (patch-instance! @*changes target deliver-event)
-    (reset! *global-element element)
-    (reset! *dom-element element)))
+    (reset! *global-element element)))
 
 (defn render! [target markup dispatch!]
   (if (some? @*global-element)
