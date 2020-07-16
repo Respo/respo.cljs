@@ -29,7 +29,7 @@
   "homepage": "https://github.com/Respo/respo#readme",
   "dependencies": {},
   "devDependencies": {
-    "shadow-cljs": "^2.10.14",
+    "shadow-cljs": "^2.10.15",
     "source-map-support": "^0.5.19",
     "ws": "^7.3.1"
   }
