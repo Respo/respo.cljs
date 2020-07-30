@@ -13,7 +13,8 @@
     (-> text
         (string/replace (re-pattern "\"") "&quot;")
         (string/replace (re-pattern "<") "&lt;")
-        (string/replace (re-pattern ">") "&gt;"))))
+        (string/replace (re-pattern ">") "&gt;")
+        (string/replace (re-pattern "\\n") "&#13;&#10;"))))
 
 (defn style->string [styles]
   (->> styles

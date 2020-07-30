@@ -656,7 +656,7 @@
                     :data $ {}
                       |T $ {} (:type :leaf) (:text |nil?) (:id |ry0M2NfZM) (:by |rJoDgvdeG) (:at 1512356888690)
                       |j $ {} (:type :leaf) (:text |text) (:id |Skgbm3EGWf) (:by |rJoDgvdeG) (:at 1512356889535)
-                  |P $ {} (:type :leaf) (:text ||) (:id |S1-fXnEMbz) (:by |rJoDgvdeG) (:at 1512356890474)
+                  |P $ {} (:type :leaf) (:text "|\"") (:id |S1-fXnEMbz) (:by |rJoDgvdeG) (:at 1596102369852)
                   |T $ {} (:type :expr) (:id |rk_Oxzl_YAKZ) (:by nil) (:at 1504774121421)
                     :data $ {}
                       |T $ {} (:type :leaf) (:id |SkYOgGg_YRYW) (:text |->) (:by |root) (:at 1504774121421)
@@ -685,6 +685,14 @@
                               |T $ {} (:type :leaf) (:id |BkA_lGlOtCY-) (:text |re-pattern) (:by |root) (:at 1504774121421)
                               |j $ {} (:type :leaf) (:id |HJJtgzx_K0FZ) (:text ||>) (:by |rJoDgvdeG) (:at 1512356543433)
                           |r $ {} (:type :leaf) (:id |HJxFlGl_F0F-) (:text "||&gt;") (:by |rJoDgvdeG) (:at 1512356546006)
+                      |y $ {} (:type :expr) (:id |Lnnxr1f9yz) (:by nil) (:at 1504774121421)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:id |S1h_gfgdFCK-) (:text |string/replace) (:by |root) (:at 1504774121421)
+                          |j $ {} (:type :expr) (:id |H1adeMgdY0YZ) (:by nil) (:at 1504774121421)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:id |BkA_lGlOtCY-) (:text |re-pattern) (:by |root) (:at 1504774121421)
+                              |j $ {} (:type :leaf) (:id |HJJtgzx_K0FZ) (:text "|\"\\n") (:by |rJoDgvdeG) (:at 1596102368087)
+                          |r $ {} (:type :leaf) (:id |HJxFlGl_F0F-) (:text "|\"&#13;&#10;") (:by |rJoDgvdeG) (:at 1596102589821)
           |make-string $ {} (:type :expr) (:id |ryONgMedKRKW) (:by nil) (:at 1504774121421)
             :data $ {}
               |T $ {} (:type :leaf) (:id |ByKEeze_K0Yb) (:text |defn) (:by |root) (:at 1504774121421)
