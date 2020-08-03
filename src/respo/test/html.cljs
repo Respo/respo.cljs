@@ -52,7 +52,7 @@
     "test generated HTML from component"
     (is
      (=
-      "<textarea value=\"a\\nb\\nc\\n&quot;\\nd\">a\nb\nc\n&quot;\nd</textarea>"
+      "<textarea value=\"a&#13;&#10;b&#13;&#10;c&#13;&#10;&quot;&#13;&#10;d\">a&#13;&#10;b&#13;&#10;c&#13;&#10;&quot;&#13;&#10;d</textarea>"
       (make-string piece))))))
 
 (defn main! [] (run-tests))
