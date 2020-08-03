@@ -5764,7 +5764,7 @@
                           |j $ {} (:type :expr) (:id |HySefPdlz) (:by |rJoDgvdeG) (:at 1511711213169)
                             :data $ {}
                               |T $ {} (:type :leaf) (:text |=) (:id |rkeNxMP_eM) (:by |rJoDgvdeG) (:at 1511711213352)
-                              |f $ {} (:type :leaf) (:text "||<textarea value=\"a\\nb\\nc\\n&quot;\\nd\">a\nb\nc\n&quot;\nd</textarea>") (:id |H1-8d2NMZG) (:by |rJoDgvdeG) (:at 1512357407941)
+                              |f $ {} (:type :leaf) (:text "||<textarea value=\"a&#13;&#10;b&#13;&#10;c&#13;&#10;&quot;&#13;&#10;d\">a&#13;&#10;b&#13;&#10;c&#13;&#10;&quot;&#13;&#10;d</textarea>") (:id |H1-8d2NMZG) (:by |rJoDgvdeG) (:at 1596421840316)
                               |r $ {} (:type :expr) (:id |S1llZfDOxf) (:by |rJoDgvdeG) (:at 1511711223959)
                                 :data $ {}
                                   |T $ {} (:type :leaf) (:text |make-string) (:id |rJg-MD_xM) (:by |rJoDgvdeG) (:at 1511711227344)
