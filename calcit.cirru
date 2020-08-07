@@ -1251,6 +1251,28 @@
                       |j $ {} (:type :expr) (:id |By6qpzeuKRY-) (:by nil) (:at 1504774121421)
                         :data $ {}
                           |T $ {} (:type :leaf) (:id |HyRcpMgOt0Kb) (:text |#{}) (:by |root) (:at 1504774121421)
+                  |n $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1596766606927)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1596766609367) (:text |filter) (:id |UN1CfUTlGh)
+                      |j $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1596766609572)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1596766610546) (:text |fn) (:id |hj_aPVmPot)
+                          |j $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1596766610870)
+                            :data $ {}
+                              |T $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1596766611663)
+                                :data $ {}
+                                  |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1596766611897) (:text |[]) (:id |1NZ3o-IuMK)
+                                  |j $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1596766613685) (:text |k) (:id |SGWeoymiZD)
+                                  |r $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1596766614006) (:text |v) (:id |S574O2V_b5)
+                                :id |Ne4QNdCdU
+                            :id |Wd8oLMc4rO
+                          |r $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1596766615048)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1596766616020) (:text |some?) (:id |y0MRc7ld0-leaf)
+                              |j $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1596766616793) (:text |v) (:id |JoXoyYqwn)
+                            :id |y0MRc7ld0-
+                        :id |XKznngXxyy
+                    :id |DlkfX28U5k
           |event->edn $ {} (:type :expr) (:id |BkJspGxdKAFZ) (:by nil) (:at 1504774121421)
             :data $ {}
               |T $ {} (:type :leaf) (:id |B1gsTzgdF0tW) (:text |defn) (:by |root) (:at 1504774121421)
