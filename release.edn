@@ -1,4 +1,4 @@
-{:version "0.13.3-a1",
+{:version "0.13.3",
  :group-id "respo",
  :artifact-id "respo",
  :skip-tag true,
