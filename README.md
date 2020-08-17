@@ -83,6 +83,15 @@ Adding effects to component:
   [(effect-a text) (div {})])
 ```
 
+Define a hooks plugin, like components it has caching support:
+
+```clojure
+(defplugin plugin-x [a b]
+  {:ui (div {} (<> "Demo"))
+   :show (fn []
+            (do))})
+```
+
 Read docs to use Respo:
 
 * [Beginner Guide](https://github.com/Respo/respo/wiki/Beginner-Guide)
