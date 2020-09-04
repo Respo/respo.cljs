@@ -1,8 +1,7 @@
-
 {
   :paths ["src" "macros"]
   :deps {
-    cumulo/memof {:mvn/version "0.2.1-a1"}
+    cumulo/memof {:mvn/version "0.2.1"}
   }
   :aliases {
     :release {

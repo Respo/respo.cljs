@@ -21,7 +21,9 @@
     (println "Loaded." (.now js/performance)))
   (set! (.-onbeforeunload js/window) save-store!))
 
-(defn reload! []
+(defn ^:dev/after-load
+  reload!
+  []
   (clear-cache!)
   (render-app! mount-target)
   (.log js/console "code updated."))

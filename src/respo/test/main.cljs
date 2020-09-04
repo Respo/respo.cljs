@@ -6,7 +6,7 @@
 
 (defn main! [] (html/main!) (run-tests))
 
-(defn reload! [] (main!))
+(defn ^:dev/after-load reload! [] (main!))
 
 (deftest
  test-pick-attrs

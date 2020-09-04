@@ -1002,6 +1002,7 @@
                   |T $ {} (:type :leaf) (:text |.log) (:id |BJ48-Cwdxzleaf) (:by |rJoDgvdeG) (:at 1511714303053)
                   |j $ {} (:type :leaf) (:text |js/console) (:id |BkmDWRwdxf) (:by |rJoDgvdeG) (:at 1511714304564)
                   |r $ {} (:type :leaf) (:text "||code updated.") (:id |S1ltZADulf) (:by |rJoDgvdeG) (:at 1511714306996)
+              |b $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1599216865039) (:text |^:dev/after-load) (:id |knB9g5wszi)
           |save-store! $ {} (:type :expr) (:id |SylRGTvOxf) (:by |rJoDgvdeG) (:at 1511714070196)
             :data $ {}
               |T $ {} (:type :leaf) (:text |defn) (:id |Byb0fpwuxf) (:by |rJoDgvdeG) (:at 1511714070196)
@@ -9199,6 +9200,7 @@
               |v $ {} (:type :expr) (:id |BJsXHvuxM) (:by |rJoDgvdeG) (:at 1511712034731)
                 :data $ {}
                   |T $ {} (:type :leaf) (:text |main!) (:id |BJsXHvuxMleaf) (:by |rJoDgvdeG) (:at 1511712035802)
+              |b $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1599216877830) (:text |^:dev/after-load) (:id |9jO4pvSDV)
           |test-pick-attrs $ {} (:type :expr) (:id |SJetjfbuGM) (:by |root) (:at 1513783968618)
             :data $ {}
               |T $ {} (:type :leaf) (:text |deftest) (:id |H1ZYjGZOfG) (:by |root) (:at 1513783969980)

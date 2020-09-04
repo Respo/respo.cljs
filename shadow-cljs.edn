@@ -2,7 +2,7 @@
   :source-paths ["src" "macros"]
   :dependencies [
     [mvc-works/hsl "0.1.2"]
-    [cumulo/memof "0.2.1-a1"]
+    [cumulo/memof "0.2.1"]
   ]
   :open-file-command [
     "subl"
@@ -15,12 +15,8 @@
       :modules {
         :main {:init-fn respo.main/main!}
       }
-      :devtools {:after-load respo.main/reload!, :loader-mode :script}
       :release {:output-dir "dist/"}
     }
-    :test {
-      :target :node-script, :output-to "target/test.js", :main respo.test.main/main!
-      :devtools {:after-load respo.test.main/reload!}
-    }
+    :test {:target :node-script, :output-to "target/test.js", :main respo.test.main/main!}
   }
 }
