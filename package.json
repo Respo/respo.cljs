@@ -1,6 +1,6 @@
 {
   "name": "respo",
-  "version": "0.13.4",
+  "version": "0.13.5",
   "description": "Virtual DOM library",
   "main": "index.js",
   "scripts": {
@@ -29,8 +29,8 @@
   "homepage": "https://github.com/Respo/respo#readme",
   "dependencies": {},
   "devDependencies": {
-    "shadow-cljs": "^2.11.1",
+    "shadow-cljs": "^2.11.15",
     "source-map-support": "^0.5.19",
-    "ws": "^7.3.1"
+    "ws": "^7.4.2"
   }
 }

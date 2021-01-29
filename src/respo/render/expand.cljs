@@ -3,9 +3,7 @@
   (:require [clojure.string :as string]
             [respo.util.detect :refer [component? element? effect? =seq]]
             [respo.util.list :refer [filter-first pick-attrs filter-first]]
-            [respo.schema :as schema]
-            [respo.caches :refer [*memof-caches]]
-            [memof.core :as memof]))
+            [respo.schema :as schema]))
 
 (declare render-children)
 
@@ -17,14 +15,7 @@
 
 (defn render-markup [markup coord]
   (cond
-    (component? markup)
-      (let [v (memof/access-record *memof-caches (:render markup) (:args markup))]
-        (if (some? v)
-          v
-          (let [result (render-component markup coord)]
-            (comment println "[Respo] reusing component from memof" (:name markup))
-            (memof/write-record! *memof-caches (:render markup) (:args markup) result)
-            result)))
+    (component? markup) (render-component markup coord)
     (element? markup) (render-element markup coord)
     :else
       (do
@@ -37,10 +28,7 @@
     (assoc markup :coord coord :children child-elements)))
 
 (defn render-component [markup coord]
-  (let [args (:args markup)
-        new-coord (conj coord (:name markup))
-        render (:render markup)
-        markup-tree (apply render args)]
+  (let [new-coord (conj coord (:name markup)), markup-tree (:tree markup)]
     (comment println "render component" (:name markup))
     (comment println "no cache:" coord)
     (cond
