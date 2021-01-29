@@ -9,7 +9,8 @@
             [respo.app.comp.zero :refer [comp-zero]]
             [respo.app.comp.wrap :refer [comp-wrap]]
             [respo.util.dom :refer [text-width time!]]
-            [respo.app.style.widget :as widget]))
+            [respo.app.style.widget :as widget]
+            [memof.alias :refer [memof-call]]))
 
 (defeffect
  effect-focus
@@ -88,7 +89,8 @@
            (reverse)
            (map
             (fn [task]
-              (let [task-id (:id task)] [task-id (comp-task (>> states task-id) task)])))))
+              (let [task-id (:id task)]
+                [task-id (memof-call comp-task (>> states task-id) task)])))))
      (if (> (count tasks) 0)
        (div
         {:spell-check true, :style style-toolbar}

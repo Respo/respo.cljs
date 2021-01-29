@@ -5,15 +5,10 @@
   (assert (symbol? comp-name) "1st argument should be a symbol")
   (assert (coll? params) "2nd argument should be a collection")
   (assert (some? (last body)) "defcomp should return a component")
-  (let [renderer-name (gensym "renderer-")]
-  `(do
-    (declare ~comp-name) ; handle self recursion...
-    (defn ~renderer-name [~@params] ~@body)
-    (defn ~comp-name [~@params]
-      (merge respo.schema/component
-        {:args (list ~@params) ,
-         :name ~(keyword comp-name),
-         :render ~renderer-name})))))
+  `(defn ~comp-name [~@params]
+     (merge respo.schema/component
+       {:name ~(keyword comp-name),
+        :tree (do ~@body)})))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr i img input li link video audio
@@ -67,7 +62,4 @@
   (assert (symbol? x) "1st argument should be a symbol")
   (assert (coll? params) "2nd argument should be a collection")
   (assert (some? (last body)) "defplugin should return something")
-  (let [plugin-name (gensym "plugin-")]
-    `(do
-       (defn ~plugin-name [~@params] ~@body)
-       (defn ~x [~@params] (respo.core/call-plugin-func ~plugin-name [~@params])))))
+  `(defn ~x [~@params] ~@body))

@@ -2,7 +2,7 @@
   :source-paths ["src" "macros"]
   :dependencies [
     [mvc-works/hsl "0.1.2"]
-    [cumulo/memof "0.2.2"]
+    [cumulo/memof "0.2.3"]
   ]
   :open-file-command [
     "subl"
