@@ -95,7 +95,7 @@
        (div
         {:spell-check true, :style style-toolbar}
         (div
-         {:style widget/button, :on-click (if (:locked? state) (fn [e d!] (d! :clear nil)))}
+         {:style widget/button, :on-click (if (:locked? state) nil (fn [e d!] (d! :clear)))}
          (<> "Clear2"))
         (=< 8 nil)
         (div

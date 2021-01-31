@@ -3,4 +3,4 @@
 
 (def *cached-id (atom 0))
 
-(defn get-id! [] (swap! *cached-id inc) @*cached-id)
+(defn get-id! [] (swap! *cached-id inc) (str "id-" @*cached-id))

@@ -1,6 +1,6 @@
 {
   "name": "respo",
-  "version": "0.13.5",
+  "version": "0.13.6",
   "description": "Virtual DOM library",
   "main": "index.js",
   "scripts": {

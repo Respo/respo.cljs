@@ -15,6 +15,7 @@
       :modules {
         :main {:init-fn respo.main/main!}
       }
+      :devtools {:loader-mode :script}
       :release {:output-dir "dist/"}
     }
     :test {:target :node-script, :output-to "target/test.js", :main respo.test.main/main!}

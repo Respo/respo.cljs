@@ -6,9 +6,10 @@
   (assert (coll? params) "2nd argument should be a collection")
   (assert (some? (last body)) "defcomp should return a component")
   `(defn ~comp-name [~@params]
+    (respo.core/extract-effects-list
      (merge respo.schema/component
        {:name ~(keyword comp-name),
-        :tree (do ~@body)})))
+        :tree (do ~@body)}))))
 
 (def support-elements '[a body br button canvas code div footer
                         h1 h2 head header html hr i img input li link video audio
