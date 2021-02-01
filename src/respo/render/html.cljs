@@ -4,8 +4,7 @@
             [respo.util.format
              :refer
              [prop->attr purify-element mute-element ensure-string text->html]]
-            [respo.util.detect :refer [component? element?]]
-            [respo.render.expand :refer [render-app]]))
+            [respo.util.detect :refer [component? element?]]))
 
 (defn escape-html [text]
   (if (nil? text)
@@ -71,5 +70,4 @@
      tag-name
      ">")))
 
-(defn make-string [tree]
-  (let [element (render-app tree)] (element->string (purify-element (mute-element element)))))
+(defn make-string [tree] (element->string (purify-element (mute-element tree))))
