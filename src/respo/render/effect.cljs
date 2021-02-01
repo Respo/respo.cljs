@@ -56,17 +56,20 @@
 
 (defn collect-updating [collect! action coord n-coord old-tree new-tree]
   (assert (component? new-tree) "Expected component for updating")
-  (let [effects (:effects new-tree), new-coord (conj coord (:name new-tree))]
+  (let [effects (:effects new-tree)
+        old-effects (:effects old-tree)
+        new-coord (conj coord (:name new-tree))]
     (when-not (empty? effects)
       (comment js/console.log "collect update" n-coord (:effects new-tree))
-      (doseq [idx (range (count effects))]
-        (let [old-effect (get-in old-tree [:effects idx])
-              new-effect (get effects idx)
+      (loop [new-items effects, old-items old-effects]
+        (let [new-effect (first new-items)
+              old-effect (first old-items)
               method (:method new-effect)]
-          (comment println old-effect new-effect)
-          (when-not (=seq (:args new-effect) (:args old-effect))
+          (when-not (and (= (:name new-effect) (:name old-effect))
+                         (=seq (:args new-effect) (:args old-effect)))
             (collect!
              [(if (= :update action) op/effect-update op/effect-before-update)
               new-coord
               n-coord
-              (fn [target] (method (:args new-effect) [action target]))])))))))
+              (fn [target] (method (:args new-effect) [action target]))])))
+        (when-not (empty? new-items) (recur (rest new-items) (rest old-items)))))))
