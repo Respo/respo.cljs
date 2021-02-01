@@ -57,7 +57,7 @@
 (defn collect-updating [collect! action coord n-coord old-tree new-tree]
   (assert (component? new-tree) "Expected component for updating")
   (let [effects (:effects new-tree)
-        old-effects (:effect new-tree)
+        old-effects (:effects old-tree)
         new-coord (conj coord (:name new-tree))]
     (when-not (empty? effects)
       (comment js/console.log "collect update" n-coord (:effects new-tree))

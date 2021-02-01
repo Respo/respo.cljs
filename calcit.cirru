@@ -3509,8 +3509,8 @@
                           |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1612169052018) (:text |old-effects)
                           |j $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1612169052395)
                             :data $ {}
-                              |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1612169053455) (:text |:effect)
-                              |j $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1612169054702) (:text |new-tree)
+                              |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1612171183309) (:text |:effects)
+                              |j $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1612171099310) (:text |old-tree)
                   |P $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1571584705125)
                     :data $ {}
                       |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1572505111703) (:text |when-not)
@@ -8609,7 +8609,7 @@
                   |j $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1571586977512) (:text "|\"Task effect")
                   |x $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1571586982894) (:text |action)
                   |y $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1572885427880) (:text |at-place?)
-                  |D $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1612169421760) (:text |;)
+                  |D $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1612171403344) (:text |;)
               |yT $ {} (:type :expr) (:by |rJoDgvdeG) (:at 1572086688548)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |rJoDgvdeG) (:at 1572086689200) (:text |case)
