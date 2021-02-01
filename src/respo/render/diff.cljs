@@ -111,7 +111,7 @@
        (recur collect! coord n-coord (:tree old-tree) new-tree))
     (and (element? old-tree) (component? new-tree))
       (let [new-coord (conj coord (:name new-tree))]
-        (find-element-diffs collect! new-coord coord n-coord old-tree (:tree new-tree))
+        (find-element-diffs collect! new-coord n-coord old-tree (:tree new-tree))
         (collect-mounting collect! coord n-coord new-tree true))
     (and (element? old-tree) (element? new-tree))
       (let [old-children (:children old-tree), new-children (:children new-tree)]
