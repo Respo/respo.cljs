@@ -25,7 +25,7 @@
    :opacity 0.2,
    :font-size "12px",
    :font-family "Avenir,Verdana",
-   :line-height 1.4,
+   :line-height "1.4em",
    :padding "2px 6px",
    :border-radius "4px",
    :max-width 160,

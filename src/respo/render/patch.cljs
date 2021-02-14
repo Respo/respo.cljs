@@ -1,7 +1,9 @@
 
 (ns respo.render.patch
   (:require [clojure.string :as string]
-            [respo.util.format :refer [dashed->camel event->prop ensure-string]]
+            [respo.util.format
+             :refer
+             [dashed->camel event->prop ensure-string get-style-value]]
             [respo.render.dom :refer [make-element style->string]]
             [respo.schema.op :as op]))
 
@@ -24,8 +26,10 @@
       (aset target prop-name prop-value))))
 
 (defn add-style [target op]
-  (let [style-name (dashed->camel (name (key op))), style-value (ensure-string (val op))]
-    (aset (.-style target) style-name style-value)))
+  (let [style-name (name (key op))
+        style-prop (dashed->camel style-name)
+        style-value (get-style-value (val op) style-name)]
+    (aset (.-style target) style-prop style-value)))
 
 (defn append-element [target op listener-builder coord]
   (let [new-element (make-element op listener-builder coord)]

@@ -3,7 +3,12 @@
   (:require [clojure.string :as string]
             [respo.util.format
              :refer
-             [prop->attr purify-element mute-element ensure-string text->html]]
+             [prop->attr
+              purify-element
+              mute-element
+              ensure-string
+              text->html
+              get-style-value]]
             [respo.util.detect :refer [component? element?]]))
 
 (defn escape-html [text]
@@ -19,8 +24,10 @@
   (->> styles
        (map
         (fn [entry]
-          (let [k (first entry), v (last entry)]
-            (str (name k) ":" (if (string? v) (escape-html v) (ensure-string v)) ";"))))
+          (let [k (first entry)
+                style-name (name k)
+                v (get-style-value (last entry) style-name)]
+            (str style-name ":" (escape-html v) ";"))))
        (string/join "")))
 
 (defn entry->string [entry]
