@@ -49,6 +49,16 @@
 
 (defn event->string [x] (subs (name x) 3))
 
+(def pattern-non-dimensional
+  (new js/RegExp "acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera" "i"))
+
+(defn get-style-value [x style-name]
+  (cond
+    (string? x) x
+    (keyword? x) (name x)
+    (number? x) (if (.test pattern-non-dimensional style-name) (str x) (str x "px"))
+    :else (str x)))
+
 (defn mute-element [element]
   (if (component? element)
     (update element :tree mute-element)
