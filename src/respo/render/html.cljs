@@ -8,7 +8,8 @@
               mute-element
               ensure-string
               text->html
-              get-style-value]]
+              get-style-value
+              dashed->camel]]
             [respo.util.detect :refer [component? element?]]))
 
 (defn escape-html [text]
@@ -26,7 +27,7 @@
         (fn [entry]
           (let [k (first entry)
                 style-name (name k)
-                v (get-style-value (last entry) style-name)]
+                v (get-style-value (last entry) (dashed->camel style-name))]
             (str style-name ":" (escape-html v) ";"))))
        (string/join "")))
 

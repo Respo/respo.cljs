@@ -28,7 +28,7 @@
 (defn add-style [target op]
   (let [style-name (name (key op))
         style-prop (dashed->camel style-name)
-        style-value (get-style-value (val op) style-name)]
+        style-value (get-style-value (val op) style-prop)]
     (aset (.-style target) style-prop style-value)))
 
 (defn append-element [target op listener-builder coord]
