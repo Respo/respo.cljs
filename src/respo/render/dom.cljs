@@ -24,7 +24,7 @@
           (if (some? v) (aset element k v))))
       (doseq [entry style]
         (let [style-name (name (first entry)), k (dashed->camel style-name), v (last entry)]
-          (aset (aget element "style") k (get-style-value v style-name))))
+          (aset (aget element "style") k (get-style-value v k))))
       (doseq [event-name (keys (:event virtual-element))]
         (let [name-in-string (event->prop event-name)]
           (comment println "listener:" event-name name-in-string)
