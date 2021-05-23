@@ -1,4 +1,6 @@
 
+> Notice: since the author has moved to Calcit-js, the maintenance has been moved to [respo.calcit](https://github.com/Respo/respo.calcit). And this repo will no longer be developed.
+
 Respo: A virtual DOM library in ClojureScript
 ----
 
