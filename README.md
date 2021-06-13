@@ -9,7 +9,7 @@ Respo: A virtual DOM library in ClojureScript
 [![Respo](https://img.shields.io/clojars/v/respo/respo.svg)](https://clojars.org/respo/respo)
 
 ```clojure
-[respo "0.13.10"]
+[respo "0.13.11"]
 ```
 
 * Home http://respo-mvc.org
