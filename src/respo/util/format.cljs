@@ -2,18 +2,10 @@
 (ns respo.util.format
   (:require [clojure.string :as string] [respo.util.detect :refer [component? element?]]))
 
-(defn dashed->camel
-  ([x] (dashed->camel "" x false))
-  ([acc piece promoted?]
-   (if (= piece "")
-     acc
-     (let [cursor (get piece 0), piece-followed (subs piece 1)]
-       (if (= cursor "-")
-         (recur acc piece-followed true)
-         (recur
-          (str acc (if promoted? (string/upper-case cursor) cursor))
-          piece-followed
-          false))))))
+(def dashed-letter-pattern (new js/RegExp "-[a-z]" "g"))
+
+(defn dashed->camel [x]
+  (.replace x dashed-letter-pattern (fn [cc pos prop] (.toUpperCase (aget cc 1)))))
 
 (defn ensure-string [x] (cond (string? x) x (keyword? x) (name x) :else (str x)))
 
